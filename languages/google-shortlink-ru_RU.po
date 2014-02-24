@@ -1,0 +1,565 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: google-shortlink\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-20 12:47+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: bestwebsoft.com <plugins@bestwebsoft.com>\n"
+"Language-Team: bestwebsoft.com <wp@bestwebsoft.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: _e;__;esc_attr_e\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: google-shortlink.php:33
+msgid "Google Shortlink Options"
+msgstr "Настройки Google Shortlink"
+
+#: google-shortlink.php:33
+#: google-shortlink.php:900
+#: google-shortlink.php:1067
+#: google-shortlink.php:1144
+#: google-shortlink.php:1218
+msgid "Google Shortlink"
+msgstr "Googler Shortlink"
+
+#: google-shortlink.php:48
+msgid "requires"
+msgstr "требуется"
+
+#: google-shortlink.php:48
+msgid "or higher, that is why it has been deactivated! Please upgrade WordPress and try again."
+msgstr "или выше, поэтому он был деактивирован! Пожалуйста, обновите WordPress и попробуйте снова."
+
+#: google-shortlink.php:48
+msgid "Back to the WordPress"
+msgstr "Вернутся на"
+
+#: google-shortlink.php:48
+msgid "Plugins page"
+msgstr "Страницу плагинов"
+
+#: google-shortlink.php:73
+msgid "Do you really want to delete all links in database?"
+msgstr "Вы действительно хотите удалить все ссылки из базы данных?"
+
+#: google-shortlink.php:168
+msgid "An unknown error occurred."
+msgstr "Возникла неизвестная ошибка."
+
+#: google-shortlink.php:172
+msgid "Bad request error."
+msgstr "Плохой запрос."
+
+#: google-shortlink.php:176
+msgid "Invalid API key error."
+msgstr "Некорректный API ключ."
+
+#: google-shortlink.php:180
+msgid "Access not configured error."
+msgstr "Ошибка \"Доступ не настроен\""
+
+#: google-shortlink.php:184
+msgid "Expired API key error."
+msgstr "Ошибка \"Истекший API ключ\""
+
+#: google-shortlink.php:188
+msgid "Curl error. Please try again."
+msgstr "Ошибка curl. Пожалуйста, попробуйте снова."
+
+#: google-shortlink.php:192
+msgid "more details"
+msgstr "детальнее"
+
+#: google-shortlink.php:219
+msgid "Replacing long links with short..."
+msgstr "Заменяем длинные ссылки на короткие..."
+
+#: google-shortlink.php:222
+msgid "Restoring short links to long..."
+msgstr "Заменяем короткие ссылки на длинные..."
+
+#: google-shortlink.php:225
+msgid "Restoring all links and deleting them from db..."
+msgstr "Восстанавливаем все ссылки и удаляем их из базы данных..."
+
+#: google-shortlink.php:228
+msgid "Scanning web-site...."
+msgstr "Сканируем веб-сайт...."
+
+#: google-shortlink.php:335
+#: google-shortlink.php:346
+msgid "Error:"
+msgstr "Ошибка:"
+
+#: google-shortlink.php:335
+#: google-shortlink.php:1071
+msgid "Invalid API key. Go to plugin's"
+msgstr "Некорректный API ключ. Перейдите на страницу"
+
+#: google-shortlink.php:335
+#: google-shortlink.php:922
+#: google-shortlink.php:1071
+msgid "settings page"
+msgstr "настроек плагина"
+
+#: google-shortlink.php:335
+#: google-shortlink.php:1071
+msgid "and enter correct key."
+msgstr "и введите корректный ключ"
+
+#: google-shortlink.php:346
+msgid "Expired API key. Your key has either expired or has newly been created."
+msgstr "Истекший API ключ. Ваш ключ просрочен или только что создан."
+
+#: google-shortlink.php:347
+msgid "Create a new key in the first case or just wait for a few minutes in the second case."
+msgstr "Создайте новый ключ в первом случае или просто подождите пару минут во втором."
+
+#: google-shortlink.php:436
+msgid "All links from database have been restored to long links and the database has been cleared."
+msgstr "Все ссылки из базы данных были восстановлены к длинным ссылкам и база данных была очищена."
+
+#: google-shortlink.php:439
+msgid "All links from database have been restored to long links."
+msgstr "Все ссылки из базы данных были восстановлены к длинным ссылкам."
+
+#: google-shortlink.php:440
+#: google-shortlink.php:444
+msgid "Total replaces:"
+msgstr "Всего замен:"
+
+#: google-shortlink.php:443
+msgid "All links from database have been replaced with short links."
+msgstr "Все ссылки из базы данных были заменены на короткие ссылки."
+
+#: google-shortlink.php:447
+#: google-shortlink.php:1160
+msgid "Web-site was scanned for new links,"
+msgstr "Веб сайт был просканирован в поисках новых ссылок,"
+
+#: google-shortlink.php:450
+#: google-shortlink.php:1163
+msgid "links were added to db."
+msgstr "ссылки были добавлены в бд"
+
+#: google-shortlink.php:452
+#: google-shortlink.php:1165
+msgid "no new links found."
+msgstr "новых ссылок не обнаружено."
+
+#: google-shortlink.php:452
+msgid "The list of articles, where the link is located, has been updated for each link."
+msgstr "Список статей, где содержится ссылка, был обновлен для каждой ссылки."
+
+#: google-shortlink.php:455
+msgid "Curl errors:"
+msgstr "Ошибки curl:"
+
+#: google-shortlink.php:455
+msgid "Scan the web site again to find skipped links if they exist."
+msgstr "Просканируйте веб сайт снова, что бы найти пропущенные ссылки, если таковые имеются."
+
+#: google-shortlink.php:575
+#: google-shortlink.php:880
+msgid "You do not have sufficient permissions to access this page."
+msgstr "У Вас нет прав доступа к этой странице"
+
+#: google-shortlink.php:584
+msgid "Settings were changed"
+msgstr "Настройки были изменены"
+
+#: google-shortlink.php:587
+msgid "Incorrect API key entered"
+msgstr "Введен некорректный API ключ "
+
+#: google-shortlink.php:595
+msgid "Google Shortlink Settings"
+msgstr "Настройки Google Shortlink"
+
+#: google-shortlink.php:604
+#: google-shortlink.php:1225
+msgid "How to get API key"
+msgstr "Как получить API ключ"
+
+#: google-shortlink.php:606
+#: google-shortlink.php:1227
+msgid "To get API key you must go to"
+msgstr "Что бы получить API ключ, вы должны перейти на"
+
+#: google-shortlink.php:608
+msgid "Create project there and insert public API key below."
+msgstr "Создайте там проект и вставьте публичный API ключ ниже."
+
+#: google-shortlink.php:609
+msgid "More details"
+msgstr "Детальнее"
+
+#: google-shortlink.php:611
+#: google-shortlink.php:1395
+#: google-shortlink.php:1406
+msgid "Settings"
+msgstr "Настройки"
+
+#: google-shortlink.php:615
+msgid "API key for your goo.gl account"
+msgstr "API ключ для Вашего аккаунта goo.gl"
+
+#: google-shortlink.php:623
+msgid "Show links in table per page"
+msgstr "Показывать ссылок в таблице на одной странице"
+
+#: google-shortlink.php:631
+msgid "All"
+msgstr "Все"
+
+#: google-shortlink.php:637
+msgid "Save changes"
+msgstr "Сохранить изменения"
+
+#: google-shortlink.php:721
+msgid "None"
+msgstr "Нет"
+
+#: google-shortlink.php:727
+msgid "Wait for response"
+msgstr "Ждем ответа"
+
+#: google-shortlink.php:749
+msgid "link"
+msgstr "ссылка"
+
+#: google-shortlink.php:750
+msgid "links"
+msgstr "ссылки"
+
+#: google-shortlink.php:770
+msgid "ID"
+msgstr "ID"
+
+#: google-shortlink.php:771
+msgid "Long link"
+msgstr "Длинная ссылка"
+
+#: google-shortlink.php:772
+msgid "Short link"
+msgstr "Короткая ссылка"
+
+#: google-shortlink.php:773
+msgid "Total clicks"
+msgstr "Всего переходов"
+
+#: google-shortlink.php:774
+msgid "Articles that contain links"
+msgstr "Статьи, которые содержат ссылку"
+
+#: google-shortlink.php:803
+#: google-shortlink.php:818
+msgid "Replace"
+msgstr "Заменить"
+
+#: google-shortlink.php:804
+#: google-shortlink.php:819
+msgid "Restore"
+msgstr "Восстановить"
+
+#: google-shortlink.php:805
+#: google-shortlink.php:809
+msgid "Delete"
+msgstr "Удалить"
+
+#: google-shortlink.php:820
+msgid "Delete from db"
+msgstr "Удалить из бд"
+
+#: google-shortlink.php:907
+msgid "One long link was replaced with a short link."
+msgstr "Одна длинная ссылка была заменена на короткую."
+
+#: google-shortlink.php:910
+msgid "One short link was restored to a long link."
+msgstr "Одна короткая ссылка была заменена на длинную."
+
+#: google-shortlink.php:913
+msgid "One short link was deleted from database."
+msgstr "Одна короткая ссылка была удалена из базы данных."
+
+#: google-shortlink.php:922
+msgid "Warning:"
+msgstr "Внимание:"
+
+#: google-shortlink.php:922
+msgid "You don't enter api key yet. Go to plugin's"
+msgstr "Вы еще не ввели ключ API. Перейдите на страницу"
+
+#: google-shortlink.php:922
+msgid "and enter your key."
+msgstr "и введите Ваш ключ."
+
+#: google-shortlink.php:931
+#: google-shortlink.php:942
+#, php-format
+msgid "Total %d links have been replaced"
+msgstr "Всего %d ссылок было заменено"
+
+#: google-shortlink.php:934
+#: google-shortlink.php:945
+#, php-format
+msgid "Total %d links have been restored"
+msgstr "Всего %d ссылок было востановлено"
+
+#: google-shortlink.php:937
+#: google-shortlink.php:948
+#, php-format
+msgid "Total %d links have been deleted from database"
+msgstr "Всего %d ссылок было удалено из базы данных"
+
+#: google-shortlink.php:963
+msgid "There are no links in database. Go to the Additional options tab, and scan your web site"
+msgstr "В базе данных не содержится ссылок. Перейдите на вкладку \"Дополнительные опции\", и просканируйте ваш веб сайт."
+
+#: google-shortlink.php:968
+#: google-shortlink.php:1081
+#: google-shortlink.php:1173
+#: google-shortlink.php:1220
+msgid "Table of links"
+msgstr "Таблица ссылок"
+
+#: google-shortlink.php:969
+#: google-shortlink.php:1082
+#: google-shortlink.php:1174
+#: google-shortlink.php:1221
+msgid "Direct input"
+msgstr "Прямой ввод"
+
+#: google-shortlink.php:970
+#: google-shortlink.php:1083
+#: google-shortlink.php:1175
+#: google-shortlink.php:1222
+msgid "Additional options"
+msgstr "Дополнительные опции"
+
+#: google-shortlink.php:971
+#: google-shortlink.php:1084
+#: google-shortlink.php:1176
+#: google-shortlink.php:1223
+#: google-shortlink.php:1407
+msgid "FAQ"
+msgstr "Часто задаваемые вопросы"
+
+#: google-shortlink.php:1014
+msgid "Bad request"
+msgstr "Плохой запрос"
+
+#: google-shortlink.php:1018
+msgid "Acces not configured."
+msgstr "Доступ не натроен."
+
+#: google-shortlink.php:1022
+msgid "Unknown error. Try again later."
+msgstr "Неизвестная ошибка. Попробуйте позже."
+
+#: google-shortlink.php:1077
+msgid "There are empty fields on the page. Fill them out before adding another one."
+msgstr "На странице остались пустые поля. Заполните их перед добавлением еще одного."
+
+#: google-shortlink.php:1092
+msgid "Get short links by direct input:"
+msgstr "Получить короткие ссылки путем прямого ввода"
+
+#: google-shortlink.php:1098
+msgid "Type long links here:"
+msgstr "Вводите длинные ссылки сюда:"
+
+#: google-shortlink.php:1099
+msgid "Short links will appear below:"
+msgstr "Короткие ссылки появятся ниже:"
+
+#: google-shortlink.php:1118
+msgid "Get short links"
+msgstr "Получить короткие ссылки"
+
+#: google-shortlink.php:1119
+msgid "Reset form"
+msgstr "Очистить форму"
+
+#: google-shortlink.php:1120
+msgid "Add field"
+msgstr "Добавить поле"
+
+#: google-shortlink.php:1151
+msgid "All links from database have been restored to long links and the database has been cleared"
+msgstr "Все ссылки из базы данных были восстановлены к длинным ссылкам и база данных была очищена"
+
+#: google-shortlink.php:1154
+msgid "All links from database have been restored to long links"
+msgstr "Все ссылки из базы данных были восстановлены к длинным ссылкам"
+
+#: google-shortlink.php:1157
+msgid "All links from database have been replaced with short links"
+msgstr "Все ссылки из базы данных были заменены на короткие ссылки"
+
+#: google-shortlink.php:1184
+msgid "Actions with all links:"
+msgstr "Действия со всеми ссылками"
+
+#: google-shortlink.php:1191
+msgid "Scan web-site for new external links"
+msgstr "Сканировать веб сайт в поисках новых внешних ссылок"
+
+#: google-shortlink.php:1193
+msgid "Replace automatically all external links"
+msgstr "Заменить автоматически все внешние ссылки"
+
+#: google-shortlink.php:1195
+msgid "Restore automatically all external links"
+msgstr "Восстановить автоматически все внешние ссылки"
+
+#: google-shortlink.php:1197
+msgid "Restore all links and clear database"
+msgstr "Восстановить все ссылки и очистить базу данных"
+
+#: google-shortlink.php:1205
+msgid "Apply"
+msgstr "Применить"
+
+#: google-shortlink.php:1229
+msgid "Then go to \"Projects\" tab and press \"Create project\" button."
+msgstr "Потом перейти на вкладку \"Projects\" и нажать кнопку \"Create project\""
+
+#: google-shortlink.php:1232
+msgid "After that you will be redirected to project page. Go to \"API and auth\" tab. Make sure \"URL Shortener API\" turn on."
+msgstr "После этого вы будете переадресованы на страницу проекта. Перейдите на вкладку \"API and auth\". Убедитесь, что \"URL Shortener API\" включен."
+
+#: google-shortlink.php:1235
+msgid "Then go to \"Credentials\" tab. At \"Public API access\" section of the page click \"Create new key\" button."
+msgstr "После перейдите на вкладку \"Credentials\". В разделе  страницы \"Public API access\" нажмите кнопку \"Create new key\"."
+
+#: google-shortlink.php:1237
+msgid "In a popup window, that will appear choose \"Browser key\"."
+msgstr "Во всплывающем окне, которое появится, выберете \"Browser key\"."
+
+#: google-shortlink.php:1237
+msgid "Do not fill"
+msgstr "Не заполняйте"
+
+#: google-shortlink.php:1237
+msgid "\"referers\" field in the next popup window and click \"Create\" button."
+msgstr "поле \"referers\" в следующем всплывающем окне и нажмите кнопку \"Create\""
+
+#: google-shortlink.php:1238
+msgid "It is important not to fill \"referers\" field. It may cause \"Acces not configured\" error, it is highly recomended to leave this field empty for correct work."
+msgstr "Важно не заполнять поле \"referers\". Это может вызвать ошибку \"Доступ не наcтроен\", настоятельно рекомендуется оставить это поле пустым для корректной работы."
+
+#: google-shortlink.php:1241
+msgid "After all you will see created API key at the page, just copy and paste it to the field below and enjoy the plugin."
+msgstr "После всего Вы увидете созданный API ключ на страницу, просто скопируйте и вставте его в поле ниже и наслаждайтесь плагином."
+
+#: google-shortlink.php:1244
+msgid "I have an error!"
+msgstr "У меня возникла ошибка!"
+
+#: google-shortlink.php:1245
+msgid "Access not configured"
+msgstr "Доступ не настроен"
+
+#: google-shortlink.php:1248
+msgid "This error occurs in two cases:"
+msgstr "Данная ошибка возникает в двух случаях:"
+
+#: google-shortlink.php:1252
+msgid "\"URL Shortener api\" is turned off at your project API options at google api console."
+msgstr "На странице API настроек вашего проекта \"URL Shortener api\" выключен."
+
+#: google-shortlink.php:1253
+msgid "To fix this just go to api options of your project and set \"URL Shortener api\" on. After that in some cases you will have to ceate a new API key, or recreate the current one."
+msgstr "Что бы исправить это просто перейдите к api настройкам вашего проекта и включите \"URL Shortener api\". После этого, в некоторых случаях, Вам понадобится создать новый API ключ или пересоздать текущий."
+
+#: google-shortlink.php:1258
+msgid "The \"referers\" field at public API key options is not empty."
+msgstr "Поле \"refererf\" в настройках публичного API ключа не пустое."
+
+#: google-shortlink.php:1259
+msgid "To fix this you need to clear \"referers\" field and recreate API key."
+msgstr "Чтобы исправить это, вам нужно очистить поле \"referers\" и пересоздать API ключ."
+
+#: google-shortlink.php:1264
+msgid "Invalid API key"
+msgstr "Некорректный API ключ."
+
+#: google-shortlink.php:1267
+msgid "This error occurs if you entered incorrect API key on plugin's settings page. Go to google api console, copy public API key there and paste it to the field on plugin's settings page."
+msgstr "Данная ошибка возникает если введен некорректный API ключ на странице опций плагина. Перейдите на google api console, скопируйте API ключ и вставьте его в поле на странице опций плагина."
+
+#: google-shortlink.php:1269
+msgid "Expired API key"
+msgstr "Истекший API ключ"
+
+#: google-shortlink.php:1272
+msgid "This error occurs if your API key is outdate or it is a newly created one. Go to google api console, create a new public API key there and paste it to the field on the plugin's options page in the first case, or just wait a few minutes in the second case.."
+msgstr "Данная ошибка возникает если Ваш API ключ просрочен или только создан. Перейдите на google api console, там создайте новый публичный API ключ и вставьте его в поле на странице опций плагина в первом случае, или просто подождите несколько минут во втором."
+
+#: google-shortlink.php:1364
+msgid "Link status: "
+msgstr "Статус ссылки: "
+
+#: google-shortlink.php:1408
+msgid "Support"
+msgstr "Поддержка"
+
+#~ msgid "Access not configured."
+#~ msgstr "Доступ не натроен."
+
+#~ msgid ""
+#~ "It occurs when \"URL shortener API\" turn off at Google console or when "
+#~ "Referers field is not empty"
+#~ msgstr ""
+#~ "Она возникает, когда \"URL shortener API\" в Google console выключен или "
+#~ "когда поле referers не пустое"
+
+#~ msgid "An error appear. Incorrect API key or to much queries to goo.gl"
+#~ msgstr ""
+#~ "Возникла ошибка. Некорректный API ключ или слишком много запросов к goo.gl"
+
+#~ msgid "Database is empty. Scan web site first"
+#~ msgstr "База данных пуста. Просканируйте сначала веб сайт."
+
+#~ msgid "Total %d links have been restored and deleted from database"
+#~ msgstr "Всего %d ссылок было восстановлено и удалено из базы данных"
+
+#~ msgid ""
+#~ "Link status is not recieved. Probably it is to much queries to goo.gl. "
+#~ "Please, wait a minute and try again."
+#~ msgstr ""
+#~ "Статус ссылки не получен. Возможно произошло слишком много запросов к goo."
+#~ "gl. Пожалуйста, подождите минуту и попробуйте снова."
+
+#~ msgid "Google url shortener"
+#~ msgstr "Google url shortener"
+
+#~ msgid "Actions with links:"
+#~ msgstr "Действия со ссылками"
+
+#~ msgid "Actions with selected links"
+#~ msgstr "Действия с выбранными ссылками"
+
+#~ msgid "Bulk actions"
+#~ msgstr "Массовіе действия"
+
+#~ msgid "displayed: %d-%d "
+#~ msgstr "отображено: %d-%d "
+
+#~ msgid "page:"
+#~ msgstr "страница:"
+
+#~ msgid "There are no links in database"
+#~ msgstr "В базе данных пока нет ссылок"
+
+#~ msgid "Google url shortener options"
+#~ msgstr "Настройки Google url shortener"
