@@ -1,66 +1,14 @@
-/*styles for icons*/
-#adminmenu #toplevel_page_bws_plugins div.wp-menu-image {
-	background: url("../images/icon_16.png") no-repeat scroll center center transparent;
-}
-
-.admin-color-classic #adminmenu #toplevel_page_bws_plugins div.wp-menu-image {
-	background: url("../images/icon_16_b.png") no-repeat scroll center center transparent;
-}
-
-#adminmenu #toplevel_page_google-shortlink div.wp-menu-image {
-	background: url("../images/icon_16.png") no-repeat scroll center center transparent;	
-}
-
-.admin-color-classic #adminmenu #toplevel_page_google-shortlink div.wp-menu-image {
-	background: url("../images/icon_16_b.png") no-repeat scroll center center transparent;
-}
-
-#adminmenu #toplevel_page_google-shortlink:hover div.wp-menu-image,
-#adminmenu #toplevel_page_google-shortlink a.current div.wp-menu-image {
-	background: url("../images/icon_16_c.png") no-repeat scroll center center transparent;	
-}
-
-#adminmenu #toplevel_page_bws_plugins:hover div.wp-menu-image,
-#adminmenu #toplevel_page_bws_plugins.wp-has-current-submenu div.wp-menu-image {
-	background: url("../images/icon_16_c.png") no-repeat scroll center center transparent;
-}
-
-.wrap #icon-options-general.icon32-bws {
-	background: url("../images/icon_36.png") no-repeat scroll left top transparent;
-}
-
-.admin-color-classic .wrap #icon-options-general.icon32-bws {
-	background: url("../images/icon_36_b.png") no-repeat scroll left top transparent;
-}
-
-#toplevel_page_bws_plugins .wp-submenu .wp-first-item {
-    display:none;
-}
-
-.bws_system_info_meta_box {
-    width: 850px;
-}
-
-.bws_system_info_meta_box .hndle {
-    cursor: pointer !important;
-}
-
-.bws_system_info {
-    float: left;
-    margin-right: 10px;
-    width: 400px;
-}
-.bws_system_info th {
-    padding: 10px 0;
-    text-align: left;
-    width: 50%;
-}
-.bws_system_info tbody td {
-    border-bottom: 1px solid #DFDFDF;
-}
-
 /*Google Shortlink*/
-
+.wrap #icon-options-general.icon32-google-shortlink {
+    background: url("../bws_menu/images/icon_36.png") no-repeat scroll left top transparent;
+}
+#adminmenu #toplevel_page_google-shortlink div.wp-menu-image {
+    background: url("../images/menu.png") no-repeat scroll left -28px transparent;
+}
+#adminmenu #toplevel_page_google-shortlink:hover div.wp-menu-image,
+#adminmenu #toplevel_page_google-shortlink.current div.wp-menu-image {
+    background: url("../images/menu.png") no-repeat scroll left 0 transparent;
+}
 /*styles for table*/
 .gglshrtlnk_table {
     border-collapse: collapse;
@@ -68,7 +16,6 @@
     margin-top: 0.5em;
     width: 100%;
 }
-
 .gglshrtlnk_main-th {
     font-weight: bold;
     line-height: 1.3;
@@ -79,40 +26,31 @@
     font-size: 14px;
     color: #222;
 }
-
 .gglshrtlnk_table .gglshrtlnk_main-th,
 .gglshrtlnk_table > tbody > tr > td {
     padding: 7px 10px 10px 9px !important;
 }
-
 .gglshrtlnk_table .gglshrtlnk_main-th {
     width: 200px;
 }
-
 /*styles for input td in tables*/
 #gglshrtlnk_direct-input-table .gglshrtlnk_long-link-column {
     padding: 1px 5px 1px 0;
 }
-
 .gglshrtlnk_long-link-column input[type="url"] {
     width: 400px;
 }
-
 /*styles for output td in tables*/
 #gglshrtlnk_direct-input-table .gglshrtlnk_short-link-column {
     padding: 0px 0 0px 5px;
 }
-
 .gglshrtlnk_short-link-column input[type="url"] {
     width: 200px;
 }
-
 /*general styles for tables*/
-
 #gglshrtlnk_api-key {
     width: 325px;
 }
-
 .gglshrtlnk_hide,
 .column-id {
     display: none !important;
@@ -123,25 +61,20 @@
     width: 15%;
     min-width: 140px;
 }
-
 #gglshrtlnk_table-of-links .column-post_ids {
     width: 40%;
     min-width: 220px;
 }
-
 #gglshrtlnk_table-of-links .column-long_url {
     width: 30%;
     min-width: 220px;
 }
-
 #gglshrtlnk_table-of-links .column-cb {
     width: 25px;
 }
-
 #gglshrtlnk_table-of-links p.search-box{
     margin: 3px 0 0 0;
 }
-
 #gglshrtlnk_table-of-links .manage-column {
     padding: 0 10px;
 }

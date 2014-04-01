@@ -4,7 +4,7 @@ Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=10
 Tags: google, goo.gl, url, short, shorturl, links, redirect, shortener, tinyurl, short url 
 Requires at least: 3.0
 Tested up to: 3.8.1
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -85,7 +85,7 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 1. the link to the page where the problem occurs
 2. the name of the plugin and its version. If you are using a pro version - your order number.
 3. the version of your WordPress installation
-4. copy and paste into the message your system status report. Please read more here: <a href="http://bestwebsoft.com/wp-content/uploads/manual/wp_plugin/general/System_Status.pdf" target="_blank">System_Status.pdf</a>
+4. copy and paste into the message your system status report. Please read more here: <a href="https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit" target="_blank">System_Status.pdf</a>
 
 == Screenshots ==
 
@@ -96,6 +96,11 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.4 - 31.03.2014 =
+* Update : We added support for custom types.
+* Budfix : Plugin optimization is done.
+* Update : BWS menu and screenshots are updated.
 
 = V1.3 - 10.02.2014 =
 * NEW : New interface of the plugin page was created.
@@ -113,6 +118,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4 =
+We added support for custom types. Plugin optimization is done. BWS menu and screenshots are updated.
 
 = V1.3 =
 We remade the interface of the plugin page. Ajax for main plugin's functions was added.
