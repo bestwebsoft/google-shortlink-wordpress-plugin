@@ -1,10 +1,10 @@
 === Google Shortlink ===
 Contributors: bestwebsoft
-Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=10&product_id=13
-Tags: google, goo.gl, url, short, shorturl, links, redirect, shortener, tinyurl, short url 
+Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=1&product_id=94
+Tags: change link, display links, display multiple links, get short links, get short links automatically, get short links by direct input, get short links without leaving site, goo.gl, googel, googgle, gogle, gogole, google, google shortlink plugin, external links, link statisctics,  links, redirect, replace external links, replace url, short, short url, shortener, shortlink, shorturl, swap links, tinyurl, url
 Requires at least: 3.0
-Tested up to: 3.8.1
-Stable tag: 1.4
+Tested up to: 3.9.1
+Stable tag: 1.4.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,6 +16,8 @@ This plugin allows you to get short links from goo.gl servise without leaving yo
 It works in two modes: get short links by direct input and get short link for all external links on your site automacitally.
 With this plugin you can replace all external links on your site to short links.
 Plugin also displays a click-through statistics for each short link.
+
+http://www.youtube.com/watch?v=SZIWLm8mmdU
 
 <a href="http://wordpress.org/plugins/google-shortlink/faq/" target="_blank">FAQ</a>
 
@@ -39,6 +41,7 @@ There is also a premium version of the plugin <a href="http://bestwebsoft.com/pl
 = Translation =
 
 * Russian (ru_RU)
+* Ukrainian (uk)
 
 If you would like to create your own language pack or update the existing one, you can send <a href="http://codex.wordpress.org/Translating_WordPress" target="_blank">the text of PO and MO files</a> for <a href="http://support.bestwebsoft.com" target="_blank">BestWebSoft</a> and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO files  <a href="http://www.poedit.net/download.php" target="_blank">Poedit</a>.
 
@@ -85,7 +88,7 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 1. the link to the page where the problem occurs
 2. the name of the plugin and its version. If you are using a pro version - your order number.
 3. the version of your WordPress installation
-4. copy and paste into the message your system status report. Please read more here: <a href="https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit" target="_blank">System_Status.pdf</a>
+4. copy and paste into the message your system status report. Please read more here: <a href="https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit" target="_blank">Instuction on System Status</a>
 
 == Screenshots ==
 
@@ -97,9 +100,16 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 
 == Changelog ==
 
+= V1.4.1 - 20.05.2014 =
+* Bugfix : Bug with replacing, restoring, deleting of links was fixed.
+* Bugfix : We fixed a bug which created a database when you first start the plugin.
+* Update : BWS plugins section is updated.
+* Update : We updated all functionality for wordpress 3.9.1.
+* NEW : The Ukrainian language file is added to the plugin.
+
 = V1.4 - 31.03.2014 =
 * Update : We added support for custom types.
-* Budfix : Plugin optimization is done.
+* Bugfix : Plugin optimization is done.
 * Update : BWS menu and screenshots are updated.
 
 = V1.3 - 10.02.2014 =
@@ -118,6 +128,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4.1 =
+Bug with replacing, restoring, deleting of links was fixed. We fixed a bug creating a database when you first start the plugin. BWS plugins section is updated. We updated all functionality for wordpress 3.9.1. The Ukrainian language file is added to the plugin. 
 
 = V1.4 =
 We added support for custom types. Plugin optimization is done. BWS menu and screenshots are updated.

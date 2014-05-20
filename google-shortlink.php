@@ -3,7 +3,7 @@
 Plugin Name: Google Shortlink
 Plugin URI: http://bestwebsoft.com/plugin/
 Description: This plugin allows you to shorten links of you site with Google Shortlink
-Version: 1.4
+Version: 1.4.1
 Author: BestWebSoft 
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
@@ -29,7 +29,8 @@ License: GPLv2 or later
 if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 	function gglshrtlnk_menu() {
 		global $bstwbsftwppdtplgns_options, $wpmu, $bstwbsftwppdtplgns_added_menu;
-		$bws_menu_version = '1.2.3';
+		$bws_menu_info = get_plugin_data( plugin_dir_path( __FILE__ ) . "bws_menu/bws_menu.php" );
+		$bws_menu_version = $bws_menu_info["Version"];
 		$base = plugin_basename(__FILE__);
 
 		if ( ! isset( $bstwbsftwppdtplgns_options ) ) {
@@ -96,7 +97,7 @@ if ( ! function_exists( 'gglshrtlnk_admin_init' ) ) {
 		/* Function check if plugin is compatible with current WP version  */
 		gglshrtlnk_version_check();					
 
-		load_plugin_textdomain( 'google-shortlink', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 		
+		load_plugin_textdomain( 'google-shortlink', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 }
 
@@ -115,12 +116,12 @@ if ( ! function_exists ( 'gglshrtlnk_version_check' ) ) {
 	}
 }
 
-
-
 /*function for register default settings*/
 if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 	function register_gglshrtlnk_options() {
 		global $gglshrtlnk_options, $wpmu, $gglshrtlnk_plugin_info, $wpdb, $gglshrtlnk_table_name;
+
+		$gglshrtlnk_table_name = $wpdb->prefix . 'google_shortlink';
 
 		if ( ! $gglshrtlnk_plugin_info ) {
 			if ( ! function_exists( 'get_plugin_data' ) )
@@ -128,12 +129,11 @@ if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 			$gglshrtlnk_plugin_info = get_plugin_data( __FILE__ );	
 		}
 
-		$gglshrtlnk_table_name = $wpdb->prefix . 'google_shortlink';
 		$gglshrtlnk_db_version = '1.0';
 
 		$gglshrtlnk_default_options = array(
 			'plugin_option_version' 	=> $gglshrtlnk_plugin_info["Version"],
-			'plugin_db_version' 		=> $gglshrtlnk_db_version,
+			'plugin_db_version' 		=> '',
 			'api_key' 					=> '',
 			'pagination' 				=> '10'
 		);
@@ -171,6 +171,10 @@ if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 if ( ! function_exists( 'gglshrtlnk_create_table' ) ) {
 	function gglshrtlnk_create_table() {
 		global $wpdb, $gglshrtlnk_table_name;
+
+		if ( ! $gglshrtlnk_table_name )
+			$gglshrtlnk_table_name = $wpdb->prefix . 'google_shortlink';
+
 		$is_table_exist = $wpdb->get_var(
 			$wpdb->prepare(
 				"SHOW TABLES LIKE %s", $gglshrtlnk_table_name
@@ -666,6 +670,10 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 		<div class="wrap">
 			<div class="icon32 icon32-bws" id="icon-options-general"></div>
 			<h2><?php _e( 'Google Shortlink Settings', 'google-shortlink' ) ?></h2>
+			<h2 class="nav-tab-wrapper">
+				<a class="nav-tab nav-tab-active" href="admin.php?page=gglshrtlnk_options"><?php _e( 'Settings', 'google-shortlink' ); ?></a>
+				<a class="nav-tab" href="http://bestwebsoft.com/plugin/google-shortlink/#faq" target="_blank"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
+			</h2>
 			<?php if ( isset( $_POST['gglshrtlnk_options-form-was-send'] ) ) :?>		
 				<div class="<?php echo $gglshrtlnk_message_class; ?> fade below-h2" >
 					<p>
@@ -874,13 +882,13 @@ class gglshrtlnk_list_table extends WP_List_Table {
 		$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $gglshrtlnk_sql );
 		if( $gglshrtlnk_is_added_by_direct != 'added_by_direct' ) {
 			$actions = array(
-				'replace' => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_REQUEST['page'],'replace',$item['id'], __( 'Replace', 'google-shortlink' ) ),
-				'restore' => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_REQUEST['page'],'restore',$item['id'], __( 'Restore', 'google-shortlink' ) ),
-				'delete'  => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_REQUEST['page'],'delete',$item['id'], __( 'Delete', 'google-shortlink' ) ),
+				'replace' => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_GET['page'],'replace',$item['id'], __( 'Replace', 'google-shortlink' ) ),
+				'restore' => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_GET['page'],'restore',$item['id'], __( 'Restore', 'google-shortlink' ) ),
+				'delete'  => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_GET['page'],'delete',$item['id'], __( 'Delete', 'google-shortlink' ) ),
 			);
 		} else {
 			$actions = array(
-				'delete' => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_REQUEST['page'],'delete',$item['id'], __( 'Delete', 'google-shortlink' ) ),
+				'delete' => sprintf( '<a href="?page=%s&action=%s&link=%s">%s</a>',$_GET['page'],'delete',$item['id'], __( 'Delete', 'google-shortlink' ) ),
 			);			
 		}
 
@@ -1500,6 +1508,8 @@ if ( ! function_exists( 'gglshrtlnk_delete_options' ) ) {
 	}
 }
 
+/*hook for activation plugin */
+register_activation_hook( __FILE__, 'gglshrtlnk_create_table' );
 
 /*hook for add menu */
 add_action( 'admin_menu', 'gglshrtlnk_menu' ); 
