@@ -2,9 +2,9 @@
 Contributors: bestwebsoft
 Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=1&product_id=94
 Tags: change link, display links, display multiple links, get short links, get short links automatically, get short links by direct input, get short links without leaving site, goo.gl, googel, googgle, gogle, gogole, google, google shortlink plugin, external links, link statisctics,  links, redirect, replace external links, replace url, short, short url, shortener, shortlink, shorturl, swap links, tinyurl, url
-Requires at least: 3.0
-Tested up to: 3.9.1
-Stable tag: 1.4.1
+Requires at least: 3.1
+Tested up to: 4.0-beta3
+Stable tag: 1.4.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,10 +12,7 @@ This plugin allows you to get short links from goo.gl servise without leaving yo
 
 == Description ==
 
-This plugin allows you to get short links from goo.gl servise without leaving your site.
-It works in two modes: get short links by direct input and get short link for all external links on your site automacitally.
-With this plugin you can replace all external links on your site to short links.
-Plugin also displays a click-through statistics for each short link.
+This plugin allows you to get short links from goo.gl service without leaving your site. It works in two modes: get short links by direct input and get short link for all external links on your site automatically. With this plugin you can replace all external links on your site with short links. The plugin also displays a click-through statistics for each short link.
 
 http://www.youtube.com/watch?v=SZIWLm8mmdU
 
@@ -100,6 +97,10 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 
 == Changelog ==
 
+= V1.4.2 - 12.08.2014 =
+* Bugfix : Security Exploit was fixed.
+* Update : We updated all functionality for wordpress 4.0-beta3.
+
 = V1.4.1 - 20.05.2014 =
 * Bugfix : Bug with replacing, restoring, deleting of links was fixed.
 * Bugfix : We fixed a bug which created a database when you first start the plugin.
@@ -128,6 +129,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4.2 =
+Security Exploit was fixed. We updated all functionality for wordpress 4.0-beta3.
 
 = V1.4.1 =
 Bug with replacing, restoring, deleting of links was fixed. We fixed a bug creating a database when you first start the plugin. BWS plugins section is updated. We updated all functionality for wordpress 3.9.1. The Ukrainian language file is added to the plugin. 
