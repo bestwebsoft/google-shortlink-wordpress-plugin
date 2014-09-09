@@ -1,8 +1,8 @@
 ( function ( $ ) {
 	$( document ).ready( function () {
-		//add one more field to direct input
+		/* add one more field to direct input */
 		$( '#gglshrtlnk_add-field-button' ).click( function() {
-			// alert( $.isEmptyObject($('[name ^= gglshrtlnk_url-input-]')) );
+
 			var gglshrtlnk_is_empty = 1;
 			$('[name ^= gglshrtlnk_url-input-]').each( function() {
 				if ( $( this ).attr( 'value' ) == '' ) { 
@@ -12,7 +12,7 @@
 					gglshrtlnk_is_empty = 0;
 				}
 			});
-			//alert('gglshrtlnk_is_empty = ' + gglshrtlnk_is_empty );
+
 			if ( gglshrtlnk_is_empty == 0 ){
 				var oldval = $( '#gglshrtlnk_number_of_input_links' ).val();
 				var newval = ++oldval;
@@ -26,7 +26,7 @@
 				$( '#gglshrtlnk_no_more_fields' ).removeClass( 'gglshrtlnk_hide' );
 			}
 		});
-		//remove one field of direct input
+		/* remove one field of direct input */
 		$( '#gglshrtlnk_remove-field-button' ).click( function(){
 			if ( $( '#gglshrtlnk_direct-input-table' ).find( 'tbody' ).find( 'tr' ).size() > 2 ) {
 				var oldval = $( '#gglshrtlnk_number_of_input_links' ).val();
@@ -35,7 +35,7 @@
 				$( '#gglshrtlnk_direct-input-table' ).find( 'tbody' ).find( 'tr:last' ).detach();
 			};
 		});		
-		//reset direct input form
+		/* reset direct input form */
 		$( '#reset-direct' ).click( function() {
 			$( '[name ^= gglshrtlnk_url-input-]' ).each( function(index, element) {
 				$( element ).val('');
@@ -44,10 +44,10 @@
 				$( element ).val('');
 			});
 		});
-		//confirm delete db
+		/* confirm delete db */
 		$( '#gglshrtlnk_delete-all-radio' ).click( function() {
 			if ( $( this ).attr( 'checked' ) == 'checked' ) {
-				if ( ! confirm( gglshrtlnk_delete_fromdb_message ) ) {
+				if ( ! confirm( gglshrtlnk_vars.gglshrtlnk_delete_fromdb_message ) ) {
 					$( this ).removeAttr( 'checked' );
 					$( this ).blur();
 					$( '#gglshrtlnk_scan' ).attr( 'checked', 'checked' );

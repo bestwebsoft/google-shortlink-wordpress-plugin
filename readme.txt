@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=1&product_id=94
 Tags: change link, display links, display multiple links, get short links, get short links automatically, get short links by direct input, get short links without leaving site, goo.gl, googel, googgle, gogle, gogole, google, google shortlink plugin, external links, link statisctics,  links, redirect, replace external links, replace url, short, short url, shortener, shortlink, shorturl, swap links, tinyurl, url
 Requires at least: 3.1
-Tested up to: 4.0-beta3
-Stable tag: 1.4.2
+Tested up to: 4.0
+Stable tag: 1.4.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -97,6 +97,11 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 
 == Changelog ==
 
+= V1.4.3 - 09.09.2014 =
+* Bugfix : The misprint in the code was fixed.
+* Bugfix : Check ajax referer is added.
+* Update : We updated all functionality for wordpress 4.0.
+
 = V1.4.2 - 12.08.2014 =
 * Bugfix : Security Exploit was fixed.
 * Update : We updated all functionality for wordpress 4.0-beta3.
@@ -129,6 +134,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4.3 =
+The misprint in the code was fixed. Check ajax referer is added. We updated all functionality for wordpress 4.0.
 
 = V1.4.2 =
 Security Exploit was fixed. We updated all functionality for wordpress 4.0-beta3.
