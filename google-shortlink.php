@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Google Shortlink
+Plugin Name: Google Shortlink by BestWebSoft
 Plugin URI: http://bestwebsoft.com/plugin/
 Description: This plugin allows you to shorten links of you site with Google Shortlink
 Version: 1.4.3
