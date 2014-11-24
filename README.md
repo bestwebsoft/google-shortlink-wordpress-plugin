@@ -1,16 +1,16 @@
-<a href="http://bestwebsoft.com/plugin/google-shortlink/" target=_blank>Google Shortlink</a> 
+<a href="http://bestwebsoft.com/products/google-shortlink/" target=_blank>Google Shortlink by BestWebSoft</a> 
 ================
 
 This plugin allows you to get short links from goo.gl servise without leaving your site. It works in two modes: get short links by direct input and get short link for all external links on your site automacitally. With this plugin you can replace all external links on your site to short links. Plugin also displays a click-through statistics for each short link. 
 
 <img src="http://bestwebsoft.com/wp-content/uploads/2014/02/shortlink-banner-website.jpg" />
 
-<a href="http://bestwebsoft.com/plugin/google-shortlink/#description" target=_blank>Description</a> | 
-<a href="http://bestwebsoft.com/plugin/google-shortlink/#installation" target=_blank>Installation</a> | 
-<a href="http://bestwebsoft.com/plugin/google-shortlink/#faq" target=_blank>FAQ</a> | 
-<a href="http://bestwebsoft.com/plugin/google-shortlink/#screenshots" target=_blank>Screenshots</a> | 
-<a href="http://bestwebsoft.com/plugin/google-shortlink/#changelog" target=_blank>Changelog</a> | 
-<a href="http://bestwebsoft.com/plugin/google-shortlink/#download" target=_blank>Download</a>
+<a href="http://bestwebsoft.com/products/google-shortlink/description" target=_blank>Description</a> | 
+<a href="http://bestwebsoft.com/products/google-shortlink/installation" target=_blank>Installation</a> | 
+<a href="http://bestwebsoft.com/products/google-shortlink/faq" target=_blank>FAQ</a> | 
+<a href="http://bestwebsoft.com/products/google-shortlink/screenshots" target=_blank>Screenshots</a> | 
+<a href="http://bestwebsoft.com/products/google-shortlink/changelog" target=_blank>Changelog</a> | 
+<a href="http://bestwebsoft.com/products/google-shortlink/download" target=_blank>Download</a>
 
 
 Features
