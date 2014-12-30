@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Google Shortlink by BestWebSoft
-Plugin URI: http://bestwebsoft.com/plugin/
+Plugin URI: http://bestwebsoft.com/products/
 Description: This plugin allows you to shorten links of you site with Google Shortlink
-Version: 1.4.3
+Version: 1.4.4
 Author: BestWebSoft
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
@@ -28,13 +28,13 @@ License: GPLv2 or later
 /* function for add menu and sub-menu */
 if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 	function gglshrtlnk_menu() {
-		global $bstwbsftwppdtplgns_options, $wpmu, $bstwbsftwppdtplgns_added_menu;
+		global $bstwbsftwppdtplgns_options, $bstwbsftwppdtplgns_added_menu;
 		$bws_menu_info = get_plugin_data( plugin_dir_path( __FILE__ ) . "bws_menu/bws_menu.php" );
 		$bws_menu_version = $bws_menu_info["Version"];
 		$base = plugin_basename(__FILE__);
 
 		if ( ! isset( $bstwbsftwppdtplgns_options ) ) {
-			if ( 1 == $wpmu ) {
+			if ( is_multisite() ) {
 				if ( ! get_site_option( 'bstwbsftwppdtplgns_options' ) )
 					add_site_option( 'bstwbsftwppdtplgns_options', array(), '', 'yes' );
 				$bstwbsftwppdtplgns_options = get_site_option( 'bstwbsftwppdtplgns_options' );
@@ -48,11 +48,17 @@ if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 		if ( isset( $bstwbsftwppdtplgns_options['bws_menu_version'] ) ) {
 			$bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] = $bws_menu_version;
 			unset( $bstwbsftwppdtplgns_options['bws_menu_version'] );
-			update_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
+			if ( is_multisite() )
+				update_site_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
+			else
+				update_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
 			require_once( dirname( __FILE__ ) . '/bws_menu/bws_menu.php' );
 		} else if ( ! isset( $bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] ) || $bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] < $bws_menu_version ) {
 			$bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] = $bws_menu_version;
-			update_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
+			if ( is_multisite() )
+				update_site_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
+			else
+				update_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
 			require_once( dirname( __FILE__ ) . '/bws_menu/bws_menu.php' );
 		} else if ( ! isset( $bstwbsftwppdtplgns_added_menu ) ) {
 			$plugin_with_newer_menu = $base;
@@ -66,8 +72,8 @@ if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 			if ( file_exists( ABSPATH . $wp_content_dir . '/plugins/' . $plugin_with_newer_menu[0] . '/bws_menu/bws_menu.php' ) )
 				require_once( ABSPATH . $wp_content_dir . '/plugins/' . $plugin_with_newer_menu[0] . '/bws_menu/bws_menu.php' );
 			else
-				require_once( dirname( __FILE__ ) . '/bws_menu/bws_menu.php' );
-			$bstwbsftwppdtplgns_added_menu = true;
+				require_once( dirname( __FILE__ ) . '/bws_menu/bws_menu.php' );	
+			$bstwbsftwppdtplgns_added_menu = true;			
 		}
 
 		add_menu_page( 'BWS Plugins', 'BWS Plugins', 'manage_options', 'bws_plugins', 'bws_add_menu_render', plugins_url( 'images/px.png', __FILE__ ), 1001 );
@@ -78,6 +84,9 @@ if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 
 if ( ! function_exists( 'gglshrtlnk_init' ) ) {
 	function gglshrtlnk_init() {
+		/* Function check if plugin is compatible with current WP version  */
+		gglshrtlnk_version_check();		
+
 		if ( ! is_admin() || ( isset( $_REQUEST['page'] ) && ( $_REQUEST['page'] == 'google-shortlink' || $_REQUEST['page'] == 'gglshrtlnk_options' ) ) )
 			register_gglshrtlnk_options();
 	}
@@ -94,10 +103,7 @@ if ( ! function_exists( 'gglshrtlnk_admin_init' ) ) {
 
 		/* Add variable for bws_menu */
 		if ( ! isset( $bws_plugin_info ) || empty( $bws_plugin_info ) )
-			$bws_plugin_info = array( 'id' => '115', 'version' => $gglshrtlnk_plugin_info["Version"] );
-
-		/* Function check if plugin is compatible with current WP version  */
-		gglshrtlnk_version_check();		
+			$bws_plugin_info = array( 'id' => '115', 'version' => $gglshrtlnk_plugin_info["Version"] );		
 	}
 }
 
@@ -108,9 +114,13 @@ if ( ! function_exists ( 'gglshrtlnk_version_check' ) ) {
 		$require_wp		=	"3.1"; /* Wordpress at least requires version */
 		$plugin			=	plugin_basename( __FILE__ );
 	 	if ( version_compare( $wp_version, $require_wp, "<" ) ) {
+	 		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 			if ( is_plugin_active( $plugin ) ) {
 				deactivate_plugins( $plugin );
-				wp_die( "<strong>" . $gglshrtlnk_plugin_info['Name'] . " </strong> " . __( 'requires', 'google-shortlink' ) . " <strong>WordPress " . $require_wp . "</strong> " . __( 'or higher, that is why it has been deactivated! Please upgrade WordPress and try again.', 'google-shortlink') . "<br /><br />" . __( 'Back to the WordPress', 'google-shortlink') . " <a href='" . get_admin_url( null, 'plugins.php' ) . "'>" . __( 'Plugins page', 'google-shortlink') . "</a>." );
+				$admin_url = ( function_exists( 'get_admin_url' ) ) ? get_admin_url( null, 'plugins.php' ) : esc_url( '/wp-admin/plugins.php' );
+				if ( ! $gglshrtlnk_plugin_info )
+					$gglshrtlnk_plugin_info = get_plugin_data( __FILE__, false );
+				wp_die( "<strong>" . $gglshrtlnk_plugin_info['Name'] . " </strong> " . __( 'requires', 'google-shortlink' ) . " <strong>WordPress " . $require_wp . "</strong> " . __( 'or higher, that is why it has been deactivated! Please upgrade WordPress and try again.', 'google-shortlink') . "<br /><br />" . __( 'Back to the WordPress', 'google-shortlink') . " <a href='" . $admin_url . "'>" . __( 'Plugins page', 'google-shortlink') . "</a>." );
 			}
 		}
 	}
@@ -119,7 +129,7 @@ if ( ! function_exists ( 'gglshrtlnk_version_check' ) ) {
 /*function for register default settings*/
 if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 	function register_gglshrtlnk_options() {
-		global $gglshrtlnk_options, $wpmu, $gglshrtlnk_plugin_info, $wpdb, $gglshrtlnk_table_name;
+		global $gglshrtlnk_options, $gglshrtlnk_plugin_info, $wpdb, $gglshrtlnk_table_name;
 
 		$gglshrtlnk_table_name = $wpdb->prefix . 'google_shortlink';
 
@@ -138,15 +148,11 @@ if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 			'pagination' 				=> '10'
 		);
 		/* add options to database */
-		if ( 1 == $wpmu ) {
-			if ( ! get_site_option( 'gglshrtlnk_options' ) )
-				add_site_option( 'gglshrtlnk_options', $gglshrtlnk_default_options );
-		} else {
-			if ( ! get_option( 'gglshrtlnk_options' ) )
-				add_option( 'gglshrtlnk_options', $gglshrtlnk_default_options );
-		}
+		if ( ! get_option( 'gglshrtlnk_options' ) )
+			add_option( 'gglshrtlnk_options', $gglshrtlnk_default_options );
+
 		/* get options from database to operate with them */
-		$gglshrtlnk_options = ( 1 == $wpmu ) ? get_site_option( 'gglshrtlnk_options' ) : get_option( 'gglshrtlnk_options' );
+		$gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
 
 		/* Array merge incase this version has added new options */
 		if ( ! isset( $gglshrtlnk_options['plugin_option_version'] ) || $gglshrtlnk_options['plugin_option_version'] != $gglshrtlnk_plugin_info["Version"] ) {
@@ -656,7 +662,7 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 			<h2><?php _e( 'Google Shortlink Settings', 'google-shortlink' ) ?></h2>
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab nav-tab-active" href="admin.php?page=gglshrtlnk_options"><?php _e( 'Settings', 'google-shortlink' ); ?></a>
-				<a class="nav-tab" href="http://bestwebsoft.com/plugin/google-shortlink/#faq" target="_blank"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
+				<a class="nav-tab" href="http://bestwebsoft.com/products/google-shortlink/faq/" target="_blank"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
 			</h2>
 			<?php if ( isset( $_POST['gglshrtlnk_options-form-was-send'] ) ) :?>
 				<div class="<?php echo $gglshrtlnk_message_class; ?> fade below-h2" >
@@ -786,113 +792,115 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 }
 
 /* creating class for display table of links */
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-}
-class gglshrtlnk_list_table extends WP_List_Table {
-	/*conctructor */
-	function __construct() {
-		global $status, $page;
-	    parent::__construct( array(
-	        'singular'  => __( 'link', 'google-shortlink' ),     /*singular name of the listed records */
-	        'plural'    => __( 'links', 'google-shortlink' ),   /*plural name of the listed records */
-	        'ajax'      => true       /*does this table support ajax? */
-		) );
+if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
+	if ( ! class_exists( 'WP_List_Table' ) ) {
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 	}
-	function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'id':
-			case 'long_url':
-			case 'short_url':
-			case 'total_clicks':
-			case 'post_ids':
-				return $item[ $column_name ];
-			default:
-				return print_r( $item, true ) ; /*Show the whole array for troubleshooting purposes */
-		}
-	}
-	/*function for columns */
-	function get_columns(){
-		$columns = array(
-			'cb'			=> '<input type="checkbox" />',
-			'id' 			=> __( 'ID', 'google-shortlink' ),
-			'long_url'  	=> __( 'Long link', 'google-shortlink' ),
-			'short_url' 	=> __( 'Short link', 'google-shortlink' ),
-			'total_clicks'	=> __( 'Total clicks', 'google-shortlink' ),
-			'post_ids'		=> __( 'Articles that contain links', 'google-shortlink' )
-		);
-		return $columns;
-	}
-	/* function for column cb */
-	function column_cb( $item ) {
-		if ( $item['post_ids'] != 'None' ) {
-			return sprintf(
-				'<input type="checkbox" name="link[]" value="%s" />', $item['id']
-			);
-		} else {
-			return sprintf(
-				'<input type="checkbox"  name="link[]" value="%s" />', $item['id']
-			);
-		}
-	}
-	/* function for actions */
-	function column_long_url( $item ) {
-		global $wpdb, $gglshrtlnk_table_name;
-		$gglshrtlnk_id = $item['id'];
-		$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM $gglshrtlnk_table_name	 WHERE `id` = %s", $gglshrtlnk_id ) );
-		if ( $gglshrtlnk_is_added_by_direct != 'added_by_direct' ) {
-			$actions = array(
-				'replace' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'replace', $item['id'] ) , 'gglshrtlnk_tbl-noonce-replace' . $item['id'] ) . '">' .  __( 'Replace', 'google-shortlink' ) . '</a>',
-				'restore' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'restore', $item['id'] ) , 'gglshrtlnk_tbl-noonce-restore' . $item['id'] ) . '">' . __( 'Restore', 'google-shortlink' ) . '</a>',				
-				'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' ) . '</a>',
-			);
-		} else {
-			$actions = array(
-				'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' )  . '</a>',
-			);
-		}
-		return sprintf( '%1$s %2$s', $item['long_url'], $this->row_actions( $actions ) );
-	}
-	/* function for bulk actions */
-	function get_bulk_actions() {
-		$actions = array(
-			'replace'	=> __( 'Replace', 'google-shortlink' ),
-			'restore'	=> __( 'Restore', 'google-shortlink' ),
-			'delete'	=> __( 'Delete from db', 'google-shortlink' )
-		);
-		return $actions;
-	}
-	/* function for prepairing items */
-	function prepare_items() {
-		global $wpdb, $gglshrtlnk_options, $gglshrtlnk_table_name;
-		/*if no pagination */
-		if ( $gglshrtlnk_options['pagination'] == 'all' ){
-			$columns  = $this->get_columns();
-			$hidden   = array();
-			$sortable = array();
-			$this->_column_headers = array( $columns, $hidden, $sortable );
-			$this->items = gglshrtlnk_table_data();
-			$action = $this->current_action();
-			$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
-		/*if pagination turn on */
-		} else {
-			$per_page = $gglshrtlnk_options['pagination'];
-  			$current_page = $this->get_pagenum();
-			$columns  = $this->get_columns();
-			$hidden   = array();
-			$sortable = array();
-			$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
-			$this->found_data = gglshrtlnk_table_data();
-			$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page
+	class gglshrtlnk_list_table extends WP_List_Table {
+		/*conctructor */
+		function __construct() {
+			global $status, $page;
+		    parent::__construct( array(
+		        'singular'  => __( 'link', 'google-shortlink' ),     /*singular name of the listed records */
+		        'plural'    => __( 'links', 'google-shortlink' ),   /*plural name of the listed records */
+		        'ajax'      => true       /*does this table support ajax? */
 			) );
-			$this->_column_headers = array( $columns, $hidden, $sortable );
-			$this->items = $this->found_data;
-			$action = $this->current_action();
 		}
-	}
-} /*class end */
+		function column_default( $item, $column_name ) {
+			switch ( $column_name ) {
+				case 'id':
+				case 'long_url':
+				case 'short_url':
+				case 'total_clicks':
+				case 'post_ids':
+					return $item[ $column_name ];
+				default:
+					return print_r( $item, true ) ; /*Show the whole array for troubleshooting purposes */
+			}
+		}
+		/*function for columns */
+		function get_columns(){
+			$columns = array(
+				'cb'			=> '<input type="checkbox" />',
+				'id' 			=> __( 'ID', 'google-shortlink' ),
+				'long_url'  	=> __( 'Long link', 'google-shortlink' ),
+				'short_url' 	=> __( 'Short link', 'google-shortlink' ),
+				'total_clicks'	=> __( 'Total clicks', 'google-shortlink' ),
+				'post_ids'		=> __( 'Articles that contain links', 'google-shortlink' )
+			);
+			return $columns;
+		}
+		/* function for column cb */
+		function column_cb( $item ) {
+			if ( $item['post_ids'] != 'None' ) {
+				return sprintf(
+					'<input type="checkbox" name="link[]" value="%s" />', $item['id']
+				);
+			} else {
+				return sprintf(
+					'<input type="checkbox"  name="link[]" value="%s" />', $item['id']
+				);
+			}
+		}
+		/* function for actions */
+		function column_long_url( $item ) {
+			global $wpdb, $gglshrtlnk_table_name;
+			$gglshrtlnk_id = $item['id'];
+			$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM $gglshrtlnk_table_name	 WHERE `id` = %s", $gglshrtlnk_id ) );
+			if ( $gglshrtlnk_is_added_by_direct != 'added_by_direct' ) {
+				$actions = array(
+					'replace' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'replace', $item['id'] ) , 'gglshrtlnk_tbl-noonce-replace' . $item['id'] ) . '">' .  __( 'Replace', 'google-shortlink' ) . '</a>',
+					'restore' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'restore', $item['id'] ) , 'gglshrtlnk_tbl-noonce-restore' . $item['id'] ) . '">' . __( 'Restore', 'google-shortlink' ) . '</a>',				
+					'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' ) . '</a>',
+				);
+			} else {
+				$actions = array(
+					'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' )  . '</a>',
+				);
+			}
+			return sprintf( '%1$s %2$s', $item['long_url'], $this->row_actions( $actions ) );
+		}
+		/* function for bulk actions */
+		function get_bulk_actions() {
+			$actions = array(
+				'replace'	=> __( 'Replace', 'google-shortlink' ),
+				'restore'	=> __( 'Restore', 'google-shortlink' ),
+				'delete'	=> __( 'Delete from db', 'google-shortlink' )
+			);
+			return $actions;
+		}
+		/* function for prepairing items */
+		function prepare_items() {
+			global $wpdb, $gglshrtlnk_options, $gglshrtlnk_table_name;
+			/*if no pagination */
+			if ( $gglshrtlnk_options['pagination'] == 'all' ){
+				$columns  = $this->get_columns();
+				$hidden   = array();
+				$sortable = array();
+				$this->_column_headers = array( $columns, $hidden, $sortable );
+				$this->items = gglshrtlnk_table_data();
+				$action = $this->current_action();
+				$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
+			/*if pagination turn on */
+			} else {
+				$per_page = $gglshrtlnk_options['pagination'];
+	  			$current_page = $this->get_pagenum();
+				$columns  = $this->get_columns();
+				$hidden   = array();
+				$sortable = array();
+				$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
+				$this->found_data = gglshrtlnk_table_data();
+				$this->set_pagination_args( array(
+					'total_items' => $total_items,
+					'per_page'    => $per_page
+				) );
+				$this->_column_headers = array( $columns, $hidden, $sortable );
+				$this->items = $this->found_data;
+				$action = $this->current_action();
+			}
+		}
+	} /*class end */
+}
 
 /*function to display table of links */
 if ( ! function_exists( 'gglshrtlnk_table' ) ) {
