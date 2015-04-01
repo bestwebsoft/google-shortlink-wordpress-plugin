@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=1&product_id=94
 Tags: change link, display links, display multiple links, get short links, get short links automatically, get short links by direct input, get short links without leaving site, goo.gl, googel, googgle, gogle, gogole, google, google shortlink plugin, external links, link statisctics,  links, redirect, replace external links, replace url, short, short url, shortener, shortlink, shorturl, swap links, tinyurl, url
 Requires at least: 3.1
-Tested up to: 4.1
-Stable tag: 1.4.4
+Tested up to: 4.1.1
+Stable tag: 1.4.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,6 +58,8 @@ We can fix some things for free for the users who provide translation of our plu
 4. Plugin page is located in main menu.
 4. Enter your API key for goo.gl account on plugin options page.
 
+<a href="https://docs.google.com/document/d/1DAvJCKv4sj2wxBQmWVKtABYk3kwkTS_cKhJIiPGlG3o/edit" target="_blank">View a Step-by-step Instruction on Google Shortlink Installation</a>.
+
 == Frequently Asked Questions ==
 
 = Where can I get api key for this plugin? =
@@ -96,6 +98,10 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.4.5 - 01.04.2015 =
+* Bugfix : Plugin optimization is done.
+* Update : We updated all functionality for wordpress 4.1.1.
 
 = V1.4.4 - 30.12.2014 =
 * Update : BWS plugins section is updated.
@@ -138,6 +144,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4.5 =
+Plugin optimization is done. We updated all functionality for wordpress 4.1.1.
 
 = V1.4.4 =
 BWS plugins section is updated. We updated all functionality for wordpress 4.1.
