@@ -1,10 +1,10 @@
 === Google Shortlink by BestWebSoft ===
 Contributors: bestwebsoft
-Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=1&product_id=94
+Donate link: http://bestwebsoft.com/donate/
 Tags: change link, display links, display multiple links, get short links, get short links automatically, get short links by direct input, get short links without leaving site, goo.gl, googel, googgle, gogle, gogole, google, google shortlink plugin, external links, link statisctics,  links, redirect, replace external links, replace url, short, short url, shortener, shortlink, shorturl, swap links, tinyurl, url
 Requires at least: 3.1
-Tested up to: 4.1.1
-Stable tag: 1.4.5
+Tested up to: 4.2.2
+Stable tag: 1.4.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -84,6 +84,7 @@ Yes, just paste it to one of the fields below "Type long links here:" title on '
 = I have some problems with the plugin's work. What Information should I provide to receive proper support? =
 
 Please make sure that the problem hasn't been discussed yet on our forum (<a href="http://support.bestwebsoft.com" target="_blank">http://support.bestwebsoft.com</a>). If no, please provide the following data along with your problem's description:
+
 1. the link to the page where the problem occurs
 2. the name of the plugin and its version. If you are using a pro version - your order number.
 3. the version of your WordPress installation
@@ -98,6 +99,10 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.4.6 - 20.05.2015 =
+* Bugfix : We fixed bug with displaying the list of links.
+* Update : We updated all functionality for wordpress 4.2.2.
 
 = V1.4.5 - 01.04.2015 =
 * Bugfix : Plugin optimization is done.
@@ -144,6 +149,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4.6 =
+We fixed bug with displaying the list of links. We updated all functionality for wordpress 4.2.2.
 
 = V1.4.5 =
 Plugin optimization is done. We updated all functionality for wordpress 4.1.1.

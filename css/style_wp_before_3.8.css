@@ -51,8 +51,7 @@
 #gglshrtlnk_api-key {
     width: 325px;
 }
-.gglshrtlnk_hide,
-.column-id {
+.gglshrtlnk_hide {
     display: none !important;
 }
 /*table of links*/

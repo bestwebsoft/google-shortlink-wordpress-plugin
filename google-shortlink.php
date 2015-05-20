@@ -3,7 +3,7 @@
 Plugin Name: Google Shortlink by BestWebSoft
 Plugin URI: http://bestwebsoft.com/products/
 Description: This plugin allows you to shorten links of you site with Google Shortlink
-Version: 1.4.5
+Version: 1.4.6
 Author: BestWebSoft
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
@@ -29,8 +29,8 @@ License: GPLv2 or later
 if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 	function gglshrtlnk_menu() {
 		bws_add_general_menu( plugin_basename( __FILE__ ) );
-		add_submenu_page( 'bws_plugins', 'Google Shortlink ' . __( 'Settings', 'google-shortlink' ), 'Google Shortlink', 'manage_options', "gglshrtlnk_options", 'gglshrtlnk_options_page');
-		add_menu_page( 'Google Shortlink', 'Google Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', plugins_url( "images/px.png", __FILE__ ),'31');
+		add_submenu_page( 'bws_plugins', __( 'Google Shortlink Settings', 'google-shortlink' ), 'Google Shortlink', 'manage_options', 'gglshrtlnk_options', 'gglshrtlnk_options_page' );
+		add_menu_page( 'Google Shortlink', 'Google Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', plugins_url( 'bws_menu/images/px.png', __FILE__ ), '55.1' );
 	}
 }
 
@@ -346,7 +346,7 @@ if ( ! function_exists( 'gglshrtlnk_ajax_additional_opt_callback' ) ) {
 												$( '#gglshrtlnk_ajax-status' ).addClass( 'error' ).removeClass( 'updated' );
 											});
 										</script>
-										<?php echo '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( "Invalid API key. Go to plugin's", 'google-shortlink') . ' <a href="' . admin_url('admin.php?page=gglshrtlnk_options','') . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __('and enter correct key.', 'google-shortlink' );
+										<?php echo '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url('admin.php?page=gglshrtlnk_options','') . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __('and enter correct key.', 'google-shortlink' );
 										/*stop script */
 										die();
 									break;
@@ -813,31 +813,21 @@ if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
 		/* function for prepairing items */
 		function prepare_items() {
 			global $wpdb, $gglshrtlnk_options, $gglshrtlnk_table_name;
-			/*if no pagination */
-			if ( $gglshrtlnk_options['pagination'] == 'all' ){
-				$columns  = $this->get_columns();
-				$hidden   = array();
-				$sortable = array();
-				$this->_column_headers = array( $columns, $hidden, $sortable );
-				$this->items = gglshrtlnk_table_data();
-				$action = $this->current_action();
-				$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
+			$columns	= $this->get_columns();
+			$hidden		= array( 'id' );
+			$sortable	= array();
+			$this->_column_headers = array( $columns, $hidden, $sortable );
+			$this->items = gglshrtlnk_table_data();
+			$action = $this->current_action();
+			$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
 			/*if pagination turn on */
-			} else {
+			if ( 'all' != $gglshrtlnk_options['pagination'] ) {			
 				$per_page = $gglshrtlnk_options['pagination'];
-	  			$current_page = $this->get_pagenum();
-				$columns  = $this->get_columns();
-				$hidden   = array();
-				$sortable = array();
-				$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
-				$this->found_data = gglshrtlnk_table_data();
+	  			$current_page = $this->get_pagenum();				
 				$this->set_pagination_args( array(
 					'total_items' => $total_items,
 					'per_page'    => $per_page
 				) );
-				$this->_column_headers = array( $columns, $hidden, $sortable );
-				$this->items = $this->found_data;
-				$action = $this->current_action();
 			}
 		}
 	} /*class end */
@@ -907,7 +897,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 						</p>
 					</div>
 				<?php }
-				if ( $gglshrtlnk_options['api_key'] == '' ) {?>
+				if ( $gglshrtlnk_options['api_key'] == '' ) { ?>
 					<div class="error below-h2">
 						<p>
 							<?php echo "<b/>" . __( 'Warning:', 'google-shortlink' ) ."</b> ". __( "You don't enter api key yet. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __( 'and enter your key.', 'google-shortlink' ); ?>
@@ -1050,10 +1040,10 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 					<div class="wrap">
 						<div class="icon32 icon32-bws" id="icon-options-general"></div>
 						<h2>Google Shortlink</h2>
-						<?php if ( isset( $gglshrtlnk_key_invalid ) ) {?>
+						<?php if ( isset( $gglshrtlnk_key_invalid ) ) { ?>
 							<div class="below-h2 error">
 								<p>
-									<?php echo __( "Invalid API key. Go to plugin's", 'google-shortlink') . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options','' ) . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __( 'and enter correct key.', 'google-shortlink' ); ?>
+									<?php echo __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options','' ) . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __( 'and enter correct key.', 'google-shortlink' ); ?>
 								</p>
 							</div>
 						<?php } ?>
@@ -1122,7 +1112,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 						<div class="icon32 icon32-bws" id="icon-options-general"></div>
 						<h2>Google Shortlink</h2>
 						<div class="results below-h2 gglshrtlnk_hide updated" id="gglshrtlnk_ajax-status"></div>
-						<?php if ( isset( $_POST[ 'gglshrtlnk_actions-with-links-was-send' ] ) && check_admin_referer( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ) ) {?>
+						<?php if ( isset( $_POST[ 'gglshrtlnk_actions-with-links-was-send' ] ) && check_admin_referer( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ) ) { ?>
 							<div class="updated fade below-h2" >
 								<p>
 									<?php if ( isset( $_POST['gglshrtlnk_actions_with_links_radio'] ) && $_POST['gglshrtlnk_actions_with_links_radio'] != 'none' ) {
@@ -1425,4 +1415,3 @@ add_filter( 'plugin_action_links', 'gglshrtlnk_action_links', 10, 2 );
 add_filter( 'plugin_row_meta', 'gglshrtlnk_links', 10, 2 );
 /*hook for uninstalling plugin */
 register_uninstall_hook( __FILE__, 'gglshrtlnk_delete_options' );
-?>
