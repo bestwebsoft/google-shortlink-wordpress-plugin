@@ -3,7 +3,7 @@
 Plugin Name: Google Shortlink by BestWebSoft
 Plugin URI: http://bestwebsoft.com/products/
 Description: This plugin allows you to shorten links of you site with Google Shortlink
-Version: 1.4.6
+Version: 1.4.7
 Author: BestWebSoft
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
@@ -47,7 +47,7 @@ if ( ! function_exists( 'gglshrtlnk_init' ) ) {
 		}
 
 		/* Function check if plugin is compatible with current WP version  */
-		bws_wp_version_check( plugin_basename( __FILE__ ), $gglshrtlnk_plugin_info, "3.1" );
+		bws_wp_version_check( plugin_basename( __FILE__ ), $gglshrtlnk_plugin_info, '3.1' );
 
 		if ( ! is_admin() || ( isset( $_REQUEST['page'] ) && ( $_REQUEST['page'] == 'google-shortlink' || $_REQUEST['page'] == 'gglshrtlnk_options' ) ) )
 			register_gglshrtlnk_options();
@@ -622,7 +622,7 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 					<tr valign="top">
 						<th scope="row"><?php _e( 'API key for your goo.gl account', 'google-shortlink' ); ?></th>
 						<td>
-							<input name="gglshrtlnk_api-key" id="gglshrtlnk_api-key" type="text" value="<?php echo $gglshrtlnk_options[ 'api_key' ]; ?>" />
+							<input name="gglshrtlnk_api-key" id="gglshrtlnk_api-key" type="text" maxlength="250" value="<?php echo $gglshrtlnk_options[ 'api_key' ]; ?>" />
 						</td>
 					</tr>
 					<tr valign="top">
