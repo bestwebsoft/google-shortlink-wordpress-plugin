@@ -3,8 +3,10 @@
 Plugin Name: Google Shortlink by BestWebSoft
 Plugin URI: http://bestwebsoft.com/products/
 Description: This plugin allows you to shorten links of you site with Google Shortlink
-Version: 1.4.7
 Author: BestWebSoft
+Text Domain: google-shortlink
+Domain Path: /languages
+Version: 1.4.8
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
 */
@@ -29,8 +31,20 @@ License: GPLv2 or later
 if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 	function gglshrtlnk_menu() {
 		bws_add_general_menu( plugin_basename( __FILE__ ) );
-		add_submenu_page( 'bws_plugins', __( 'Google Shortlink Settings', 'google-shortlink' ), 'Google Shortlink', 'manage_options', 'gglshrtlnk_options', 'gglshrtlnk_options_page' );
-		add_menu_page( 'Google Shortlink', 'Google Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', plugins_url( 'bws_menu/images/px.png', __FILE__ ), '55.1' );
+		$settings = add_submenu_page( 'bws_plugins', __( 'Google Shortlink Settings', 'google-shortlink' ), 'Google Shortlink', 'manage_options', 'gglshrtlnk_options', 'gglshrtlnk_options_page' );
+		$hook = add_menu_page( 'Google Shortlink', 'Google Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', plugins_url( 'bws_menu/images/px.png', __FILE__ ), '55.1' );
+		
+		add_action( 'load-' . $settings, 'gglshrtlnk_add_tabs' );
+		add_action( 'load-' . $hook, 'gglshrtlnk_add_tabs' );
+	}
+}
+
+/**
+ * Internationalization
+ */
+if ( ! function_exists( 'gglshrtlnk_plugins_loaded' ) ) {
+	function gglshrtlnk_plugins_loaded() {
+		load_plugin_textdomain( 'google-shortlink', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 }
 
@@ -38,7 +52,8 @@ if ( ! function_exists( 'gglshrtlnk_init' ) ) {
 	function gglshrtlnk_init() {
 		global $gglshrtlnk_plugin_info;
 		
-		require_once( dirname( __FILE__ ) . '/bws_menu/bws_functions.php' );
+		require_once( dirname( __FILE__ ) . '/bws_menu/bws_include.php' );
+		bws_include_init( plugin_basename( __FILE__ ) );
 		
 		if ( empty( $gglshrtlnk_plugin_info ) ) {
 			if ( ! function_exists( 'get_plugin_data' ) )
@@ -47,7 +62,7 @@ if ( ! function_exists( 'gglshrtlnk_init' ) ) {
 		}
 
 		/* Function check if plugin is compatible with current WP version  */
-		bws_wp_version_check( plugin_basename( __FILE__ ), $gglshrtlnk_plugin_info, '3.1' );
+		bws_wp_min_version_check( plugin_basename( __FILE__ ), $gglshrtlnk_plugin_info, '3.8', '3.1' );
 
 		if ( ! is_admin() || ( isset( $_REQUEST['page'] ) && ( $_REQUEST['page'] == 'google-shortlink' || $_REQUEST['page'] == 'gglshrtlnk_options' ) ) )
 			register_gglshrtlnk_options();
@@ -56,9 +71,7 @@ if ( ! function_exists( 'gglshrtlnk_init' ) ) {
 
 if ( ! function_exists( 'gglshrtlnk_admin_init' ) ) {
 	function gglshrtlnk_admin_init() {
-		global $bws_plugin_info, $gglshrtlnk_plugin_info;
-
-		load_plugin_textdomain( 'google-shortlink', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		global $bws_plugin_info, $gglshrtlnk_plugin_info;		
 
 		/* Add variable for bws_menu */
 		if ( ! isset( $bws_plugin_info ) || empty( $bws_plugin_info ) )
@@ -69,9 +82,7 @@ if ( ! function_exists( 'gglshrtlnk_admin_init' ) ) {
 /*function for register default settings*/
 if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 	function register_gglshrtlnk_options() {
-		global $gglshrtlnk_options, $gglshrtlnk_plugin_info, $wpdb, $gglshrtlnk_table_name;
-
-		$gglshrtlnk_table_name = $wpdb->prefix . 'google_shortlink';
+		global $gglshrtlnk_options, $gglshrtlnk_plugin_info, $wpdb;
 
 		if ( ! $gglshrtlnk_plugin_info ) {
 			if ( ! function_exists( 'get_plugin_data' ) )
@@ -85,7 +96,8 @@ if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 			'plugin_option_version' 	=> $gglshrtlnk_plugin_info["Version"],
 			'plugin_db_version' 		=> '',
 			'api_key' 					=> '',
-			'pagination' 				=> '10'
+			'pagination' 				=> '10',
+			'display_settings_notice'	=>	1
 		);
 		/* add options to database */
 		if ( ! get_option( 'gglshrtlnk_options' ) )
@@ -96,31 +108,31 @@ if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 
 		/* Array merge incase this version has added new options */
 		if ( ! isset( $gglshrtlnk_options['plugin_option_version'] ) || $gglshrtlnk_options['plugin_option_version'] != $gglshrtlnk_plugin_info["Version"] ) {
+			$gglshrtlnk_default_options['display_settings_notice'] = 0;
 			$gglshrtlnk_options = array_merge( $gglshrtlnk_default_options, $gglshrtlnk_options );
 			$gglshrtlnk_options['plugin_option_version'] = $gglshrtlnk_plugin_info["Version"];
-			update_option( 'gglshrtlnk_options', $gglshrtlnk_options );
+			$update_option = true;
 		}
 
 		/* create or update db table */
 		if ( ! isset( $gglshrtlnk_options['plugin_db_version'] ) || $gglshrtlnk_options['plugin_db_version'] != $gglshrtlnk_db_version ) {
 			gglshrtlnk_create_table();
 			$gglshrtlnk_options['plugin_db_version'] = $gglshrtlnk_db_version;
-			update_option( 'gglshrtlnk_options', $gglshrtlnk_options );
+			$update_option = true;
 		}
+		if ( isset( $update_option ) )
+			update_option( 'gglshrtlnk_options', $gglshrtlnk_options );
 	}
 }
 
 /*function for create a new table in db*/
 if ( ! function_exists( 'gglshrtlnk_create_table' ) ) {
 	function gglshrtlnk_create_table() {
-		global $wpdb, $gglshrtlnk_table_name;
-
-		if ( ! $gglshrtlnk_table_name )
-			$gglshrtlnk_table_name = $wpdb->prefix . 'google_shortlink';
+		global $wpdb;
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-		$gglshrtlnk_sql = "CREATE TABLE IF NOT EXISTS `" . $gglshrtlnk_table_name . "` (
+		$gglshrtlnk_sql = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "google_shortlink` (
 			`id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
 			`long_url` VARCHAR(255) NOT NULL,
 			`short_url` VARCHAR(50) NOT NULL,
@@ -134,40 +146,20 @@ if ( ! function_exists( 'gglshrtlnk_create_table' ) ) {
 /*function for adding styles and scripts*/
 if( ! function_exists( 'gglshrtlnk_script_style' ) ) {
 	function gglshrtlnk_script_style() {
-		global $wp_version;
-		if ( 3.8 > $wp_version ) {
-			wp_enqueue_style( 'gglshrtlnk_styles', plugins_url( 'css/style_wp_before_3.8.css', __FILE__ ) );
-		} else {
-			wp_enqueue_style( 'gglshrtlnk_styles', plugins_url( 'css/style.css', __FILE__ ) );
-		}
+		wp_enqueue_style( 'gglshrtlnk_styles', plugins_url( 'css/style.css', __FILE__ ) );
+
 		if ( isset( $_REQUEST['page'] ) && ( $_REQUEST['page'] == 'google-shortlink' || $_REQUEST['page'] == 'gglshrtlnk_options' ) ) {
 			wp_enqueue_script( 'gglshrtlnk_script', plugins_url( 'js/script.js', __FILE__ ), array( 'jquery' ) );
 			wp_localize_script( 'gglshrtlnk_script', 'gglshrtlnk_vars', array(
-				'gglshrtlnk_delete_fromdb_message' => __( "Do you really want to delete all links in database?", "google-shortlink" )
+				'gglshrtlnk_delete_fromdb_message' 	=> __( "Do you really want to delete all links in database?", 'google-shortlink' ),
+				'gglshrtlnk_ajax_nonce' 			=> wp_create_nonce( 'gglshrtlnk_ajax_nonce_value' ),
+				'gglshrtlnk_replace_all' 			=> __( "Replacing long links with short...", 'google-shortlink' ),
+				'gglshrtlnk_restore_all' 			=> __( "Restoring short links to long...", 'google-shortlink' ),
+				'gglshrtlnk_delete_all_radio' 		=> __( "Restoring all links and deleting them from db...", 'google-shortlink' ),
+				'gglshrtlnk_scan' 					=> __( "Scanning web-site....", 'google-shortlink' ),
 			) );
 		}
 	}
-}
-
-/* ajax function for total clicks*/
-if ( ! function_exists( 'gglshrtlnk_total_clicks_javascript' ) ) {
-	function gglshrtlnk_total_clicks_javascript() { ?>
-		<script type="text/javascript" >
-			jQuery(document).ready(function($) {
-				$( '.total_clicks' ).each( function( current_item ) {
-					var gglshrtlnk_data = {
-						action: 'total_clicks',
-						gglshrtlnk_is_javascript_on: 1,
-						gglshrtlnk_short_to_count: $( this ).prev().text(),
-						'gglshrtlnk_nonce' : '<?php echo wp_create_nonce( 'gglshrtlnk_ajax_nonce_value' ); ?>'
-					};
-					$.post( ajaxurl, gglshrtlnk_data, function( gglshrtlnk_response ) {
-						$('.total_clicks').eq( current_item ).html( gglshrtlnk_response );
-					});
-				});
-			});
-		</script>
-	<?php }
 }
 
 /*callback for ajax function for total clicks*/
@@ -179,27 +171,31 @@ if ( ! function_exists( 'gglshrtlnk_ajax_total_clicks_callback' ) ) {
 		$gglshrtlnk_count_var = gglshrtlnk_count( $_POST['gglshrtlnk_short_to_count'] );
 		switch ( $gglshrtlnk_count_var ) {
 			case 'unknown_error':
-				echo __( 'An unknown error occurred.', 'google-shortlink' );
+				_e( 'An unknown error occurred.', 'google-shortlink' );
 				die();
 			break;
 			case 'invalid':
-				echo __( 'Bad request error.', 'google-shortlink' );
+				_e( 'Bad request error.', 'google-shortlink' );
 				die();
 			break;
 			case 'keyInvalid':
-				echo __( 'Invalid API key error.', 'google-shortlink' );
+				_e( 'Invalid API key error.', 'google-shortlink' );
 				die();
 			break;
 			case 'accessNotConfigured':
-				echo __( 'Access not configured error.', 'google-shortlink' );
+				_e( 'Access not configured error.', 'google-shortlink' );
 				die();
 			break;
 			case 'keyExpired':
-				echo __( 'Expired API key error.', 'google-shortlink' );
+				_e( 'Expired API key error.', 'google-shortlink' );
 				die();
 			break;
 			case 'curl_error':
-				echo __( 'Curl error. Please try again.', 'google-shortlink' );
+				_e( 'Curl error. Please try again.', 'google-shortlink' );
+				die();
+			break;
+			case 'not_support_curl':
+				_e( 'This hosting does not support СURL.', 'google-shortlink' );
 				die();
 			break;
 			default:
@@ -210,65 +206,20 @@ if ( ! function_exists( 'gglshrtlnk_ajax_total_clicks_callback' ) ) {
 	}
 }
 
-/* ajax function for additional options*/
-if ( ! function_exists( 'gglshrtlnk_additional_opt_javascript' ) ) {
-	function gglshrtlnk_additional_opt_javascript() { ?>
-		<script type="text/javascript" >
-			jQuery(document).ready(function($) {
-				$( '#gglshrtlnk_actions-with-links' ).submit( function() {
-					return false;
-				});
-				$( '#gglshrtlnk_apply_button3' ).click( function() {
-					var gglshrtlnk_radio_state = $( 'input[name=gglshrtlnk_actions_with_links_radio]:checked' ).val();
-					var gglshrtlnk_data = {
-						action: 'additional_opt',
-						gglshrtlnk_is_javascript_on: 1,
-						gglshrtlnk_actions_with_links_radio: gglshrtlnk_radio_state,
-						gglshrtlnk_bulk_select1: $( '#gglshrtlnk_bulk_select1' ).val(),
-						gglshrtlnk_bulk_select2: $( '#gglshrtlnk_bulk_select2' ).val(),
-						'gglshrtlnk_nonce' : '<?php echo wp_create_nonce( 'gglshrtlnk_ajax_nonce_value' ); ?>'
-					};
-					$( '#gglshrtlnk_ajax-status' ).removeClass( 'gglshrtlnk_hide' ).removeClass( 'error' ).addClass( 'updated' );
-					switch ( gglshrtlnk_radio_state ) {
-						case 'replace-all':
-							$( '#gglshrtlnk_ajax-status' ).html('<p><?php _e( "Replacing long links with short...","google-shortlink");?></p>');
-						break
-						case 'restore-all':
-							$( '#gglshrtlnk_ajax-status' ).html('<p><?php _e( "Restoring short links to long...","google-shortlink");?></p>');
-						break
-						case 'delete-all-radio':
-							$( '#gglshrtlnk_ajax-status' ).html('<p><?php _e( "Restoring all links and deleting them from db...","google-shortlink");?></p>');
-						break
-						case 'scan':
-							$( '#gglshrtlnk_ajax-status' ).html('<p><?php _e( "Scanning web-site....","google-shortlink");?></p>');
-						break
-					}
-					$.post( ajaxurl, gglshrtlnk_data, function( gglshrtlnk_response ) {
-						$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_response + '</p>' );
-					});
-				});
-			});
-		</script>
-	<?php }
-}
-
 /* callback for ajax function for additional options */
 if ( ! function_exists( 'gglshrtlnk_ajax_additional_opt_callback' ) ) {
-	function gglshrtlnk_ajax_additional_opt_callback() {
-		global $wpdb, $gglshrtlnk_table_name, $gglshrtlnk_links_number, $gglshrtlnk_options, $gglshrtlnk_curl_errors_count;
-		check_ajax_referer( 'gglshrtlnk_ajax_nonce_value', 'gglshrtlnk_nonce' );
+	function gglshrtlnk_ajax_additional_opt_callback( $no_js = false ) {
+		global $wpdb, $gglshrtlnk_links_number, $gglshrtlnk_options, $gglshrtlnk_curl_errors_count;
+		
+		if ( ! $no_js )
+			check_ajax_referer( 'gglshrtlnk_ajax_nonce_value', 'gglshrtlnk_nonce' );
+
+		$result = array( 'message' => '', 'error' => '' );
 
 		$gglshrtlnk_links_number = $gglshrtlnk_curl_errors_count = 0;
-		if ( ! $gglshrtlnk_table_name )
-			$gglshrtlnk_table_name = $wpdb->prefix . 'google_shortlink';
-		/*
-		* actions with all links part
-		*/
-		$gglshrtlnk_rows_to_restore = $wpdb->get_results(
-			"SELECT *
-			FROM `$gglshrtlnk_table_name`
-			", "ARRAY_A"
-		);
+		/* actions with all links part */
+		$gglshrtlnk_rows_to_restore = $wpdb->get_results( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink` ", ARRAY_A );
+		
 		switch ( $_POST['gglshrtlnk_actions_with_links_radio']  ) {
 			/*if need to restore all links and clear links table*/
 			case 'delete-all-radio' :
@@ -279,17 +230,10 @@ if ( ! function_exists( 'gglshrtlnk_ajax_additional_opt_callback' ) ) {
 					}
 				}
 				/*clear db*/
-				$wpdb->query( "TRUNCATE TABLE `$gglshrtlnk_table_name`" ); ?>
-				<!-- disabling radibuttons afted deleting -->
-				<script type="text/javascript">
-					jQuery( document ).ready( function( $ ) {
-						$( '#gglshrtlnk_replace-all' ).attr( 'disabled', 'disabled' );
-						$( '#gglshrtlnk_restore-all' ).attr( 'disabled', 'disabled' );
-						$( '#gglshrtlnk_delete-all-radio' ).removeAttr( 'checked' ).attr( 'disabled', 'disabled' );
-						$( '#gglshrtlnk_scan' ).attr( 'checked', 'checked' );
-					});
-				</script>
-			<?php break;
+				$wpdb->query( "TRUNCATE TABLE `" . $wpdb->prefix . "google_shortlink`" );
+
+				$result['message'] = __( 'All links from database have been restored to long links and the database has been cleared.', 'google-shortlink' );
+			break;
 			/*if need only to restore all links	*/
 			case 'restore-all':
 				foreach ( $gglshrtlnk_rows_to_restore as $gglshrtlnk_row_to_action ) {
@@ -297,6 +241,8 @@ if ( ! function_exists( 'gglshrtlnk_ajax_additional_opt_callback' ) ) {
 						gglshrtlnk_restore_one( $gglshrtlnk_row_to_action );
 					}
 				}
+				$result['message'] = __( 'All links from database have been restored to long links.', 'google-shortlink' ) . '<br />' . 
+					__( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
 			break;
 			/*if need only to replace all links	*/
 			case 'replace-all':
@@ -305,188 +251,140 @@ if ( ! function_exists( 'gglshrtlnk_ajax_additional_opt_callback' ) ) {
 						gglshrtlnk_replace_one( $gglshrtlnk_row_to_action );
 					}
 				}
+				$result['message'] = __( 'All links from database have been replaced with short links.', 'google-shortlink' ) . '<br />' . 
+					__( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
 			break;
 			/*if need to scan the site for new links*/
 			case 'scan':
-				$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
-				unset( $gglshrtlnk_get_all_posts['revision'] );
-				unset( $gglshrtlnk_get_all_posts['attachment'] );
-				unset( $gglshrtlnk_get_all_posts['nav_menu_item'] );
-				$gglshrtlnk_get_posts = "'" . implode( "', '", array_keys( $gglshrtlnk_get_all_posts ) ) . "'";
+				if ( ! function_exists( 'curl_init' ) ) {
+					$result['error'] = '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( 'This hosting does not support СURL.', 'google-shortlink' );
+				} else {
+					$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
+					unset( $gglshrtlnk_get_all_posts['revision'] );
+					unset( $gglshrtlnk_get_all_posts['attachment'] );
+					unset( $gglshrtlnk_get_all_posts['nav_menu_item'] );
+					
+					/* get post contents from db*/
+					$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts` WHERE `post_type` IN ('" . implode( "', '", array_keys( $gglshrtlnk_get_all_posts ) ) . "') ORDER BY `ID`", ARRAY_A );
 
-				/* get post contents from db*/
-				$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts` WHERE `post_type` IN (" . $gglshrtlnk_get_posts . ") ORDER BY `ID`", ARRAY_A );
+					foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_currentpost ) {
+						/* find all links in posts and pages */
+						preg_match_all( '#(http://|https://|ftp://)[0-9a-zA-Z./?\-_=%\#a-z&\#38;]+#m', $gglshrtlnk_currentpost['post_content'], $gglshrtlnk_out );
+						/*filter links from goo.gl and home_url */
+						foreach ( $gglshrtlnk_out[0] as $gglshrtlnk_link ) {
+							if ( strpos( $gglshrtlnk_link, 'http://goo.gl' ) === false 
+								&& strpos( $gglshrtlnk_link, home_url() ) === false ) {
+								/*check is link already in db */
+								$gglshrtlnk_link_from_db = $wpdb->get_results( $wpdb->prepare(
+									"SELECT `long_url`
+									FROM `" . $wpdb->prefix . "google_shortlink`
+									WHERE `long_url` = %s;
+									", $gglshrtlnk_link
+								) );
+								/* add new link to db if it not exist */
+								if ( ! $gglshrtlnk_link_from_db ) {
+									$gglshrtlnk_short_url = gglshrtlnk_get( $gglshrtlnk_link );
+									switch ( $gglshrtlnk_short_url ) {
+										case 'curl_error':
+											$gglshrtlnk_curl_errors_count++;
+										break;
+										/* if entered invalid api-key */
+										case 'keyInvalid':
+											$result['error'] = '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __('and enter correct key.', 'google-shortlink' );
+										break;
+										case 'keyExpired':
+											$result['error'] = '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( 'Expired API key. Your key has either expired or has newly been created.', 'google-shortlink' ) . "<br/>" . 
+											__( 'Create a new key in the first case or just wait for a few minutes in the second case.', 'google-shortlink' );
+										break;
+										/*skip bad request link */
+										case 'invalid':
+										break;
+										/*skip unknown error */
+										case 'unknown_error':
+										break;
+										/* correct short link */
+										default:
+											/*find post ids for new link */
+											$gglshrtlnk_post_ids = array();
+											foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
+												if ( strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link ) ) {
+													$gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+												}
+											}
+											/* add to database is url is not embedd object */
+											if ( ! empty( $gglshrtlnk_post_ids ) ) {
+											/*convert post ids into db format */
+												$gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
+												$wpdb->insert(
+													$wpdb->prefix . "google_shortlink",
+													array(
+														'long_url' => $gglshrtlnk_link,
+														'short_url' => $gglshrtlnk_short_url,
+														'post_ids' => $gglshrtlnk_post_ids_converted
+													)
+												);
+												$gglshrtlnk_links_number++;
+											}
+										break;
+									}
+								} else {
+									/* update posts ids for link */
+									$gglshrtlnk_post_ids = array();
 
-				foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_currentpost ) {
-					/* find all links in posts and pages */
-					preg_match_all( '#(http://|https://|ftp://)[0-9a-zA-Z./?\-_=%\#a-z&\#38;]+#m', $gglshrtlnk_currentpost['post_content'], $gglshrtlnk_out );
-					/*filter links from goo.gl and home_url */
-					foreach ( $gglshrtlnk_out[0] as $gglshrtlnk_link ) {
-						if ( strpos( $gglshrtlnk_link, 'http://goo.gl' ) === false && strpos( $gglshrtlnk_link ,home_url() ) === false ) {
-							/*check is link already in db */
-							$gglshrtlnk_sql = $wpdb->prepare(
-								"SELECT `long_url`
-								FROM `$gglshrtlnk_table_name`
-								WHERE `long_url` = %s;
-								", $gglshrtlnk_link
-							);
-							$gglshrtlnk_link_from_db = $wpdb->get_results( $gglshrtlnk_sql );
-							/*add new link to db if it not exist */
-							if ( ! $gglshrtlnk_link_from_db ) {
-								$gglshrtlnk_short_url = gglshrtlnk_get( $gglshrtlnk_link );
-								switch ( $gglshrtlnk_short_url ) {
-									case 'curl_error':
-										$gglshrtlnk_curl_errors_count++;
-									break;
-									/* if entered invalid api-key */
-									case 'keyInvalid': ?>
-										<!--  if entered invalid api-key -->
-										<script type="text/javascript">
-											jQuery(document).ready(function($) {
-												$( '#gglshrtlnk_ajax-status' ).addClass( 'error' ).removeClass( 'updated' );
-											});
-										</script>
-										<?php echo '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url('admin.php?page=gglshrtlnk_options','') . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __('and enter correct key.', 'google-shortlink' );
-										/*stop script */
-										die();
-									break;
-									case 'keyExpired': ?>
-										<!--  if entered invalid api-key -->
-										<script type="text/javascript">
-											jQuery(document).ready(function($) {
-												$( '#gglshrtlnk_ajax-status' ).addClass( 'error' ).removeClass( 'updated' );
-											});
-										</script>
-										<?php echo	'<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( 'Expired API key. Your key has either expired or has newly been created.', 'google-shortlink' ) . "<br/>";
-											echo __( 'Create a new key in the first case or just wait for a few minutes in the second case.', 'google-shortlink' );
-										/*stop script */
-										die();
-									break;
-									/*skip bad request link */
-									case 'invalid':
-									break;
-									/*
-									case 'accessNotConfigured': ?>
-										<!--  if entered invalid api-key -->
-										<script type="text/javascript">
-											jQuery(document).ready(function($) {
-												$( '#gglshrtlnk_ajax-status' ).addClass( 'error' ).removeClass( 'updated' );
-											});
-										</script>
-										<?php echo	'<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . __( 'Access not configured.', 'google-shortlink' ) . "<br/>";
-											echo __( 'It occurs when "URL shortener API" is turned off at Google console or when Referers field is not empty', 'google-shortlink' );
-										/*stop script */
-										die();
-									break;
-									/*skip unknown error */
-									case 'unknown_error':
-									break;
-									/* correct short link */
-									default:
-										/*find post ids for new link */
-										$gglshrtlnk_post_ids = array();
-										foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
+									foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
+										if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
 											if ( strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link ) ) {
 												$gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
 											}
 										}
-										/* add to database is url is not embedd object */
-										if ( ! empty( $gglshrtlnk_post_ids ) ) {
-										/*convert post ids into db format */
-											$gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
-											$wpdb->insert(
-												$gglshrtlnk_table_name,
-												array(
-													'long_url' => $gglshrtlnk_link,
-													'short_url' => $gglshrtlnk_short_url,
-													'post_ids' => $gglshrtlnk_post_ids_converted
-												)
-											);
-											$gglshrtlnk_links_number++;
-										}
-									break;
-								}
-							} else {
-								/* update posts ids for link */
-								$gglshrtlnk_post_ids = array();
-								$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
-								unset( $gglshrtlnk_get_all_posts['revision'] );
-								unset( $gglshrtlnk_get_all_posts['attachment'] );
-								unset( $gglshrtlnk_get_all_posts['nav_menu_item'] );
-
-								foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
-									if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
-										if ( strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link ) ) {
-											$gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
-										}
 									}
+									/*convert post ids into db format */
+									$gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
+									$wpdb->update(
+										$wpdb->prefix . "google_shortlink",
+										array( 'post_ids' => $gglshrtlnk_post_ids_converted ),
+										array( 'long_url' => $gglshrtlnk_link ),
+										array( '%s' ),
+										array( '%s' )
+									);
 								}
-								/*convert post ids into db format */
-								$gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
-								$wpdb->update(
-									$gglshrtlnk_table_name,
-									array( 'post_ids' => $gglshrtlnk_post_ids_converted ),
-									array( 'long_url' => $gglshrtlnk_link ),
-									array( '%s' ),
-									array( '%s' )
-								);
 							}
 						}
 					}
-				} ?>
-				<script type="text/javascript">
-					jQuery( document ).ready( function( $ ) {
-						$( '#gglshrtlnk_replace-all' ).removeAttr( 'disabled' );
-						$( '#gglshrtlnk_restore-all' ).removeAttr( 'disabled' );
-						$( '#gglshrtlnk_delete-all-radio' ).removeAttr( 'disabled' );
-					});
-				</script>
-			<?php break;
+
+					if ( empty( $result['error'] ) ) {
+						$result['message'] = __( 'Web-site was scanned for new links,', 'google-shortlink' );
+						if ( 0 != $gglshrtlnk_links_number ) {
+							$result['message'] .= " " . $gglshrtlnk_links_number . " " . __( 'links were added to db.', 'google-shortlink' );
+						} else {
+							$result['message'] .= " " . __( 'no new links found.', 'google-shortlink' ) . "<br />" . __( 'The list of articles, where the link is located, has been updated for each link.', 'google-shortlink' );
+						}
+						if ( 0 != $gglshrtlnk_curl_errors_count )
+							$result['error'] = "<br/>" . __( 'Curl errors:', 'google-shortlink' ) . " " . $gglshrtlnk_curl_errors_count . "." . __( 'Scan the web site again to find skipped links if they exist.', 'google-shortlink' );
+					}
+				}
+			break;
 		}
 		/* message creating */
-		if ( isset( $_POST['gglshrtlnk_is_javascript_on'] ) ) {
-			if ( isset( $_POST['gglshrtlnk_actions_with_links_radio'] ) && $_POST['gglshrtlnk_actions_with_links_radio'] != 'none' ) {
-				if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'delete-all-radio' ) {
-					_e( 'All links from database have been restored to long links and the database has been cleared.', 'google-shortlink' );
-				}
-				if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'restore-all' ) {
-					_e( 'All links from database have been restored to long links.', 'google-shortlink' );
-					echo '<br />' . __( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
-				}
-				if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'replace-all' ) {
-					_e( 'All links from database have been replaced with short links.', 'google-shortlink' );
-					echo '<br />' . __( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
-				}
-				if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'scan' ) {
-					_e( 'Web-site was scanned for new links,', 'google-shortlink' );
-					if ( 0 != $gglshrtlnk_links_number ) {
-						echo " " . $gglshrtlnk_links_number . " ";
-						_e( 'links were added to db.', 'google-shortlink' );
-					} else {
-						echo " " . __( 'no new links found.', 'google-shortlink' ) . "<br />" . __( 'The list of articles, where the link is located, has been updated for each link.', 'google-shortlink' );
-					}
-					if ( 0 != $gglshrtlnk_curl_errors_count ) {
-						echo "<br/>" . __( 'Curl errors:', 'google-shortlink' ) . " " . $gglshrtlnk_curl_errors_count . "." . __( 'Scan the web site again to find skipped links if they exist.', 'google-shortlink' );
-					}
-				}
-			}
-			die(); /* this is required to return a proper result */
-		}
+		if ( ! $no_js ) {
+			echo json_encode( $result );
+			die();
+		} else
+			return $result;
 	}
 }
 
 /* function for actions part on table of links tab */
 if ( ! function_exists( 'gglshrtlnk_actions' ) ) {
 	function gglshrtlnk_actions( $gglshrtlnk_action, $gglshrtlnk_id_to_action ) {
-		global $wpdb, $gglshrtlnk_table_name;
-		$gglshrtlnk_sql = $wpdb->prepare(
+		global $wpdb;
+		/*select row with short and long db */
+		$gglshrtlnk_row_to_action = $wpdb->get_row( $wpdb->prepare(
 			"SELECT *
-			FROM `$gglshrtlnk_table_name`
+			FROM `" . $wpdb->prefix . "google_shortlink`
 			WHERE `id` = %d
 			", $gglshrtlnk_id_to_action
-		);
-		/*select row with short and long db */
-		$gglshrtlnk_row_to_action = $wpdb->get_row( $gglshrtlnk_sql , 'ARRAY_A');
+		), ARRAY_A );
 		/* delete selected links */
 		if ( $gglshrtlnk_action == 'delete' ) {
 			gglshrtlnk_delete_one( $gglshrtlnk_row_to_action );
@@ -515,7 +413,7 @@ if ( ! function_exists( 'gglshrtlnk_replace_one' ) ) {
 			"SELECT `post_content`, `ID`
 			FROM `$wpdb->posts`
 			WHERE `ID` = $gglshrtlnk_post_ids
-			", 'ARRAY_A'
+			", ARRAY_A
 		);
 		foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_one ) {
 		 	$gglshrtlnk_one['post_content'] = str_replace( $gglshrtlnk_row_to_action['long_url'], $gglshrtlnk_row_to_action['short_url'], $gglshrtlnk_one['post_content'] );
@@ -537,7 +435,7 @@ if ( ! function_exists( 'gglshrtlnk_restore_one' ) ) {
 			"SELECT `post_content`, `ID`
 			FROM `$wpdb->posts`
 			WHERE `ID` = $gglshrtlnk_post_ids
-			", 'ARRAY_A'
+			", ARRAY_A
 		);
 		foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_one ) {
 			$gglshrtlnk_one['post_content'] = str_replace( $gglshrtlnk_row_to_action['short_url'], $gglshrtlnk_row_to_action['long_url'] , $gglshrtlnk_one['post_content'] );
@@ -552,7 +450,7 @@ if ( ! function_exists( 'gglshrtlnk_restore_one' ) ) {
 /* function for restoring and deletind one long link */
 if ( ! function_exists( 'gglshrtlnk_delete_one' ) ) {
 	function gglshrtlnk_delete_one( $gglshrtlnk_row_to_action ) {
-		global $wpdb, $gglshrtlnk_links_number, $gglshrtlnk_table_name;
+		global $wpdb, $gglshrtlnk_links_number;
 		if ( $gglshrtlnk_row_to_action['post_ids'] != 'added_by_direct' ) {
 			$gglshrtlnk_post_ids = unserialize( $gglshrtlnk_row_to_action['post_ids'] );
 			$gglshrtlnk_post_ids = implode(" OR ID = ", $gglshrtlnk_post_ids );
@@ -560,7 +458,7 @@ if ( ! function_exists( 'gglshrtlnk_delete_one' ) ) {
 				"SELECT `post_content`, `ID`
 				FROM `$wpdb->posts`
 				WHERE `ID` = $gglshrtlnk_post_ids
-				", 'ARRAY_A'
+				", ARRAY_A
 			);
 			foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_one ) {
 				$gglshrtlnk_one['post_content'] = str_replace( $gglshrtlnk_row_to_action['short_url'], $gglshrtlnk_row_to_action['long_url'] , $gglshrtlnk_one['post_content'] );
@@ -568,7 +466,7 @@ if ( ! function_exists( 'gglshrtlnk_delete_one' ) ) {
 				$wpdb->update( $wpdb->posts, array( 'post_content' => $gglshrtlnk_one['post_content'] ), array( 'ID' => $gglshrtlnk_one['ID'] ), array( '%s' ), array( '%d' ) );
 			}
 		}
-		$wpdb->query( $wpdb->prepare( "DELETE FROM `$gglshrtlnk_table_name` WHERE `id` = %d", $gglshrtlnk_row_to_action['id'] ) );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . $wpdb->prefix . "google_shortlink` WHERE `id` = %d", $gglshrtlnk_row_to_action['id'] ) );
 		/*increase count of deleted links */
 		$gglshrtlnk_links_number++;
 	}
@@ -577,7 +475,7 @@ if ( ! function_exists( 'gglshrtlnk_delete_one' ) ) {
 /*function for plugin settings page */
 if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 	function gglshrtlnk_options_page() {
-		global $wpdb, $gglshrtlnk_table_name, $gglshrtlnk_options, $gglshrtlnk_plugin_info;
+		global $wpdb, $gglshrtlnk_options, $gglshrtlnk_plugin_info;
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 	    	wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
@@ -598,26 +496,22 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 		} ?>
 		<!-- page begin -->
 		<div class="wrap">
-			<div class="icon32 icon32-bws" id="icon-options-general"></div>
 			<h2>Google Shortlink <?php _e( 'Settings', 'google-shortlink' ); ?></h2>
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab nav-tab-active" href="admin.php?page=gglshrtlnk_options"><?php _e( 'Settings', 'google-shortlink' ); ?></a>
-				<a class="nav-tab" href="http://bestwebsoft.com/products/google-shortlink/faq/" target="_blank"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
-			</h2>
-			<?php if ( isset( $_POST['gglshrtlnk_options-form-was-send'] ) ) :?>
+			<?php if ( isset( $_POST['gglshrtlnk_options-form-was-send'] ) ) { ?>
 				<div class="<?php echo $gglshrtlnk_message_class; ?> fade below-h2" >
 					<p><?php echo $gglshrtlnk_message_value; ?></p>
 				</div>
-	    	<?php endif; ?>
-	    	<form name="gglshrtlnk_options-form" method="post" action="">
-				<h3><?php _e( 'How to get API key', 'google-shortlink' ); ?></h3>
-				<p>
-					<?php _e( 'To get API key you must go to', 'google-shortlink' ); ?>
-					<a href="https://code.google.com/apis/console" target="_blank">Google Api Console</a>.
-					<?php _e( 'Create project there and insert public API key below.', 'google-shortlink' ); ?><br />
-					<a href="<?php echo admin_url('admin.php?page=google-shortlink&tab=faq','' ); ?>"><?php _e( 'More details', 'google-shortlink' ); ?></a>.
-				</p>
-				<h3><?php _e( 'Settings', 'google-shortlink' ); ?></h3>
+	    	<?php } 
+	    	bws_show_settings_notice(); ?>
+			<h3><?php _e( 'How to get API key', 'google-shortlink' ); ?></h3>
+			<p>
+				<?php _e( 'To get API key you must go to', 'google-shortlink' ); ?>
+				<a href="https://code.google.com/apis/console" target="_blank">Google Api Console</a>.
+				<?php _e( 'Create project there and insert public API key below.', 'google-shortlink' ); ?><br />
+				<a href="<?php echo admin_url('admin.php?page=google-shortlink&tab=faq','' ); ?>"><?php _e( 'More details', 'google-shortlink' ); ?></a>.
+			</p>
+			<h3><?php _e( 'Settings', 'google-shortlink' ); ?></h3>
+			<form class="bws_form" name="gglshrtlnk_options-form" method="post" action="">
 				<table class="form-table">
 					<tr valign="top">
 						<th scope="row"><?php _e( 'API key for your goo.gl account', 'google-shortlink' ); ?></th>
@@ -639,7 +533,7 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 					</tr>
 					<tr>
 						<th colspan="2" >
-							<input type="submit" name="gglshrtlnk_options-form-was-send" class="button-primary" value="<?php _e( 'Save changes', 'google-shortlink' ); ?>" />
+							<input id="bws-submit-button" type="submit" name="gglshrtlnk_options-form-was-send" class="button-primary" value="<?php _e( 'Save changes', 'google-shortlink' ); ?>" />
 							<?php wp_nonce_field( 'gglshrtlnk_opt-noonce-action', 'gglshrtlnk_opt-noonce-field' ); ?>
 						</th>
 					</tr>
@@ -652,26 +546,26 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 
 /*function to prepage data for the links table */
 if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
-	function gglshrtlnk_table_data(){
-		global $wpdb, $gglshrtlnk_table_name, $gglshrtlnk_options;
+	function gglshrtlnk_table_data( ) {
+		global $wpdb, $gglshrtlnk_options;
 		/*if search query was send */
 		if ( isset( $_POST['s'] ) && $_POST['s'] != '' ) {
 			$gglshrtlnk_search = stripcslashes( $_POST['s'] );
 			/*if searching on short link */
 			if ( strpos( $gglshrtlnk_search, 'http://goo.gl/' ) === false ) {
-				$gglshrtlnk_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `$gglshrtlnk_table_name` WHERE `long_url` = %s", $gglshrtlnk_search ), 'ARRAY_A' );
+				$gglshrtlnk_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink` WHERE `long_url` = %s", $gglshrtlnk_search ), ARRAY_A );
 			/*if searching of long link */
 			} else {
-				$gglshrtlnk_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `$gglshrtlnk_table_name` WHERE `short_url` = %s", $gglshrtlnk_search ), 'ARRAY_A' );
+				$gglshrtlnk_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink` WHERE `short_url` = %s", $gglshrtlnk_search ), ARRAY_A );
 			}
 
 		/*if pagination turn off */
 		} elseif ( $gglshrtlnk_options['pagination'] == 'all' ) {
 			$gglshrtlnk_data = $wpdb->get_results(
 				"SELECT *
-				FROM `$gglshrtlnk_table_name`
+				FROM `" . $wpdb->prefix . "google_shortlink`
 				ORDER BY `id` DESC
-				", 'ARRAY_A'
+				", ARRAY_A
 			);
 		/*if pagination turn on	*/
 		} else {
@@ -682,11 +576,11 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 			}
 			$gglshrtlnk_data = $wpdb->get_results(
 				"SELECT *
-				FROM `$gglshrtlnk_table_name`
+				FROM `" . $wpdb->prefix . "google_shortlink`
 				ORDER BY id DESC
 				LIMIT $gglshrtlnk_per_page
 				OFFSET $gglshrtlnk_begin
-				", 'ARRAY_A'
+				", ARRAY_A
 			);
 		}
 		/*common part */
@@ -702,9 +596,9 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 					"SELECT `ID`, `post_title`
 					FROM `$wpdb->posts`
 					WHERE `ID` = $gglshrtlnk_post_ids_string
-					", 'ARRAY_A'
+					", ARRAY_A
 				);
-				$j=0;
+				$j = 0;
 				$gglshrtlnk_home = home_url( '/?p=' );
 				foreach ( $gglshrtlnk_post_meta as $gglshrtlnk_one_meta ) {
 					$post_url = $gglshrtlnk_home . $gglshrtlnk_one_meta['ID'];
@@ -719,7 +613,7 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 				'id'           => $gglshrtlnk_row['id'],
 				'long_url'     => '<a target="_blank" href="' . $gglshrtlnk_row['long_url'] . '">' . $gglshrtlnk_row['long_url'] . '</a>' ,
 				'short_url'    => '<a target="_blank" href="' . $gglshrtlnk_row['short_url'] . '">' . $gglshrtlnk_row['short_url'] . '</a>',
-				'total_clicks' => __( 'Wait for response', 'google-shortlink' ),
+				'total_clicks' => '<div class="hide-if-no-js">' . __( 'Wait for response', 'google-shortlink' ) . '</div>',
 				'post_ids'     => $gglshrtlnk_post_ids_content
 			);
 			$i++;
@@ -734,103 +628,105 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 
 /* creating class for display table of links */
 if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
-	if ( ! class_exists( 'WP_List_Table' ) ) {
+	if ( ! class_exists( 'WP_List_Table' ) )
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-	}
-	class gglshrtlnk_list_table extends WP_List_Table {
-		/*conctructor */
-		function __construct() {
-			global $status, $page;
-		    parent::__construct( array(
-		        'singular'  => __( 'link', 'google-shortlink' ),     /*singular name of the listed records */
-		        'plural'    => __( 'links', 'google-shortlink' ),   /*plural name of the listed records */
-		        'ajax'      => true       /*does this table support ajax? */
-			) );
-		}
-		function column_default( $item, $column_name ) {
-			switch ( $column_name ) {
-				case 'id':
-				case 'long_url':
-				case 'short_url':
-				case 'total_clicks':
-				case 'post_ids':
-					return $item[ $column_name ];
-				default:
-					return print_r( $item, true ) ; /*Show the whole array for troubleshooting purposes */
-			}
-		}
-		/*function for columns */
-		function get_columns(){
-			$columns = array(
-				'cb'			=> '<input type="checkbox" />',
-				'id' 			=> __( 'ID', 'google-shortlink' ),
-				'long_url'  	=> __( 'Long link', 'google-shortlink' ),
-				'short_url' 	=> __( 'Short link', 'google-shortlink' ),
-				'total_clicks'	=> __( 'Total clicks', 'google-shortlink' ),
-				'post_ids'		=> __( 'Articles that contain links', 'google-shortlink' )
-			);
-			return $columns;
-		}
-		/* function for column cb */
-		function column_cb( $item ) {
-			if ( $item['post_ids'] != 'None' ) {
-				return sprintf(
-					'<input type="checkbox" name="link[]" value="%s" />', $item['id']
-				);
-			} else {
-				return sprintf(
-					'<input type="checkbox"  name="link[]" value="%s" />', $item['id']
-				);
-			}
-		}
-		/* function for actions */
-		function column_long_url( $item ) {
-			global $wpdb, $gglshrtlnk_table_name;
-			$gglshrtlnk_id = $item['id'];
-			$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM $gglshrtlnk_table_name	 WHERE `id` = %s", $gglshrtlnk_id ) );
-			if ( $gglshrtlnk_is_added_by_direct != 'added_by_direct' ) {
-				$actions = array(
-					'replace' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'replace', $item['id'] ) , 'gglshrtlnk_tbl-noonce-replace' . $item['id'] ) . '">' .  __( 'Replace', 'google-shortlink' ) . '</a>',
-					'restore' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'restore', $item['id'] ) , 'gglshrtlnk_tbl-noonce-restore' . $item['id'] ) . '">' . __( 'Restore', 'google-shortlink' ) . '</a>',				
-					'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' ) . '</a>',
-				);
-			} else {
-				$actions = array(
-					'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' )  . '</a>',
-				);
-			}
-			return sprintf( '%1$s %2$s', $item['long_url'], $this->row_actions( $actions ) );
-		}
-		/* function for bulk actions */
-		function get_bulk_actions() {
-			$actions = array(
-				'replace'	=> __( 'Replace', 'google-shortlink' ),
-				'restore'	=> __( 'Restore', 'google-shortlink' ),
-				'delete'	=> __( 'Delete from db', 'google-shortlink' )
-			);
-			return $actions;
-		}
-		/* function for prepairing items */
-		function prepare_items() {
-			global $wpdb, $gglshrtlnk_options, $gglshrtlnk_table_name;
-			$columns	= $this->get_columns();
-			$hidden		= array( 'id' );
-			$sortable	= array();
-			$this->_column_headers = array( $columns, $hidden, $sortable );
-			$this->items = gglshrtlnk_table_data();
-			$action = $this->current_action();
-			$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
-			/*if pagination turn on */
-			if ( 'all' != $gglshrtlnk_options['pagination'] ) {			
-				$per_page = $gglshrtlnk_options['pagination'];
-	  			$current_page = $this->get_pagenum();				
-				$this->set_pagination_args( array(
-					'total_items' => $total_items,
-					'per_page'    => $per_page
+	
+	if ( ! class_exists( 'gglshrtlnk_list_table' ) ) {
+		class gglshrtlnk_list_table extends WP_List_Table {
+			/*conctructor */
+			function __construct() {
+				global $status, $page;
+			    parent::__construct( array(
+			        'singular'  => __( 'link', 'google-shortlink' ),     /*singular name of the listed records */
+			        'plural'    => __( 'links', 'google-shortlink' ),   /*plural name of the listed records */
+			        'ajax'      => true       /*does this table support ajax? */
 				) );
 			}
-		}
-	} /*class end */
+			function column_default( $item, $column_name ) {
+				switch ( $column_name ) {
+					case 'id':
+					case 'long_url':
+					case 'short_url':
+					case 'total_clicks':
+					case 'post_ids':
+						return $item[ $column_name ];
+					default:
+						return print_r( $item, true ) ; /*Show the whole array for troubleshooting purposes */
+				}
+			}
+			/*function for columns */
+			function get_columns() {
+				$columns = array(
+					'cb'			=> '<input type="checkbox" />',
+					'id' 			=> __( 'ID', 'google-shortlink' ),
+					'long_url'  	=> __( 'Long link', 'google-shortlink' ),
+					'short_url' 	=> __( 'Short link', 'google-shortlink' ),
+					'total_clicks'	=> __( 'Total clicks', 'google-shortlink' ),
+					'post_ids'		=> __( 'Articles that contain links', 'google-shortlink' )
+				);
+				return $columns;
+			}
+			/* function for column cb */
+			function column_cb( $item ) {
+				if ( $item['post_ids'] != 'None' ) {
+					return sprintf(
+						'<input type="checkbox" name="link[]" value="%s" />', $item['id']
+					);
+				} else {
+					return sprintf(
+						'<input type="checkbox"  name="link[]" value="%s" />', $item['id']
+					);
+				}
+			}
+			/* function for actions */
+			function column_long_url( $item ) {
+				global $wpdb;
+
+				$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM `" . $wpdb->prefix . "google_shortlink` WHERE `id` = %s", $item['id'] ) );
+				if ( $gglshrtlnk_is_added_by_direct != 'added_by_direct' ) {
+					$actions = array(
+						'replace' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'replace', $item['id'] ) , 'gglshrtlnk_tbl-noonce-replace' . $item['id'] ) . '">' .  __( 'Replace', 'google-shortlink' ) . '</a>',
+						'restore' => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'restore', $item['id'] ) , 'gglshrtlnk_tbl-noonce-restore' . $item['id'] ) . '">' . __( 'Restore', 'google-shortlink' ) . '</a>',				
+						'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' ) . '</a>',
+					);
+				} else {
+					$actions = array(
+						'delete'  => '<a href="' . wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'delete', $item['id'] ) , 'gglshrtlnk_tbl-noonce-delete' . $item['id'] ) . '">' . __( 'Delete', 'google-shortlink' )  . '</a>',
+					);
+				}
+				return sprintf( '%1$s %2$s', $item['long_url'], $this->row_actions( $actions ) );
+			}
+			/* function for bulk actions */
+			function get_bulk_actions() {
+				$actions = array(
+					'replace'	=> __( 'Replace', 'google-shortlink' ),
+					'restore'	=> __( 'Restore', 'google-shortlink' ),
+					'delete'	=> __( 'Delete from db', 'google-shortlink' )
+				);
+				return $actions;
+			}
+			/* function for prepairing items */
+			function prepare_items() {
+				global $wpdb, $gglshrtlnk_options;
+				$columns	= $this->get_columns();
+				$hidden		= array( 'id' );
+				$sortable	= array();
+				$this->_column_headers = array( $columns, $hidden, $sortable, 'long_url' );
+				$this->items = gglshrtlnk_table_data();
+				$action = $this->current_action();
+				$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
+				/*if pagination turn on */
+				if ( 'all' != $gglshrtlnk_options['pagination'] ) {			
+					$per_page = $gglshrtlnk_options['pagination'];
+		  			$current_page = $this->get_pagenum();				
+					$this->set_pagination_args( array(
+						'total_items' => $total_items,
+						'per_page'    => $per_page
+					) );
+				}
+			}
+		} /*class end */
+	}
 }
 
 /*function to display table of links */
@@ -847,32 +743,38 @@ if ( ! function_exists( 'gglshrtlnk_table' ) ) {
 /* function for plugin page */
 if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 	function gglshrtlnk_page() {
-		/*globals */
-		global $wpdb, $gglshrtlnk_table_name, $gglshrtlnk_links_number, $gglshrtlnk_options;
+		global $wpdb, $gglshrtlnk_links_number, $gglshrtlnk_options;
+		
 		if ( ! current_user_can( 'manage_options' ) ) {
-	    	wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
-		}
-		if ( ! isset( $_GET['tab'] ) ) {
-			/*do action if isset  */
-			if ( isset( $_GET['action'] ) && isset( $_GET['link'] ) ) {
-				if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-' . $_GET['action'] . $_GET['link'] ) ) {
-					gglshrtlnk_actions( $_GET['action'], $_GET['link'] );
-				}
-			}
-			/*bulk actions part */
-			if ( ( ( isset( $_POST['action'] ) && $_POST['action'] != -1 ) || ( isset( $_POST['action2'] ) && $_POST['action2'] != -1 ) ) && isset( $_POST['link'] ) && check_admin_referer( 'gglshrtlnk_tbl-noonce-action', 'gglshrtlnk_tbl-noonce-field' ) ) {
-				foreach ( $_POST['link'] as $gglshrtlnk_id_to_action ) {
-					if ( $_POST['action'] != -1 ) {
-						gglshrtlnk_actions( $_POST['action'], $gglshrtlnk_id_to_action );
-					} elseif ( $_POST['action2'] != -1 ) {
-						gglshrtlnk_actions( $_POST['action2'], $gglshrtlnk_id_to_action );
+	    	wp_die( __( 'You do not have sufficient permissions to access this page.', 'google-shortlink' ) );
+		} ?>
+		<div class="wrap">
+			<h2>Google Shortlink</h2>
+			<h2 class="nav-tab-wrapper">
+				<a class="nav-tab <?php if ( ! isset( $_GET['tab'] ) ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink','' ); ?>"><?php _e( 'Table of links', 'google-shortlink' ); ?></a>
+				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'direct' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=direct','' ); ?>"><?php _e( 'Direct input', 'google-shortlink' ); ?></a>
+				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'all' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=all','' ); ?>"><?php _e( 'Additional options', 'google-shortlink' ); ?></a>
+				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'faq' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=faq','' ); ?>"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
+			</h2>
+			<?php if ( ! isset( $_GET['tab'] ) ) { ?>
+				<noscript><div class="error"><p><?php _e( 'Please enable JavaScript to count total clicks.', 'google-shortlink' ); ?></p></div></noscript> 
+				<?php /*do action if isset  */
+				if ( isset( $_GET['action'] ) && isset( $_GET['link'] ) ) {
+					if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-' . $_GET['action'] . $_GET['link'] ) ) {
+						gglshrtlnk_actions( $_GET['action'], $_GET['link'] );
 					}
 				}
-			} ?>
-			<!-- TABLE OF LINKS TAB -->
-			<div class="wrap">
-				<div class="icon32 icon32-bws" id="icon-options-general"></div>
-				<h2>Google Shortlink</h2>
+				/*bulk actions part */
+				if ( ( ( isset( $_POST['action'] ) && $_POST['action'] != -1 ) || ( isset( $_POST['action2'] ) && $_POST['action2'] != -1 ) ) && isset( $_POST['link'] ) && check_admin_referer( 'gglshrtlnk_tbl-noonce-action', 'gglshrtlnk_tbl-noonce-field' ) ) {
+					foreach ( $_POST['link'] as $gglshrtlnk_id_to_action ) {
+						if ( $_POST['action'] != -1 ) {
+							gglshrtlnk_actions( $_POST['action'], $gglshrtlnk_id_to_action );
+						} elseif ( $_POST['action2'] != -1 ) {
+							gglshrtlnk_actions( $_POST['action2'], $gglshrtlnk_id_to_action );
+						}
+					}
+				} ?>
+				<!-- TABLE OF LINKS TAB -->			
 				<!-- show message if action was done -->
 				<?php if ( isset( $_GET['action'] ) ) { ?>
 					<div class="updated below-h2">
@@ -932,46 +834,40 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 						</p>
 					</div>
 				<?php }
-				$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name"	);
+				$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
 				/*show this if database is empty */
 				if ( ! $gglshrtlnk_total_items ) { ?>
 					<div class="updated below-h2">
 						<p><?php _e( 'There are no links in database. Go to the Additional options tab, and scan your web site', 'google-shortlink' ); ?></p>
 					</div>
 				<?php }	?>
-				<h2 class="nav-tab-wrapper">
-					<a class="nav-tab nav-tab-active" href="<?php echo admin_url( 'admin.php?page=google-shortlink','' ); ?>"><?php _e( 'Table of links', 'google-shortlink' ); ?></a>
-					<a class="nav-tab" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=direct','' ); ?>"><?php _e( 'Direct input', 'google-shortlink' ); ?></a>
-					<a class="nav-tab" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=all','' ); ?>"><?php _e( 'Additional options', 'google-shortlink' ); ?></a>
-					<a class="nav-tab" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=faq','' ); ?>"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
-				</h2>
 				<form method="post" name="gglshrtlnk_table-of-links" id="gglshrtlnk_table-of-links" action="<?php echo admin_url( 'admin.php?page=google-shortlink','' ); ?>" class="gglshrtlnk_auto-replace">
 					<?php gglshrtlnk_table(); ?>
 				</form>
-			</div><!-- TABLE OF LINKS END -->
-		<?php } else {
+			<?php } else {
 			switch ( $_GET['tab'] ) {
-				case 'direct':
+				case 'direct':				
 					/*
 					* direct input part
 					*/
+					$gglshrtlnk_number_of_input_links = 3;
+
 					/*set number of direct link fields if direct input form was send */
-					if ( isset( $_POST[ 'gglshrtlnk_direct_was_send' ] ) && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) ) {
-						$gglshrtlnk_number_of_input_links = $_POST[ 'gglshrtlnk_number_of_input_links' ];
-					} else {
-						$gglshrtlnk_number_of_input_links = 3;
-					}
+					if ( isset( $_POST['gglshrtlnk_submit-direct-input'] ) && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) )
+						$gglshrtlnk_number_of_input_links = $_POST['gglshrtlnk_number_of_input_links'];
+
 				    /* get short links if long links are exist in direct input */
 					for ( $i=1; $i < $gglshrtlnk_number_of_input_links + 1; $i++ ) {
 						$gglshrtlnk_input = "gglshrtlnk_url-input-" . $i;
 						$gglshrtlnk_output = "gglshrtlnk_url-output-" . $i;
-						if ( isset( $_POST[ $gglshrtlnk_input ] ) && $_POST[ $gglshrtlnk_input ] != '' && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) ) {
+						
+						if ( ! isset( $_POST['gglshrtlnk_reset-direct-input'] ) && ! empty( $_POST[ $gglshrtlnk_input ] ) && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) ) {
 						    $gglshrtlnk_input_links[ $gglshrtlnk_input ] = stripslashes( esc_html( $_POST[ $gglshrtlnk_input ] ) );
 						    /*check first is a short kink alreary exist in db */
 						    $gglshrtlnk_short_url_from_db = $wpdb->get_var(
 						    	$wpdb->prepare(
 									"SELECT `short_url`
-									FROM `$gglshrtlnk_table_name`
+									FROM `" . $wpdb->prefix . "google_shortlink`
 									WHERE `long_url` = %s
 									", $gglshrtlnk_input_links[ $gglshrtlnk_input ]
 								)
@@ -987,19 +883,16 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 						    		break;
 						    		case 'invalid':
 								    	$gglshrtlnk_short_url[ $gglshrtlnk_output ] = __( 'Bad request', 'google-shortlink' );
-								    	$gglshrtlnk_bad_request = 1;
 								    break;
 						    		case 'accessNotConfigured':
 								    	$gglshrtlnk_short_url[ $gglshrtlnk_output ] = __( 'Acces not configured.', 'google-shortlink' );
-								    	$gglshrtlnk_unknown_error = 1;
 								    break;
 								    case 'unknown_error':
 								    	$gglshrtlnk_short_url[ $gglshrtlnk_output ] = __( 'Unknown error. Try again later.', 'google-shortlink' );
-								    	$gglshrtlnk_unknown_error = 1;
 								    break;
 						    		default:
 								    	/* add long and short url to db */
-											$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts`", 'ARRAY_A' );
+											$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts`", ARRAY_A );
 											$gglshrtlnk_post_ids = array();
 											$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
 											unset( $gglshrtlnk_get_all_posts['revision'] );
@@ -1019,7 +912,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 												$gglshrtlnk_post_ids_converted = 'added_by_direct';
 											}
 											$wpdb->insert(
-										    	$gglshrtlnk_table_name,
+										    	$wpdb->prefix . "google_shortlink",
 										    	array(
 										    		'long_url'	=> $gglshrtlnk_input_links[ $gglshrtlnk_input ],
 										    		'short_url'	=> $gglshrtlnk_short_url[ $gglshrtlnk_output ],
@@ -1036,266 +929,204 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 							$gglshrtlnk_input_links[ $gglshrtlnk_input ] = '';
 							$gglshrtlnk_short_url[ $gglshrtlnk_output ] = '';
 						}
-					} ?>
-					<div class="wrap">
-						<div class="icon32 icon32-bws" id="icon-options-general"></div>
-						<h2>Google Shortlink</h2>
-						<?php if ( isset( $gglshrtlnk_key_invalid ) ) { ?>
-							<div class="below-h2 error">
-								<p>
-									<?php echo __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options','' ) . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __( 'and enter correct key.', 'google-shortlink' ); ?>
-								</p>
-							</div>
-						<?php } ?>
-							<div class="below-h2 updated gglshrtlnk_hide" id="gglshrtlnk_no_more_fields">
-								<p><?php _e( "There are empty fields on the page. Fill them out before adding another one.", 'google-shortlink'); ?></p>
-							</div>
-						<h2 class="nav-tab-wrapper">
-							<a class="nav-tab" href="<?php echo admin_url( 'admin.php?page=google-shortlink','' ); ?>"><?php _e( 'Table of links', 'google-shortlink' ); ?></a>
-							<a class="nav-tab nav-tab-active" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=direct','' ); ?>"><?php _e( 'Direct input', 'google-shortlink' ); ?></a>
-							<a class="nav-tab" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=all','' ); ?>"><?php _e( 'Additional options', 'google-shortlink' ); ?></a>
-							<a class="nav-tab" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=faq','' ); ?>"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
-						</h2>
-						<!-- Direct input form -->
-						<form method="post" name="gglshrtlnk_direct-input-form" action="" class="gglshrtlnk_direct-input">
-							<table class="gglshrtlnk_table">
-								<tbody>
-									<tr valign="top">
-										<th scope="row" class="gglshrtlnk_main-th">
-											<?php _e( 'Get short links by direct input:', 'google-shortlink' ) ?>
-										</th>
-										<td>
-											<table id="gglshrtlnk_direct-input-table" cellspacing="0">
-												<tbody>
-													<tr>
-														<td class="gglshrtlnk_long-link-column"><?php _e( 'Type long links here:','google-shortlink' ); ?></td>
-														<td class="gglshrtlnk_short-link-column"><?php _e( 'Short links will appear below:', 'google-shortlink' ); ?></td>
-													</tr>
-													<!-- Creating table for direct input -->
-													<?php for ( $i = 1; $i < $gglshrtlnk_number_of_input_links + 1; $i++ ) {
-														$gglshrtlnk_input = "gglshrtlnk_url-input-" . $i;
-														$gglshrtlnk_output = "gglshrtlnk_url-output-" . $i; ?>
-														<tr valign="top">
-															<td class="gglshrtlnk_long-link-column"><input type="url" name="<?php echo $gglshrtlnk_input; ?>"  value="<?php echo $gglshrtlnk_input_links[ $gglshrtlnk_input ]; ?>" /></td>
-															<td class="gglshrtlnk_short-link-column"><input type="url" name="<?php echo $gglshrtlnk_output; ?>" readonly value="<?php echo $gglshrtlnk_short_url[ $gglshrtlnk_output ]; ?>" /></td>
-														</tr>
-													<?php } ?>
-												</tbody>
-											</table>
-										</td>
-									</tr>
-									<tr valign="top" >
-										<td colspan="3">
-											<input type="hidden" name="gglshrtlnk_number_of_input_links" id="gglshrtlnk_number_of_input_links" value="<?php echo $gglshrtlnk_number_of_input_links; ?>" />
-											<input type="hidden" name="gglshrtlnk_direct_was_send" value="send" />
-											<input type="submit" name="gglshrtlnk_submit-direct-input" class="button-primary alignleft>" value="<?php echo esc_attr( __( 'Get short links', 'google-shortlink' ) ); ?>" />
-											<input type="button" name="gglshrtlnk_reset-direct-input" class="button-primary alignleft>" id="reset-direct" value="<?php echo esc_attr( __( 'Reset form', 'google-shortlink' ) ); ?>" />
-											<input type="button" value="<?php echo esc_attr( __( 'Add field', 'google-shortlink' ) ); ?>" class="button-primary" id="gglshrtlnk_add-field-button" />
-											<?php wp_nonce_field( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ); ?>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</form>
+					} 
+					if ( isset( $gglshrtlnk_key_invalid ) ) { ?>
+						<div class="below-h2 error">
+							<p><?php echo __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options','' ) . '">' . __( 'settings page', 'google-shortlink') . '</a> ' . __( 'and enter correct key.', 'google-shortlink' ); ?></p>
+						</div>
+					<?php } ?>
+					<div class="below-h2 updated gglshrtlnk_hide" id="gglshrtlnk_no_more_fields">
+						<p><?php _e( "There are empty fields on the page. Fill them out before adding another one.", 'google-shortlink'); ?></p>
 					</div>
+					<!-- Direct input form -->
+					<form method="post" name="gglshrtlnk_direct-input-form" action="" class="gglshrtlnk_direct-input">
+						<table class="form-table">
+							<tr valign="top">
+								<th scope="row">
+									<?php _e( 'Get short links by direct input:', 'google-shortlink' ) ?>
+								</th>
+								<td>											
+									<table id="gglshrtlnk_direct-input-table" cellspacing="0">
+										<tbody>
+											<tr>
+												<td class="gglshrtlnk_long-link-column"><?php _e( 'Type long links here:','google-shortlink' ); ?></td>
+												<td class="gglshrtlnk_short-link-column"><?php _e( 'Short links will appear below:', 'google-shortlink' ); ?></td>
+											</tr>
+											<!-- Creating table for direct input -->
+											<?php for ( $i = 1; $i < $gglshrtlnk_number_of_input_links + 1; $i++ ) {
+												$gglshrtlnk_input = "gglshrtlnk_url-input-" . $i;
+												$gglshrtlnk_output = "gglshrtlnk_url-output-" . $i; ?>
+												<tr valign="top">
+													<td class="gglshrtlnk_long-link-column"><input type="url" name="<?php echo $gglshrtlnk_input; ?>"  value="<?php echo $gglshrtlnk_input_links[ $gglshrtlnk_input ]; ?>" /></td>
+													<td class="gglshrtlnk_short-link-column"><input type="url" name="<?php echo $gglshrtlnk_output; ?>" readonly value="<?php echo $gglshrtlnk_short_url[ $gglshrtlnk_output ]; ?>" /></td>
+												</tr>
+											<?php } ?>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<p>
+							<input type="hidden" name="gglshrtlnk_number_of_input_links" id="gglshrtlnk_number_of_input_links" value="<?php echo $gglshrtlnk_number_of_input_links; ?>" />
+							<input type="submit" name="gglshrtlnk_submit-direct-input" class="button-primary" value="<?php _e( 'Get short links', 'google-shortlink' ); ?>" />
+							<input type="submit" name="gglshrtlnk_reset-direct-input" class="button-primary" id="reset-direct" value="<?php _e( 'Reset form', 'google-shortlink' ); ?>" />
+							<input type="button" value="<?php _e( 'Add field', 'google-shortlink' ); ?>" class="button-primary hide-if-no-js" id="gglshrtlnk_add-field-button" />
+							<?php wp_nonce_field( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ); ?>
+						</p>
+					</form>
 				<?php break;
 				case 'all':
 					/*
 					* Actions with links part
-					*/
-					/*check if db is empty */
-					$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $gglshrtlnk_table_name" );
+					*/					
 					if ( isset( $_POST[ 'gglshrtlnk_actions-with-links-was-send' ] ) && check_admin_referer( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ) ) {
-						gglshrtlnk_ajax_additional_opt_callback();
-					} ?>
-					<div class="wrap">
-						<div class="icon32 icon32-bws" id="icon-options-general"></div>
-						<h2>Google Shortlink</h2>
-						<div class="results below-h2 gglshrtlnk_hide updated" id="gglshrtlnk_ajax-status"></div>
-						<?php if ( isset( $_POST[ 'gglshrtlnk_actions-with-links-was-send' ] ) && check_admin_referer( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ) ) { ?>
-							<div class="updated fade below-h2" >
+						$result = gglshrtlnk_ajax_additional_opt_callback( true );
+						if ( ! empty( $result['message'] ) ) { ?>
+							<div class="updated fade below-h2"><p><?php echo $result['message']; ?></p></div>
+						<?php }
+						if ( ! empty( $result['error'] ) ) { ?>
+							<div class="error fade below-h2"><p><?php echo $result['error']; ?></p></div>
+						<?php }
+					} 
+					/*check if db is empty */
+					$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" ); ?>
+					<div class="results below-h2 gglshrtlnk_hide updated" id="gglshrtlnk_ajax-status"></div>
+					<!-- ACTIONS WITH LINKS FORM -->
+					<form method="post" name="gglshrtlnk_actions-with-links" id="gglshrtlnk_actions-with-links" action="" class="gglshrtlnk_auto-replace">
+						<table class="form-table">
+							<tbody>
+								<tr valign="top">
+									<th><?php _e( 'Actions with all links:', 'google-shortlink' ) ?></th>
+									<td><fieldset>
+										<!-- scan web-site to find all external links -->
+										<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="scan" id="gglshrtlnk_scan" checked /> <?php _e( 'Scan web-site for new external links', 'google-shortlink' ); ?> </label><br />
+										<!-- replace automatically -->
+										<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="replace-all" id="gglshrtlnk_replace-all"<?php if ( $gglshrtlnk_total_items == 0 ) echo 'disabled="disabled"'; ?>/> <?php _e( 'Replace automatically all external links', 'google-shortlink' ); ?> </label><br />
+										<!-- restore all -->
+										<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="restore-all" id="gglshrtlnk_restore-all"<?php if ( $gglshrtlnk_total_items == 0 ) echo 'disabled="disabled"'; ?>/> <?php _e( 'Restore automatically all external links', 'google-shortlink' ); ?> </label><br />
+										<!-- delete all -->
+										<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="delete-all-radio" id="gglshrtlnk_delete-all-radio"<?php if ( $gglshrtlnk_total_items == 0 ) echo 'disabled="disabled"'; ?>/> <?php _e( 'Restore all links and clear database', 'google-shortlink' ); ?></label><br />
+									</fieldset></td>
+								</tr>
+							</tbody>
+						</table>
+						<p>
+							<input class="button-primary" value="<?php _e( 'Apply', 'google-shortlink' ); ?>" type="submit" name="gglshrtlnk_apply_button3" id="gglshrtlnk_apply_button3" />
+							<input type="hidden" name="gglshrtlnk_actions-with-links-was-send" value="send" />
+							<?php wp_nonce_field( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ); ?>
+						</p>
+					</form><!-- actions with links -->
+				<?php break;
+				case 'faq': ?>			
+					<h3><?php _e( 'How to get API key', 'google-shortlink' ); ?></h3>
+					<p>
+						<?php _e( 'To get API key you must go to', 'google-shortlink' ); ?>
+						<a href="https://code.google.com/apis/console" target="_blank">Google Api Console</a>.
+						<?php _e( 'Then go to "Projects" tab and press "Create project" button.', 'google-shortlink' ); ?><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_1.png', __FILE__ ); ?>" /><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_2.png', __FILE__ ); ?>" /><br/>
+						<?php _e( 'After that you will be redirected to project page. Go to "API and auth" tab. Make sure "URL Shortener API" turn on.' , 'google-shortlink' ); ?><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_3.png', __FILE__ ); ?>" /><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_4.png', __FILE__ ); ?>" /><br/>
+						<?php _e( 'Then go to "Credentials" tab. At "Public API access" section of the page click "Create new key" button.', 'google-shortlink' ); ?><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_5.png', __FILE__ ); ?>" /><br/>
+						<?php echo __( 'In a popup window, that will appear choose "Browser key".','google-shortlink ' ) .' <b>' . __( 'Do not fill', 'google-shortlink') .'</b> ' . __( '"referers" field in the next popup window and click "Create" button.', 'google-shortlink' ) . '<br />'; ?>
+						<?php _e( 'It is important not to fill "referers" field. It may cause "Acces not configured" error, it is highly recomended to leave this field empty for correct work.', 'google-shortlink' ); ?><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_6.png', __FILE__ ); ?>" /><br/>
+						<?php _e( 'After all you will see created API key at the page, just copy and paste it to the field below and enjoy the plugin.', 'google-shortlink' ); ?><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_7.png', __FILE__ ); ?>" /><br/>
+						<?php _e( 'If the interface on your Google Api Console differs from the given screenshots, you may probably have not switched to the new interface.', 'google-shortlink' ); ?><br/>
+						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_8.png', __FILE__ ); ?>" /><br/>
+					</p>
+					<h3><?php _e( 'I have an error!', 'google-shortlink' ); ?></h3>
+					<h4><?php _e( 'Access not configured', 'google-shortlink' ); ?></h4>
+					<img class="gglsrtlnk_img gglsrtlnk_img_error" src="<?php echo plugins_url( 'images/error_1.png', __FILE__ ); ?>" /><br/>
+					<p>
+						<?php _e( "This error occurs in two cases:", 'google-shortlink' ); ?><br/>
+						<ol>
+							<li>
 								<p>
-									<?php if ( isset( $_POST['gglshrtlnk_actions_with_links_radio'] ) && $_POST['gglshrtlnk_actions_with_links_radio'] != 'none' ) {
-										if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'delete-all-radio' ) {
-											_e( 'All links from database have been restored to long links and the database has been cleared', 'google-shortlink' );
-										}
-										if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'restore-all' ) {
-											_e( 'All links from database have been restored to long links', 'google-shortlink' );
-										}
-										if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'replace-all' ) {
-											_e( 'All links from database have been replaced with short links', 'google-shortlink' );
-										}
-										if ( $_POST['gglshrtlnk_actions_with_links_radio'] == 'scan' ) {
-											_e( 'Web-site was scanned for new links,', 'google-shortlink' );
-											if ( 0 != $gglshrtlnk_links_number ) {
-												echo " " . $gglshrtlnk_links_number . " ";
-												_e( 'links were added to db.', 'google-shortlink' );
-											} else {
-												echo " " . __( 'no new links found.', 'google-shortlink' );
-											}
-										}
-									} ?>
+									<?php _e( '"URL Shortener api" is turned off at your project API options at google api console.', 'google-shortlink' ); ?><br />
+									<?php _e( 'To fix this just go to api options of your project and set "URL Shortener api" on. After that in some cases you will have to ceate a new API key, or recreate the current one.', 'google-shortlink' ); ?>
 								</p>
-							</div>
-						<?php } ?>
-						<h2 class="nav-tab-wrapper">
-							<a class="nav-tab" href="<?php echo admin_url('admin.php?page=google-shortlink','')?>"><?php _e( 'Table of links', 'google-shortlink' ); ?></a>
-							<a class="nav-tab" href="<?php echo admin_url('admin.php?page=google-shortlink&tab=direct','')?>"><?php _e( 'Direct input', 'google-shortlink' ); ?></a>
-							<a class="nav-tab nav-tab-active" href="<?php echo admin_url('admin.php?page=google-shortlink&tab=all','')?>"><?php _e( 'Additional options', 'google-shortlink' ); ?></a>
-							<a class="nav-tab" href="<?php echo admin_url('admin.php?page=google-shortlink&tab=faq','')?>"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
-						</h2>
-						<!-- ACTIONS WITH LINKS FORM -->
-						<form method="post" name="gglshrtlnk_actions-with-links" id="gglshrtlnk_actions-with-links" action="" class="gglshrtlnk_auto-replace">
-							<table class="gglshrtlnk_table">
-								<tbody>
-									<tr valign="top">
-										<th scope ="row" class="gglshrtlnk_main-th">
-											<?php _e( 'Actions with all links:', 'google-shortlink' ) ?>
-										</th>
-										<td>
-											<table id="gglshrtlnk_all-actions">
-												<tbody>
-													<td scope ="row" class="gglshrtlnk_actions-all-div">
-														<!-- scan web-site to find all external links -->
-														<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="scan" id="gglshrtlnk_scan" checked /> <?php _e( 'Scan web-site for new external links', 'google-shortlink' ); ?> </label><br />
-														<!-- replace automatically -->
-														<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="replace-all" id="gglshrtlnk_replace-all"<?php if ( $gglshrtlnk_total_items == 0 ) { echo 'disabled="disabled"'; } ?>/> <?php _e( 'Replace automatically all external links', 'google-shortlink' ); ?> </label><br />
-														<!-- restore all -->
-														<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="restore-all" id="gglshrtlnk_restore-all"<?php if ( $gglshrtlnk_total_items == 0 ) { echo 'disabled="disabled"'; } ?>/> <?php _e( 'Restore automatically all external links', 'google-shortlink' ); ?> </label><br />
-														<!-- delete all -->
-														<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="delete-all-radio" id="gglshrtlnk_delete-all-radio"<?php if ( $gglshrtlnk_total_items == 0 ) { echo 'disabled="disabled"'; } ?>/> <?php _e( 'Restore all links and clear database', 'google-shortlink' ); ?></label><br />
-													</td >
-												</tbody>
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<input class="button-primary" value="<?php _e( 'Apply', 'google-shortlink' ); ?>" type="submit" name="gglshrtlnk_apply_button3" id="gglshrtlnk_apply_button3" />
-											<input type="hidden" name="gglshrtlnk_actions-with-links-was-send" value="send" />
-											<?php wp_nonce_field( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ); ?>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</form><!-- actions with links -->
-					</div>
-			<?php break;
-			case 'faq':?>
-			<div class="wrap">
-				<div class="icon32 icon32-bws" id="icon-options-general"></div>
-				<h2>Google Shortlink</h2>
-				<h2 class="nav-tab-wrapper">
-					<a class="nav-tab" href="<?php echo admin_url('admin.php?page=google-shortlink','')?>"><?php _e( 'Table of links', 'google-shortlink' ); ?></a>
-					<a class="nav-tab" href="<?php echo admin_url('admin.php?page=google-shortlink&tab=direct','')?>"><?php _e( 'Direct input', 'google-shortlink' ); ?></a>
-					<a class="nav-tab" href="<?php echo admin_url('admin.php?page=google-shortlink&tab=all','')?>"><?php _e( 'Additional options', 'google-shortlink' ); ?></a>
-					<a class="nav-tab nav-tab-active" href="<?php echo admin_url('admin.php?page=google-shortlink&tab=faq','')?>"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
-				</h2>
-				<h3><?php _e( 'How to get API key', 'google-shortlink' ); ?></h3>
-				<p>
-					<?php _e( 'To get API key you must go to', 'google-shortlink' ); ?>
-					<a href="https://code.google.com/apis/console" target="_blank">Google Api Console</a>.
-					<?php _e( 'Then go to "Projects" tab and press "Create project" button.', 'google-shortlink' ); ?><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_1.png', __FILE__ ); ?>" /><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_2.png', __FILE__ ); ?>" /><br/>
-					<?php _e( 'After that you will be redirected to project page. Go to "API and auth" tab. Make sure "URL Shortener API" turn on.' , 'google-shortlink' ); ?><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_3.png', __FILE__ ); ?>" /><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_4.png', __FILE__ ); ?>" /><br/>
-					<?php _e( 'Then go to "Credentials" tab. At "Public API access" section of the page click "Create new key" button.', 'google-shortlink' ); ?><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_5.png', __FILE__ ); ?>" /><br/>
-					<?php echo __( 'In a popup window, that will appear choose "Browser key".','google-shortlink ') .' <b>' . __( 'Do not fill', 'google-shortlink') .'</b> ' . __( '"referers" field in the next popup window and click "Create" button.', 'google-shortlink' ) . '<br />'; ?>
-					<?php _e( 'It is important not to fill "referers" field. It may cause "Acces not configured" error, it is highly recomended to leave this field empty for correct work.', 'google-shortlink' ); ?><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_6.png', __FILE__ ); ?>" /><br/>
-					<?php _e( 'After all you will see created API key at the page, just copy and paste it to the field below and enjoy the plugin.', 'google-shortlink' ); ?><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_7.png', __FILE__ ); ?>" /><br/>
-					<?php _e( 'If the interface on your Google Api Console differs from the given screenshots, you may probably have not switched to the new interface.', 'google-shortlink' ); ?><br/>
-					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_8.png', __FILE__ ); ?>" /><br/>
-				</p>
-				<h3><?php _e( 'I have an error!', 'google-shortlink' ); ?></h3>
-				<h4><?php _e( 'Access not configured', 'google-shortlink' ); ?></h4>
-				<img class="gglsrtlnk_img gglsrtlnk_img_error" src="<?php echo plugins_url( 'images/error_1.png', __FILE__ ); ?>" /><br/>
-				<p>
-					<?php _e( "This error occurs in two cases:", 'google-shortlink' ); ?><br/>
-					<ol>
-						<li>
-							<p>
-								<?php _e( '"URL Shortener api" is turned off at your project API options at google api console.', 'google-shortlink' ); ?><br />
-								<?php _e( 'To fix this just go to api options of your project and set "URL Shortener api" on. After that in some cases you will have to ceate a new API key, or recreate the current one.', 'google-shortlink' ); ?>
-							</p>
-						</li>
-						<li>
-							<p>
-								<?php _e( 'The "referers" field at public API key options is not empty.', 'google-shortlink' ); ?><br />
-								<?php _e( 'To fix this you need to clear "referers" field and recreate API key.', 'google-shortlink' ); ?>
-							</p>
-						</li>
-					</ol>
-				</p>
-				<h4><?php _e( 'Invalid API key', 'google-shortlink' ); ?></h4>
-				<img class="gglsrtlnk_img gglsrtlnk_img_error" src="<?php echo plugins_url( 'images/error_2.png', __FILE__ ); ?>" /><br/>
-				<p>
-					<?php _e( "This error occurs if you entered incorrect API key on plugin's settings page. Go to google api console, copy public API key there and paste it to the field on plugin's settings page.", 'google-shortlink' ) ?>
-				</p>
-				<h4><?php _e( 'Expired API key', 'google-shortlink' ); ?></h4>
-				<img class="gglsrtlnk_img gglsrtlnk_img_error" src="<?php echo plugins_url( 'images/error_3.png', __FILE__ ); ?>" /><br/>
-				<p>
-					<?php _e( "This error occurs if your API key is outdate or it is a newly created one. Go to google api console, create a new public API key there and paste it to the field on the plugin's options page in the first case, or just wait a few minutes in the second case..", 'google-shortlink' ) ?>
-				</p>
-			</div>
-			<?php break;
-			}
-		} ?>
+							</li>
+							<li>
+								<p>
+									<?php _e( 'The "referers" field at public API key options is not empty.', 'google-shortlink' ); ?><br />
+									<?php _e( 'To fix this you need to clear "referers" field and recreate API key.', 'google-shortlink' ); ?>
+								</p>
+							</li>
+						</ol>
+					</p>
+					<h4><?php _e( 'Invalid API key', 'google-shortlink' ); ?></h4>
+					<img class="gglsrtlnk_img gglsrtlnk_img_error" src="<?php echo plugins_url( 'images/error_2.png', __FILE__ ); ?>" /><br/>
+					<p>
+						<?php _e( "This error occurs if you entered incorrect API key on plugin's settings page. Go to google api console, copy public API key there and paste it to the field on plugin's settings page.", 'google-shortlink' ) ?>
+					</p>
+					<h4><?php _e( 'Expired API key', 'google-shortlink' ); ?></h4>
+					<img class="gglsrtlnk_img gglsrtlnk_img_error" src="<?php echo plugins_url( 'images/error_3.png', __FILE__ ); ?>" /><br/>
+					<p>
+						<?php _e( "This error occurs if your API key is outdate or it is a newly created one. Go to google api console, create a new public API key there and paste it to the field on the plugin's options page in the first case, or just wait a few minutes in the second case..", 'google-shortlink' ) ?>
+					</p>				
+				<?php break;
+				}
+			} ?>
+		</div>
 	<?php }
 }
 
 /*function for getting short links from direct input */
 if ( ! function_exists( 'gglshrtlnk_get' ) ) {
 	function gglshrtlnk_get( $long_url ) {
-		/* api key for application */
-		$gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
-		$gglshrtlnk_api_key = $gglshrtlnk_options[ 'api_key' ];
-		/* encoding data to json */
-		$gglshrtlnk_post_data = array( 'longUrl' => $long_url );
-		$gglshrtlnk_json_data = json_encode( $gglshrtlnk_post_data );
-		/* create curl object */
-		$gglshrtlnk_curl_obj = curl_init();
-		 curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url?key=' . $gglshrtlnk_api_key );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_SSL_VERIFYPEER, 0 );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HEADER, 0 );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HTTPHEADER, array( 'Content-type:application/json' ) );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_POST, 1 );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_POSTFIELDS, $gglshrtlnk_json_data );
-		/*execute curl */
-		$gglshrtlnk_response = curl_exec( $gglshrtlnk_curl_obj );
-		if ( $gglshrtlnk_response === false ) {
-			$gglshrtlnk_return = 'curl_error';
-			curl_close( $gglshrtlnk_curl_obj );
-			return $gglshrtlnk_return;
+		if ( ! function_exists( 'curl_init' ) ) {
+			return 'not_support_curl';			
 		} else {
-			/*decoding json response */
-			$gglshrtlnk_json = json_decode( $gglshrtlnk_response );
-			curl_close( $gglshrtlnk_curl_obj );
-			if ( isset( $gglshrtlnk_json->id ) ) {
-				$gglshrtlnk_short_url = $gglshrtlnk_json->id;
-				return $gglshrtlnk_short_url;
-			} elseif ( isset( $gglshrtlnk_json->error ) ) {
-				switch ( $gglshrtlnk_json->error->errors[0]->reason ) {
-					case 'keyInvalid':
-						return 'keyInvalid';
-					break;
-					case 'invalid':
-						return 'invalid';
-					break;
-					case 'accessNotConfigured':
-						return 'accessNotConfigured';
-					break;
-					case 'keyExpired':
-						return 'keyExpired';
-					break;
-					default:
-						return 'unknown_error';
-					break;
+			/* api key for application */
+			$gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
+			$gglshrtlnk_api_key = $gglshrtlnk_options[ 'api_key' ];
+			/* encoding data to json */
+			$gglshrtlnk_post_data = array( 'longUrl' => $long_url );
+			$gglshrtlnk_json_data = json_encode( $gglshrtlnk_post_data );
+			/* create curl object */
+			$gglshrtlnk_curl_obj = curl_init();
+			 curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url?key=' . $gglshrtlnk_api_key );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_RETURNTRANSFER, 1 );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_SSL_VERIFYPEER, 0 );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HEADER, 0 );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HTTPHEADER, array( 'Content-type:application/json' ) );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_POST, 1 );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_POSTFIELDS, $gglshrtlnk_json_data );
+			/*execute curl */
+			$gglshrtlnk_response = curl_exec( $gglshrtlnk_curl_obj );
+			if ( $gglshrtlnk_response === false ) {
+				$gglshrtlnk_return = 'curl_error';
+				curl_close( $gglshrtlnk_curl_obj );
+				return $gglshrtlnk_return;
+			} else {
+				/*decoding json response */
+				$gglshrtlnk_json = json_decode( $gglshrtlnk_response );
+				curl_close( $gglshrtlnk_curl_obj );
+				if ( isset( $gglshrtlnk_json->id ) ) {
+					$gglshrtlnk_short_url = $gglshrtlnk_json->id;
+					return $gglshrtlnk_short_url;
+				} elseif ( isset( $gglshrtlnk_json->error ) ) {
+					switch ( $gglshrtlnk_json->error->errors[0]->reason ) {
+						case 'keyInvalid':
+							return 'keyInvalid';
+						break;
+						case 'invalid':
+							return 'invalid';
+						break;
+						case 'accessNotConfigured':
+							return 'accessNotConfigured';
+						break;
+						case 'keyExpired':
+							return 'keyExpired';
+						break;
+						default:
+							return 'unknown_error';
+						break;
+					}
 				}
 			}
 		}
@@ -1305,50 +1136,54 @@ if ( ! function_exists( 'gglshrtlnk_get' ) ) {
 /*function for getting total clicks on short link */
 if ( ! function_exists( 'gglshrtlnk_count' ) ) {
 	function gglshrtlnk_count( $gglshrtlnk_short_url ) {
-		/* api key for application */
-		$gglshrtlnk_options =  get_option( 'gglshrtlnk_options' );
-		$gglshrtlnk_api_key = $gglshrtlnk_options['api_key'];
-		/* create curl object */
-		$gglshrtlnk_curl_obj = curl_init();
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url?shortUrl='. $gglshrtlnk_short_url .'&projection=ANALYTICS_CLICKS&fields=analytics,status&key=' . $gglshrtlnk_api_key );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_SSL_VERIFYPEER, 0 );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HEADER, 0 );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HTTPHEADER, array( 'Content-type:application/json' ) );
-		curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_POST, 0 );
-		/*execute curl */
-		$gglshrtlnk_response = curl_exec( $gglshrtlnk_curl_obj );
-		if ( $gglshrtlnk_response === false ) {
-			$gglshrtlnk_return = 'curl_error';
-			return $gglshrtlnk_return;
-		} else {
-			/*decoding json response */
-			$gglshrtlnk_json = json_decode( $gglshrtlnk_response );
-			curl_close( $gglshrtlnk_curl_obj );
-			if ( isset( $gglshrtlnk_json->status )  && $gglshrtlnk_json->status == 'OK' ) {
-				$gglshrtlnk_clicks = $gglshrtlnk_json->analytics->allTime->shortUrlClicks;
-				return $gglshrtlnk_clicks;
+		if ( ! function_exists( 'curl_init' ) ) {
+			return 'not_support_curl';			
+		} else {			
+			/* api key for application */
+			$gglshrtlnk_options =  get_option( 'gglshrtlnk_options' );
+			$gglshrtlnk_api_key = $gglshrtlnk_options['api_key'];
+			/* create curl object */
+			$gglshrtlnk_curl_obj = curl_init();
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url?shortUrl='. $gglshrtlnk_short_url .'&projection=ANALYTICS_CLICKS&fields=analytics,status&key=' . $gglshrtlnk_api_key );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_RETURNTRANSFER, 1 );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_SSL_VERIFYPEER, 0 );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HEADER, 0 );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_HTTPHEADER, array( 'Content-type:application/json' ) );
+			curl_setopt( $gglshrtlnk_curl_obj, CURLOPT_POST, 0 );
+			/*execute curl */
+			$gglshrtlnk_response = curl_exec( $gglshrtlnk_curl_obj );
+			if ( $gglshrtlnk_response === false ) {
+				$gglshrtlnk_return = 'curl_error';
+				return $gglshrtlnk_return;
 			} else {
-				if ( isset( $gglshrtlnk_json->status ) ) {
-					$gglshrtlnk_return = __( 'Link status: ', 'google-shortlink' ) . $gglshrtlnk_json->status;
-					return $gglshrtlnk_return;
-				} elseif ( isset( $gglshrtlnk_json->error ) ) {
-					switch ( $gglshrtlnk_json->error->errors[0]->reason ) {
-						case 'keyInvalid':
-							return 'keyInvalid';
-						break;
-						case 'keyExpired':
-							return 'keyExpired';
-						break;
-						case 'invalid':
-							return 'invalid';
-						break;
-						case 'accessNotConfigured':
-							return 'accessNotConfigured';
-						break;
-						default:
-							return 'unknown_error';
-						break;
+				/*decoding json response */
+				$gglshrtlnk_json = json_decode( $gglshrtlnk_response );
+				curl_close( $gglshrtlnk_curl_obj );
+				if ( isset( $gglshrtlnk_json->status )  && $gglshrtlnk_json->status == 'OK' ) {
+					$gglshrtlnk_clicks = $gglshrtlnk_json->analytics->allTime->shortUrlClicks;
+					return $gglshrtlnk_clicks;
+				} else {
+					if ( isset( $gglshrtlnk_json->status ) ) {
+						$gglshrtlnk_return = __( 'Link status: ', 'google-shortlink' ) . $gglshrtlnk_json->status;
+						return $gglshrtlnk_return;
+					} elseif ( isset( $gglshrtlnk_json->error ) ) {
+						switch ( $gglshrtlnk_json->error->errors[0]->reason ) {
+							case 'keyInvalid':
+								return 'keyInvalid';
+							break;
+							case 'keyExpired':
+								return 'keyExpired';
+							break;
+							case 'invalid':
+								return 'invalid';
+							break;
+							case 'accessNotConfigured':
+								return 'accessNotConfigured';
+							break;
+							default:
+								return 'unknown_error';
+							break;
+						}
 					}
 				}
 			}
@@ -1383,12 +1218,48 @@ if ( ! function_exists( 'gglshrtlnk_links' ) ) {
 	}
 }
 
+/* add admin notices */
+if ( ! function_exists ( 'gglshrtlnk_admin_notices' ) ) {
+	function gglshrtlnk_admin_notices() {
+		global $hook_suffix, $gglshrtlnk_plugin_info;
+		if ( 'plugins.php' == $hook_suffix && ! is_network_admin() ) {
+			bws_plugin_banner_to_settings( $gglshrtlnk_plugin_info, 'gglshrtlnk_options', 'google-shortlink', 'admin.php?page=gglshrtlnk_options', 'admin.php?page=google-shortlink&tab=all', 'Google Shortlink' );
+		}
+	}
+}
+
+/* add help tab  */
+if ( ! function_exists( 'gglshrtlnk_add_tabs' ) ) {
+	function gglshrtlnk_add_tabs() {
+		$screen = get_current_screen();
+		$args = array(
+			'id' 			=> 'gglshrtlnk',
+			'section' 		=> '200538839'
+		);
+		bws_help_tab( $screen, $args );
+	}
+}
+
 /* function for delete options */
 if ( ! function_exists( 'gglshrtlnk_delete_options' ) ) {
 	function gglshrtlnk_delete_options() {
-		global $wpdb, $gglshrtlnk_table_name;
-		$wpdb->query( "DROP TABLE `" . $gglshrtlnk_table_name . "`;" );
-		delete_option( 'gglshrtlnk_options' );
+		global $wpdb;	
+
+		/* Delete options and db table */
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			$old_blog = $wpdb->blogid;
+			/* Get all blog ids */
+			$blogids = $wpdb->get_col( "SELECT `blog_id` FROM $wpdb->blogs" );
+			foreach ( $blogids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				delete_option( 'gglshrtlnk_options' );
+				$wpdb->query( "DROP TABLE `" . $wpdb->prefix . "google_shortlink`;" );
+			}
+			switch_to_blog( $old_blog );
+		} else {
+			delete_option( 'gglshrtlnk_options' );
+			$wpdb->query( "DROP TABLE `" . $wpdb->prefix . "google_shortlink`;" );
+		}
 	}
 }
 
@@ -1400,12 +1271,10 @@ add_action( 'admin_menu', 'gglshrtlnk_menu' );
 
 add_action( 'init', 'gglshrtlnk_init' );
 add_action( 'admin_init', 'gglshrtlnk_admin_init' );
+add_action( 'plugins_loaded', 'gglshrtlnk_plugins_loaded' );
 
 /*hook for scripts and styles */
 add_action( 'admin_enqueue_scripts', 'gglshrtlnk_script_style' );
-
-add_action( 'admin_footer', 'gglshrtlnk_additional_opt_javascript' );
-add_action( 'admin_footer', 'gglshrtlnk_total_clicks_javascript' );
 /*hooks for ajax on additional options tab */
 add_action( 'wp_ajax_additional_opt', 'gglshrtlnk_ajax_additional_opt_callback' );
 /*hooks for ajax to get total clicks */
@@ -1413,5 +1282,7 @@ add_action( 'wp_ajax_total_clicks', 'gglshrtlnk_ajax_total_clicks_callback' );
 /*hook for plugin links */
 add_filter( 'plugin_action_links', 'gglshrtlnk_action_links', 10, 2 );
 add_filter( 'plugin_row_meta', 'gglshrtlnk_links', 10, 2 );
+/* add admin notices */
+add_action( 'admin_notices', 'gglshrtlnk_admin_notices' );
 /*hook for uninstalling plugin */
 register_uninstall_hook( __FILE__, 'gglshrtlnk_delete_options' );

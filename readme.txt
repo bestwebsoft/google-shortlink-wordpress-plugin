@@ -1,10 +1,10 @@
 === Google Shortlink by BestWebSoft ===
 Contributors: bestwebsoft
 Donate link: http://bestwebsoft.com/donate/
-Tags: change link, display links, display multiple links, get short links, get short links automatically, get short links by direct input, get short links without leaving site, goo.gl, googel, googgle, gogle, gogole, google, google shortlink plugin, external links, link statisctics,  links, redirect, replace external links, replace url, short, short url, shortener, shortlink, shorturl, swap links, tinyurl, url
-Requires at least: 3.1
-Tested up to: 4.2.3
-Stable tag: 1.4.7
+Tags: add link shortener, add short links, add shortlink, add shortlink plugin, add url shortener, best link shortener, best wp link shortener, best wordpress link shortener, best url shortener, change link, display links, display multiple links, external-links, free, free plugin, free link shortener, free google link shortener, get short links, get short links automatically, get short links by direct input, get short links without leaving site, google link shortener, gogle, gogole, goo.gl, googel, googgle, google, google shortlink plugin, link statisctics, link, links, plugin, redirect, replace external links, replace url, short, short url, shotener, shortener, shortlink, shorturl, swap links, tinyurl, url, url shortener, wp plugin, wordpress plugin, wp link shortener, wp url shortener, wordpress link shortener, wordpress url shortener
+Requires at least: 3.8
+Tested up to: 4.3.1
+Stable tag: 1.4.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,17 +16,17 @@ This plugin allows you to get short links from goo.gl service without leaving yo
 
 http://www.youtube.com/watch?v=SZIWLm8mmdU
 
-<a href="http://wordpress.org/plugins/google-shortlink/faq/" target="_blank">FAQ</a>
+<a href="http://wordpress.org/plugins/google-shortlink/faq/" target="_blank">Google Shortlink by BestWebSoft FAQ</a>
 
-<a href="http://support.bestwebsoft.com" target="_blank">Support</a>
+<a href="http://support.bestwebsoft.com" target="_blank">Google Shortlink by BestWebSoft Support</a>
 
 = Features =
 
-* Actions: You can get a short link by direct input.
-* Actions: You can get a short links for all external links on your site automatically.
-* Actions: You can swap normal links to short links and vice versa on your site anytime.
-* Display: You can choose the number of links to display on a page.
-* Display: You can view the click-through statistics of short links.
+* Get a short link by direct input.
+* Get a short links for all external links on your site automatically.
+* Swap normal links to short links and vice versa on your site anytime.
+* Choose the number of links to display on a page.
+* View the click-through statistics of short links.
 
 = Recommended Plugins =
 
@@ -100,6 +100,10 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 
 == Changelog ==
 
+= V1.4.8 - 02.11.2015 =
+* Update : BWS plugins section is updated.
+* Update : We updated all functionality for wordpress 4.3.1.
+
 = V1.4.7 - 27.07.2015 =
 * Update : We updated all functionality for wordpress 4.2.3.
 
@@ -152,6 +156,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4.8 =
+BWS plugins section is updated. We updated all functionality for wordpress 4.3.1.
 
 = V1.4.7 =
 We updated all functionality for wordpress 4.2.3.

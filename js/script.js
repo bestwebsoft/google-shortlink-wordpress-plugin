@@ -13,7 +13,7 @@
 				}
 			});
 
-			if ( gglshrtlnk_is_empty == 0 ){
+			if ( gglshrtlnk_is_empty == 0 ) {
 				var oldval = $( '#gglshrtlnk_number_of_input_links' ).val();
 				var newval = ++oldval;
 				$( '#gglshrtlnk_number_of_input_links' ).val( newval );
@@ -53,6 +53,71 @@
 					$( '#gglshrtlnk_scan' ).attr( 'checked', 'checked' );
 				}; 
 			}
-		}); 	
+		}); 
+
+		$( '#gglshrtlnk_actions-with-links' ).submit( function() {
+			return false;
+		});
+
+		$( '#gglshrtlnk_apply_button3' ).click( function() {
+			var gglshrtlnk_radio_state = $( 'input[name=gglshrtlnk_actions_with_links_radio]:checked' ).val();
+			var gglshrtlnk_data = {
+				action: 'additional_opt',
+				gglshrtlnk_actions_with_links_radio: gglshrtlnk_radio_state,
+				gglshrtlnk_bulk_select1: $( '#gglshrtlnk_bulk_select1' ).val(),
+				gglshrtlnk_bulk_select2: $( '#gglshrtlnk_bulk_select2' ).val(),
+				'gglshrtlnk_nonce' : gglshrtlnk_vars.gglshrtlnk_ajax_nonce
+			};
+			$( '#gglshrtlnk_ajax-status' ).removeClass( 'gglshrtlnk_hide' ).removeClass( 'error' ).addClass( 'updated' );
+			switch ( gglshrtlnk_radio_state ) {
+				case 'replace-all':
+					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_replace_all + '</p>' );
+				break
+				case 'restore-all':
+					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_restore_all + '</p>' );
+				break
+				case 'delete-all-radio':
+					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_delete_all_radio + '</p>' );					
+				break
+				case 'scan':
+					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_scan + '</p>' );
+				break
+			}
+			$.ajax({
+				url: ajaxurl,
+				type: "POST",
+				data: gglshrtlnk_data,
+				success: function( result ) {
+					var data = $.parseJSON( result );
+
+					if ( data['error'] != '' ) {
+						$( '#gglshrtlnk_ajax-status' ).addClass( 'error' ).removeClass( 'updated' );
+						$( '#gglshrtlnk_ajax-status' ).html( '<p>' + data['error'] + '</p>' );
+					} else {
+						$( '#gglshrtlnk_ajax-status' ).html( '<p>' + data['message'] + '</p>' );
+					}
+
+					if ( gglshrtlnk_radio_state == 'delete-all-radio' ) {
+					/* disabling radibuttons afted deleting */
+						$( '#gglshrtlnk_replace-all, #gglshrtlnk_restore-all' ).attr( 'disabled', 'disabled' );
+						$( '#gglshrtlnk_delete-all-radio' ).removeAttr( 'checked' ).attr( 'disabled', 'disabled' );
+						$( '#gglshrtlnk_scan' ).attr( 'checked', 'checked' );
+					} else if ( gglshrtlnk_radio_state == 'scan' ) {
+						$( '#gglshrtlnk_replace-all, #gglshrtlnk_restore-all, #gglshrtlnk_delete-all-radio' ).removeAttr( 'disabled' );
+					}
+				}
+			});
+		});
+
+		$( '.total_clicks' ).each( function( current_item ) {
+			var gglshrtlnk_data = {
+				action: 'total_clicks',
+				gglshrtlnk_short_to_count: $( this ).prev().text(),
+				'gglshrtlnk_nonce' : gglshrtlnk_vars.gglshrtlnk_ajax_nonce
+			};
+			$.post( ajaxurl, gglshrtlnk_data, function( result ) {
+				$('.total_clicks').eq( current_item ).html( result );
+			});
+		});	
 	});
 } )( jQuery );
