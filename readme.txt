@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: http://bestwebsoft.com/donate/
 Tags: add link shortener, add short links, add shortlink, add shortlink plugin, add url shortener, best link shortener, best wp link shortener, best wordpress link shortener, best url shortener, change link, display links, display multiple links, external-links, free, free plugin, free link shortener, free google link shortener, get short links, get short links automatically, get short links by direct input, get short links without leaving site, google link shortener, gogle, gogole, goo.gl, googel, googgle, google, google shortlink plugin, link statisctics, link, links, plugin, redirect, replace external links, replace url, short, short url, shotener, shortener, shortlink, shorturl, swap links, tinyurl, url, url shortener, wp plugin, wordpress plugin, wp link shortener, wp url shortener, wordpress link shortener, wordpress url shortener
 Requires at least: 3.8
-Tested up to: 4.3.1
-Stable tag: 1.4.8
+Tested up to: 4.4
+Stable tag: 1.4.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,7 +12,7 @@ This plugin allows you to get short links from goo.gl servise without leaving yo
 
 == Description ==
 
-This plugin allows you to get short links from goo.gl service without leaving your site. It works in two modes: get short links by direct input and get short link for all external links on your site automatically. With this plugin you can replace all external links on your site with short links. The plugin also displays a click-through statistics for each short link.
+This plugin allows you to get short links from <a href="https://goo.gl" target="_blank">Google URL Shortener</a> service without leaving your site. It works in two modes: get short links by direct input and get short link for all external links on your site automatically. With this plugin you can replace all external links on your site with short links. The plugin also displays a click-through statistics for each short link.
 
 http://www.youtube.com/watch?v=SZIWLm8mmdU
 
@@ -23,7 +23,7 @@ http://www.youtube.com/watch?v=SZIWLm8mmdU
 = Features =
 
 * Get a short link by direct input.
-* Get a short links for all external links on your site automatically.
+* Get short links for all external links on your site automatically.
 * Swap normal links to short links and vice versa on your site anytime.
 * Choose the number of links to display on a page.
 * View the click-through statistics of short links.
@@ -100,6 +100,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 
 == Changelog ==
 
+= V1.4.9 - 09.12.2015 =
+* Bugfix : The bug with plugin menu duplicating was fixed.
+
 = V1.4.8 - 02.11.2015 =
 * Update : BWS plugins section is updated.
 * Update : We updated all functionality for wordpress 4.3.1.
@@ -156,6 +159,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.4.9 =
+The bug with plugin menu duplicating was fixed.
 
 = V1.4.8 =
 BWS plugins section is updated. We updated all functionality for wordpress 4.3.1.

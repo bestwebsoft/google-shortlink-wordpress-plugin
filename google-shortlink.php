@@ -6,7 +6,7 @@ Description: This plugin allows you to shorten links of you site with Google Sho
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.4.8
+Version: 1.4.9
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
 */
@@ -30,7 +30,7 @@ License: GPLv2 or later
 /* function for add menu and sub-menu */
 if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 	function gglshrtlnk_menu() {
-		bws_add_general_menu( plugin_basename( __FILE__ ) );
+		bws_general_menu();
 		$settings = add_submenu_page( 'bws_plugins', __( 'Google Shortlink Settings', 'google-shortlink' ), 'Google Shortlink', 'manage_options', 'gglshrtlnk_options', 'gglshrtlnk_options_page' );
 		$hook = add_menu_page( 'Google Shortlink', 'Google Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', plugins_url( 'bws_menu/images/px.png', __FILE__ ), '55.1' );
 		
@@ -496,21 +496,21 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 		} ?>
 		<!-- page begin -->
 		<div class="wrap">
-			<h2>Google Shortlink <?php _e( 'Settings', 'google-shortlink' ); ?></h2>
+			<h1>Google Shortlink <?php _e( 'Settings', 'google-shortlink' ); ?></h1>
 			<?php if ( isset( $_POST['gglshrtlnk_options-form-was-send'] ) ) { ?>
 				<div class="<?php echo $gglshrtlnk_message_class; ?> fade below-h2" >
 					<p><?php echo $gglshrtlnk_message_value; ?></p>
 				</div>
 	    	<?php } 
 	    	bws_show_settings_notice(); ?>
-			<h3><?php _e( 'How to get API key', 'google-shortlink' ); ?></h3>
+			<h2><?php _e( 'How to get API key', 'google-shortlink' ); ?></h2>
 			<p>
 				<?php _e( 'To get API key you must go to', 'google-shortlink' ); ?>
 				<a href="https://code.google.com/apis/console" target="_blank">Google Api Console</a>.
 				<?php _e( 'Create project there and insert public API key below.', 'google-shortlink' ); ?><br />
 				<a href="<?php echo admin_url('admin.php?page=google-shortlink&tab=faq','' ); ?>"><?php _e( 'More details', 'google-shortlink' ); ?></a>.
 			</p>
-			<h3><?php _e( 'Settings', 'google-shortlink' ); ?></h3>
+			<h2><?php _e( 'Settings', 'google-shortlink' ); ?></h2>
 			<form class="bws_form" name="gglshrtlnk_options-form" method="post" action="">
 				<table class="form-table">
 					<tr valign="top">
@@ -749,7 +749,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 	    	wp_die( __( 'You do not have sufficient permissions to access this page.', 'google-shortlink' ) );
 		} ?>
 		<div class="wrap">
-			<h2>Google Shortlink</h2>
+			<h1>Google Shortlink</h1>
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab <?php if ( ! isset( $_GET['tab'] ) ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink','' ); ?>"><?php _e( 'Table of links', 'google-shortlink' ); ?></a>
 				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'direct' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=direct','' ); ?>"><?php _e( 'Direct input', 'google-shortlink' ); ?></a>
