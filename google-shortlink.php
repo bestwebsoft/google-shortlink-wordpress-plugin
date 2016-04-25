@@ -6,12 +6,12 @@ Description: This plugin allows you to shorten links of you site with Google Sho
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.4.9
+Version: 1.5.0
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
 */
 
-/*  © Copyright 2015  BestWebSoft  ( http://support.bestwebsoft.com )
+/*  © Copyright 2016  BestWebSoft  ( http://support.bestwebsoft.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 3, as
@@ -97,7 +97,8 @@ if ( ! function_exists( 'register_gglshrtlnk_options' ) ) {
 			'plugin_db_version' 		=> '',
 			'api_key' 					=> '',
 			'pagination' 				=> '10',
-			'display_settings_notice'	=>	1
+			'display_settings_notice'	=>	1,
+			'suggest_feature_banner'	=> 1
 		);
 		/* add options to database */
 		if ( ! get_option( 'gglshrtlnk_options' ) )
@@ -757,7 +758,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'faq' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=faq','' ); ?>"><?php _e( 'FAQ', 'google-shortlink' ); ?></a>
 			</h2>
 			<?php if ( ! isset( $_GET['tab'] ) ) { ?>
-				<noscript><div class="error"><p><?php _e( 'Please enable JavaScript to count total clicks.', 'google-shortlink' ); ?></p></div></noscript> 
+				<noscript><div class="error below-h2"><p><?php _e( 'Please enable JavaScript to count total clicks.', 'google-shortlink' ); ?></p></div></noscript> 
 				<?php /*do action if isset  */
 				if ( isset( $_GET['action'] ) && isset( $_GET['link'] ) ) {
 					if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-' . $_GET['action'] . $_GET['link'] ) ) {
@@ -1225,6 +1226,9 @@ if ( ! function_exists ( 'gglshrtlnk_admin_notices' ) ) {
 		if ( 'plugins.php' == $hook_suffix && ! is_network_admin() ) {
 			bws_plugin_banner_to_settings( $gglshrtlnk_plugin_info, 'gglshrtlnk_options', 'google-shortlink', 'admin.php?page=gglshrtlnk_options', 'admin.php?page=google-shortlink&tab=all', 'Google Shortlink' );
 		}
+		if ( isset( $_GET['page'] ) && ( 'gglshrtlnk_options' == $_GET['page'] || 'google-shortlink' == $_GET['page'] ) ) {
+			bws_plugin_suggest_feature_banner( $gglshrtlnk_plugin_info, 'gglshrtlnk_options', 'google-shortlink' );
+		}
 	}
 }
 
@@ -1260,6 +1264,10 @@ if ( ! function_exists( 'gglshrtlnk_delete_options' ) ) {
 			delete_option( 'gglshrtlnk_options' );
 			$wpdb->query( "DROP TABLE `" . $wpdb->prefix . "google_shortlink`;" );
 		}
+
+		require_once( dirname( __FILE__ ) . '/bws_menu/bws_include.php' );
+		bws_include_init( plugin_basename( __FILE__ ) );
+		bws_delete_plugin( plugin_basename( __FILE__ ) );
 	}
 }
 

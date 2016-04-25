@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: http://bestwebsoft.com/donate/
 Tags: add link shortener, add short links, add shortlink, add shortlink plugin, add url shortener, best link shortener, best wp link shortener, best wordpress link shortener, best url shortener, change link, display links, display multiple links, external-links, free, free plugin, free link shortener, free google link shortener, get short links, get short links automatically, get short links by direct input, get short links without leaving site, google link shortener, gogle, gogole, goo.gl, googel, googgle, google, google shortlink plugin, link statisctics, link, links, plugin, redirect, replace external links, replace url, short, short url, shotener, shortener, shortlink, shorturl, swap links, tinyurl, url, url shortener, wp plugin, wordpress plugin, wp link shortener, wp url shortener, wordpress link shortener, wordpress url shortener
 Requires at least: 3.8
-Tested up to: 4.4
-Stable tag: 1.4.9
+Tested up to: 4.5
+Stable tag: 1.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -28,6 +28,8 @@ http://www.youtube.com/watch?v=SZIWLm8mmdU
 * Choose the number of links to display on a page.
 * View the click-through statistics of short links.
 
+If you have a feature, suggestion or idea you'd like to see in the plugin, we'd love to hear about it! <a href="http://support.bestwebsoft.com/hc/en-us/requests/new" target="_blank">Suggest a Feature</a>
+
 = Recommended Plugins =
 
 The author of the Google Shortlink also recommends the following plugins:
@@ -44,7 +46,7 @@ If you would like to create your own language pack or update the existing one, y
 
 = Technical support =
 
-Dear users, our plugins are available for free download. If you have any questions or recommendations regarding the functionality of our plugins (existing options, new options, current issues), please feel free to contact us. Please note that we accept requests in English only. All messages in another languages won't be accepted.
+Dear users, our plugins are available for free download. If you have any questions or recommendations regarding the functionality of our plugins (existing options, new options, current issues), please feel free to contact us. Please note that we accept requests in English only. All messages in other languages won't be accepted.
 
 If you notice any bugs in the plugins, you can notify us about it and we'll investigate and fix the issue then. Your request should contain URL of the website, issues description and WordPress admin panel credentials.
 Moreover we can customize the plugin according to your requirements. It's a paid service (as a rule it costs $40, but the price can vary depending on the amount of the necessary changes and their complexity). Please note that we could also include this or that feature (developed for you) in the next release and share with the other users then. 
@@ -99,6 +101,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.5.0 - 25.04.2016 =
+* Update : We updated all functionality for wordpress 4.5.
 
 = V1.4.9 - 09.12.2015 =
 * Bugfix : The bug with plugin menu duplicating was fixed.
@@ -159,6 +164,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.5.0 =
+We updated all functionality for wordpress 4.5.
 
 = V1.4.9 =
 The bug with plugin menu duplicating was fixed.
