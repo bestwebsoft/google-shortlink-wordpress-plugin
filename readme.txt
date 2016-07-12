@@ -1,14 +1,14 @@
 === Google Shortlink by BestWebSoft ===
 Contributors: bestwebsoft
 Donate link: http://bestwebsoft.com/donate/
-Tags: add link shortener, add short links, add shortlink, add shortlink plugin, add url shortener, best link shortener, best wp link shortener, best wordpress link shortener, best url shortener, change link, display links, display multiple links, external-links, free, free plugin, free link shortener, free google link shortener, get short links, get short links automatically, get short links by direct input, get short links without leaving site, google link shortener, gogle, gogole, goo.gl, googel, googgle, google, google shortlink plugin, link statisctics, link, links, plugin, redirect, replace external links, replace url, short, short url, shotener, shortener, shortlink, shorturl, swap links, tinyurl, url, url shortener, wp plugin, wordpress plugin, wp link shortener, wp url shortener, wordpress link shortener, wordpress url shortener
+Tags: add link shortener, add shortlink, shortlink, google shortlink, shortlink plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
 Requires at least: 3.8
-Tested up to: 4.5
-Stable tag: 1.5.0
+Tested up to: 4.5.3
+Stable tag: 1.5.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-This plugin allows you to get short links from goo.gl servise without leaving your site. 
+Replace external WordPress website links with Google shortlinks and track click stats.
 
 == Description ==
 
@@ -42,7 +42,7 @@ There is also a premium version of the plugin <a href="http://bestwebsoft.com/pr
 * Russian (ru_RU)
 * Ukrainian (uk)
 
-If you would like to create your own language pack or update the existing one, you can send <a href="http://codex.wordpress.org/Translating_WordPress" target="_blank">the text of PO and MO files</a> for <a href="http://support.bestwebsoft.com" target="_blank">BestWebSoft</a> and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO files  <a href="http://www.poedit.net/download.php" target="_blank">Poedit</a>.
+If you would like to create your own language pack or update the existing one, you can send <a href="http://codex.wordpress.org/Translating_WordPress" target="_blank">the text of PO and MO files</a> for <a href="http://support.bestwebsoft.com/hc/en-us/requests/new" target="_blank">BestWebSoft</a> and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO files  <a href="http://www.poedit.net/download.php" target="_blank">Poedit</a>.
 
 = Technical support =
 
@@ -56,7 +56,7 @@ We can fix some things for free for the users who provide translation of our plu
 
 1. Upload the `google-shortlink` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin via the 'Plugins' menu in WordPress.
-3. Plugin settings are located in "BWS Plugins" > "Google Shortlink".
+3. Plugin settings are located in "BWS Panel" > "Google Shortlink".
 4. Plugin page is located in main menu.
 4. Enter your API key for goo.gl account on plugin options page.
 
@@ -101,6 +101,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.5.1 - 12.07.2016 =
+* Update : Instruction on How to get API key has been updated.
 
 = V1.5.0 - 25.04.2016 =
 * Update : We updated all functionality for wordpress 4.5.
@@ -164,6 +167,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<a hre
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.5.1 =
+Instruction on How to get API key has been updated.
 
 = V1.5.0 =
 We updated all functionality for wordpress 4.5.

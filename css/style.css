@@ -1,10 +1,4 @@
 /*Google Shortlink*/
-#adminmenu #toplevel_page_google-shortlink div.wp-menu-image {
-    background: url("../images/menu_single.png") no-repeat scroll center center transparent;
-}
-#adminmenu #toplevel_page_google-shortlink.wp-not-current-submenu div.wp-menu-image {
-    opacity: 0.7;
-}
 /*styles for input td in tables*/
 #gglshrtlnk_direct-input-table .gglshrtlnk_long-link-column {
     padding: 1px 5px 1px 0;

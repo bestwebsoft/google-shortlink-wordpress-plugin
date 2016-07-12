@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Google Shortlink by BestWebSoft
-Plugin URI: http://bestwebsoft.com/products/
-Description: This plugin allows you to shorten links of you site with Google Shortlink
+Plugin URI: http://bestwebsoft.com/products/google-shortlink/
+Description: Replace external WordPress website links with Google shortlinks and track click stats.
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.5.0
+Version: 1.5.1
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
 */
@@ -31,8 +31,8 @@ License: GPLv2 or later
 if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 	function gglshrtlnk_menu() {
 		bws_general_menu();
-		$settings = add_submenu_page( 'bws_plugins', __( 'Google Shortlink Settings', 'google-shortlink' ), 'Google Shortlink', 'manage_options', 'gglshrtlnk_options', 'gglshrtlnk_options_page' );
-		$hook = add_menu_page( 'Google Shortlink', 'Google Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', plugins_url( 'bws_menu/images/px.png', __FILE__ ), '55.1' );
+		$settings = add_submenu_page( 'bws_panel', __( 'Google Shortlink Settings', 'google-shortlink' ), 'Google Shortlink', 'manage_options', 'gglshrtlnk_options', 'gglshrtlnk_options_page' );
+		$hook = add_menu_page( 'Google Shortlink', 'Google Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', plugins_url( 'images/menu_single.png', __FILE__ ), '55.1' );
 		
 		add_action( 'load-' . $settings, 'gglshrtlnk_add_tabs' );
 		add_action( 'load-' . $hook, 'gglshrtlnk_add_tabs' );
@@ -1020,25 +1020,22 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 				<?php break;
 				case 'faq': ?>			
 					<h3><?php _e( 'How to get API key', 'google-shortlink' ); ?></h3>
-					<p>
-						<?php _e( 'To get API key you must go to', 'google-shortlink' ); ?>
-						<a href="https://code.google.com/apis/console" target="_blank">Google Api Console</a>.
-						<?php _e( 'Then go to "Projects" tab and press "Create project" button.', 'google-shortlink' ); ?><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_1.png', __FILE__ ); ?>" /><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_2.png', __FILE__ ); ?>" /><br/>
-						<?php _e( 'After that you will be redirected to project page. Go to "API and auth" tab. Make sure "URL Shortener API" turn on.' , 'google-shortlink' ); ?><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_3.png', __FILE__ ); ?>" /><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_4.png', __FILE__ ); ?>" /><br/>
-						<?php _e( 'Then go to "Credentials" tab. At "Public API access" section of the page click "Create new key" button.', 'google-shortlink' ); ?><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_5.png', __FILE__ ); ?>" /><br/>
-						<?php echo __( 'In a popup window, that will appear choose "Browser key".','google-shortlink ' ) .' <b>' . __( 'Do not fill', 'google-shortlink') .'</b> ' . __( '"referers" field in the next popup window and click "Create" button.', 'google-shortlink' ) . '<br />'; ?>
-						<?php _e( 'It is important not to fill "referers" field. It may cause "Acces not configured" error, it is highly recomended to leave this field empty for correct work.', 'google-shortlink' ); ?><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_6.png', __FILE__ ); ?>" /><br/>
-						<?php _e( 'After all you will see created API key at the page, just copy and paste it to the field below and enjoy the plugin.', 'google-shortlink' ); ?><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_7.png', __FILE__ ); ?>" /><br/>
-						<?php _e( 'If the interface on your Google Api Console differs from the given screenshots, you may probably have not switched to the new interface.', 'google-shortlink' ); ?><br/>
-						<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_8.png', __FILE__ ); ?>" /><br/>
-					</p>
+					<p><?php printf( __( 'To get API key you must go to %s.', 'google-shortlink' ), '<a href="https://console.developers.google.com/apis/library" target="_blank">Google Api Console</a>' ); ?>
+					<?php _e( 'Then find "Select a project" in the upper right corner and select "Create a project...".', 'google-shortlink' ); ?></p>
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_1.png', __FILE__ ); ?>" /><br/>
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_2.png', __FILE__ ); ?>" />
+					<p><?php _e( 'After that go to "URL Shortener API". Click "Enable".' , 'google-shortlink' ); ?></p>
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_3.png', __FILE__ ); ?>" />
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_4.png', __FILE__ ); ?>" />
+					<p><?php _e( 'Then go to "Credentials" tab. At "Create credentials" select "API key".', 'google-shortlink' ); ?></p>
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_5.png', __FILE__ ); ?>" />
+					<p><?php _e( 'In a popup window, that will appear choose "Browser key".','google-shortlink ' ); ?></p>
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_6.png', __FILE__ ); ?>" />
+					<p><?php _e( 'Do not fill "referers" field in the next window and click "Create" button.', 'google-shortlink' ); ?>
+						<?php _e( 'It is important not to fill "referers" field. It may cause "Acces not configured" error, it is highly recomended to leave this field empty for correct work.', 'google-shortlink' ); ?></p>
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_7.png', __FILE__ ); ?>" />
+					<p><?php _e( 'After all you will see created API key at the page, just copy and paste it to the field on the plugin settings page and enjoy the plugin.', 'google-shortlink' ); ?></p>
+					<img class="gglsrtlnk_img" src="<?php echo plugins_url( 'images/faq_8.png', __FILE__ ); ?>" />					
 					<h3><?php _e( 'I have an error!', 'google-shortlink' ); ?></h3>
 					<h4><?php _e( 'Access not configured', 'google-shortlink' ); ?></h4>
 					<img class="gglsrtlnk_img gglsrtlnk_img_error" src="<?php echo plugins_url( 'images/error_1.png', __FILE__ ); ?>" /><br/>
@@ -1224,7 +1221,7 @@ if ( ! function_exists ( 'gglshrtlnk_admin_notices' ) ) {
 	function gglshrtlnk_admin_notices() {
 		global $hook_suffix, $gglshrtlnk_plugin_info;
 		if ( 'plugins.php' == $hook_suffix && ! is_network_admin() ) {
-			bws_plugin_banner_to_settings( $gglshrtlnk_plugin_info, 'gglshrtlnk_options', 'google-shortlink', 'admin.php?page=gglshrtlnk_options', 'admin.php?page=google-shortlink&tab=all', 'Google Shortlink' );
+			bws_plugin_banner_to_settings( $gglshrtlnk_plugin_info, 'gglshrtlnk_options', 'google-shortlink', 'admin.php?page=gglshrtlnk_options', 'admin.php?page=google-shortlink&tab=all' );
 		}
 		if ( isset( $_GET['page'] ) && ( 'gglshrtlnk_options' == $_GET['page'] || 'google-shortlink' == $_GET['page'] ) ) {
 			bws_plugin_suggest_feature_banner( $gglshrtlnk_plugin_info, 'gglshrtlnk_options', 'google-shortlink' );
