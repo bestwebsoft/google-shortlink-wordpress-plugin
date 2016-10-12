@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Google Shortlink by BestWebSoft
-Plugin URI: http://bestwebsoft.com/products/google-shortlink/
+Plugin URI: http://bestwebsoft.com/products/wordpress/plugins/google-shortlink/
 Description: Replace external WordPress website links with Google shortlinks and track click stats.
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.5.1
+Version: 1.5.2
 Author URI: http://bestwebsoft.com
 License: GPLv2 or later
 */
