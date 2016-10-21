@@ -5,36 +5,59 @@ Replace external WordPress website links with Google shortlinks and track click 
 
 <img src="http://bestwebsoft.com/wp-content/uploads/2014/09/shortlink-banner-website1.jpg" />
 
-<p>This plugin allows you to get short links from <a href="https://goo.gl">Google URL Shortener</a> service without leaving your site. It works in two modes: get short links by direct input and get short link for all external links on your site automatically. With this plugin you can replace all external links on your site with short links. The plugin also displays a click-through statistics for each short link.</p>
+<p>Google Shortlink plugin is a useful tool to get short links from Google URL Shortener service without leaving your WordPress website. Generate short links by direct input and/or automatically. Replace all external links on your website with short links, restore or delete them from database, and manage statistic.</p>
+
+<p>Install, activate, and save your time!</p>
 
 
 <div class='video'></div>
 
 
-<p><a href="http://wordpress.org/plugins/google-shortlink/faq/">Google Shortlink by BestWebSoft FAQ</a></p>
-
-<p><a href="http://support.bestwebsoft.com">Google Shortlink by BestWebSoft Support</a></p>
-
 <h4>Features</h4>
 
 <ul>
-<li>Get a short link by direct input.</li>
-<li>Get short links for all external links on your site automatically.</li>
-<li>Swap normal links to short links and vice versa on your site anytime.</li>
-<li>Choose the number of links to display on a page.</li>
-<li>View the click-through statistics of short links.</li>
-</ul>
-
-<p>If you have a feature, suggestion or idea you'd like to see in the plugin, we'd love to hear about it! <a href="http://support.bestwebsoft.com/hc/en-us/requests/new">Suggest a Feature</a></p>
-
-<h4>Recommended Plugins</h4>
-
-<p>The author of the Google Shortlink also recommends the following plugins:</p>
+<li>Automatically generate short links </li>
+<li>Generate short links by direct output</li>
+<li>Add unlimited number of fields for direct links input</li>
+<li>View list of links with additional info:
 
 <ul>
-<li><a href="http://wordpress.org/plugins/updater/">Updater</a> - This plugin updates WordPress core and the plugins to the recent versions. You can also use the auto mode or manual mode for updating and set email notifications.
-There is also a premium version of the plugin <a href="http://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1">Updater Pro</a> with more useful features available. It can make backup of all your files and database before updating. Also it can forbid some plugins or WordPress Core update.</li>
+<li>Page URL</li>
+<li>Short link</li>
+<li>Number of total clicks</li>
+<li>Articles that contain link</li>
+</ul></li>
+<li>Manage your links manually with the following options:
+
+<ul>
+<li>Replace</li>
+<li>Restore</li>
+<li>Delete</li>
+</ul></li>
+<li>Manage all external links automatically:</li>
+<li>Scan website for new links
+
+<ul>
+<li>Replace </li>
+<li>Restore </li>
+<li>Restore all links and clear database</li>
+</ul></li>
+<li>Compatible with latest WordPress version</li>
+<li>Incredibly simple settings for fast setup without modifying code</li>
+<li>Detailed step-by-step documentation and videos</li>
 </ul>
+
+<p>If you have a feature suggestion or idea you'd like to see in the plugin, we'd love to hear about it! <a href="http://support.bestwebsoft.com/hc/en-us/requests/new">Suggest a Feature</a></p>
+
+<h4>Documentation &#38; Videos</h4>
+
+<ul>
+<li><a href="https://docs.google.com/document/d/1DAvJCKv4sj2wxBQmWVKtABYk3kwkTS_cKhJIiPGlG3o/">[Doc] Installation</a></li>
+</ul>
+
+<h4>Help &#38; Support</h4>
+
+<p>Visit our Help Center if you have any questions, our friendly Support Team is happy to help &#8212; <a href="http://support.bestwebsoft.com/">http://support.bestwebsoft.com/</a></p>
 
 <h4>Translation</h4>
 
@@ -43,12 +66,16 @@ There is also a premium version of the plugin <a href="http://bestwebsoft.com/pr
 <li>Ukrainian (uk)</li>
 </ul>
 
-<p>If you would like to create your own language pack or update the existing one, you can send <a href="http://codex.wordpress.org/Translating_WordPress">the text of PO and MO files</a> for <a href="http://support.bestwebsoft.com/hc/en-us/requests/new">BestWebSoft</a> and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO files  <a href="http://www.poedit.net/download.php">Poedit</a>.</p>
+<p>Some of these translations are not complete. We are constantly adding new features which should be translated. If you would like to create your own language pack or update the existing one, you can send <a href="http://codex.wordpress.org/Translating_WordPress">the text of PO and MO files</a> to <a href="http://support.bestwebsoft.com/hc/en-us/requests/new">BestWebSoft</a> and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO <a href="http://www.poedit.net/download.php">files Poedit</a>.</p>
 
-<h4>Technical support</h4>
+<h4>Recommended Plugins</h4>
 
-<p>Dear users, our plugins are available for free download. If you have any questions or recommendations regarding the functionality of our plugins (existing options, new options, current issues), please feel free to contact us. Please note that we accept requests in English only. All messages in other languages won't be accepted.</p>
+<ul>
+<li><a href="http://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1">Updater</a> - Automatically check and update WordPress core with all installed plugins to the latest versions. Manual mode, email notifications and backups of all your files and database before updating.</li>
+</ul>
 
-<p>If you notice any bugs in the plugins, you can notify us about it and we'll investigate and fix the issue then. Your request should contain URL of the website, issues description and WordPress admin panel credentials.
-Moreover we can customize the plugin according to your requirements. It's a paid service (as a rule it costs $40, but the price can vary depending on the amount of the necessary changes and their complexity). Please note that we could also include this or that feature (developed for you) in the next release and share with the other users then. 
-We can fix some things for free for the users who provide translation of our plugin into their native language (this should be a new translation of a certain plugin, you can check available translations on the official plugin page).</p>
+<h4>Donate</h4>
+
+<p>Donations play an important role in supporting open-source projects. We greatly appreciate any donation you can make to help us continue further development of free products.</p>
+
+<p><a href="http://bestwebsoft.com/donate/">Donate Now</a></p>
