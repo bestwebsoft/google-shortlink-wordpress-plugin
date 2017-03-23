@@ -1,10 +1,10 @@
 === Google Shortlink by BestWebSoft ===
 Contributors: bestwebsoft
-Donate link: http://bestwebsoft.com/donate/
+Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, add shortlink, shortlink, google shortlink, shortlink plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
 Requires at least: 3.8
-Tested up to: 4.6.1
-Stable tag: 1.5.2
+Tested up to: 4.7.3
+Stable tag: 1.5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,7 +20,7 @@ http://www.youtube.com/watch?v=SZIWLm8mmdU
 
 = Features =
 
-* Automatically generate short links 
+* Automatically generate short links
 * Generate short links by direct output
 * Add unlimited number of fields for direct links input
 * View list of links with additional info:
@@ -34,39 +34,39 @@ http://www.youtube.com/watch?v=SZIWLm8mmdU
 	* Delete
 * Manage all external links automatically:
 * Scan website for new links
-	* Replace 
-	* Restore 
+	* Replace
+	* Restore
 	* Restore all links and clear database
 * Compatible with latest WordPress version
 * Incredibly simple settings for fast setup without modifying code
 * Detailed step-by-step documentation and videos
 
-If you have a feature suggestion or idea you'd like to see in the plugin, we'd love to hear about it! [Suggest a Feature](http://support.bestwebsoft.com/hc/en-us/requests/new)
+If you have a feature suggestion or idea you'd like to see in the plugin, we'd love to hear about it! [Suggest a Feature](https://support.bestwebsoft.com/hc/en-us/requests/new)
 
 = Documentation & Videos =
 
-* [[Doc] Installation](https://docs.google.com/document/d/1DAvJCKv4sj2wxBQmWVKtABYk3kwkTS_cKhJIiPGlG3o/)
+* [[Doc] Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/edit)
 
 = Help & Support =
 
-Visit our Help Center if you have any questions, our friendly Support Team is happy to help — <http://support.bestwebsoft.com/>
+Visit our Help Center if you have any questions, our friendly Support Team is happy to help — <https://support.bestwebsoft.com/>
 
 = Translation =
 
 * Russian (ru_RU)
 * Ukrainian (uk)
 
-Some of these translations are not complete. We are constantly adding new features which should be translated. If you would like to create your own language pack or update the existing one, you can send [the text of PO and MO files](http://codex.wordpress.org/Translating_WordPress) to [BestWebSoft](http://support.bestwebsoft.com/hc/en-us/requests/new) and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO [files Poedit](http://www.poedit.net/download.php).
+Some of these translations are not complete. We are constantly adding new features which should be translated. If you would like to create your own language pack or update the existing one, you can send [the text of PO and MO files](http://codex.wordpress.org/Translating_WordPress) to [BestWebSoft](https://support.bestwebsoft.com/hc/en-us/requests/new) and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO [files Poedit](http://www.poedit.net/download.php).
 
 = Recommended Plugins =
 
-* [Updater](http://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1) - Automatically check and update WordPress core with all installed plugins to the latest versions. Manual mode, email notifications and backups of all your files and database before updating.
+* [Updater](https://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1) - Automatically check and update WordPress core with all installed plugins to the latest versions. Manual mode, email notifications and backups of all your files and database before updating.
 
 = Donate =
 
 Donations play an important role in supporting open-source projects. We greatly appreciate any donation you can make to help us continue further development of free products.
 
-[Donate Now](http://bestwebsoft.com/donate/)
+[Donate Now](https://bestwebsoft.com/donate/)
 
 == Installation ==
 
@@ -76,37 +76,40 @@ Donations play an important role in supporting open-source projects. We greatly 
 4. Plugin page is located in main menu.
 4. Enter your API key for goo.gl account on plugin options page.
 
-[View a Step-by-step Instruction on Google Shortlink Installation](https://docs.google.com/document/d/1DAvJCKv4sj2wxBQmWVKtABYk3kwkTS_cKhJIiPGlG3o/)
+[View a Step-by-step Instruction on Google Shortlink Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/edit)
 
 == Frequently Asked Questions ==
 
-= Where can I get api key for this plugin? =
+= Where can I get API key for this plugin? =
 
-1. You must go to [Google develoters console](https://cloud.google.com/console/project) and create a new project ( set fields Project name and Progect id as you wish ).
-2. After creating the project go to the "APIs & auth" tab.
-3. Find in the list of avaliable apis "URL Shortener API" and set it ON.
-4. After that go to "Credentials" tab and click "CREATE NEW KEY" button in "Public API access" area.
-5. After all in pop-up window choose "browser key". The generated key will appear on the page, and you can regenerate it anytime.
+Please complete the following:
 
-= How to replace all external links on my site with short links? =
+1. You must go to [Google developers console](https://cloud.google.com/console/project) and create a new project (set fields "Project name" and "Project ID" as you wish).
+2. After creating the project go to the “APIs & auth” tab.
+3. Find in the list of available APIs “URL Shortener API” and set it ON.
+4. After that go to “Credentials” tab and click “CREATE NEW KEY” button in “Public API access” area.
+5. Choose “browser key” in pop-up window. The generated key will appear on the page, and you can regenerate it anytime.
 
-1. Go to the plugin main page "Google Shortlink" in the main menu( Dashboard ).
+= Can I get a shortlink for any link I need? =
+
+Yes, just paste it to one of the fields below “Type long links here:” title on "Direct input" tab at plugin’s main page and press a button “Get short links”. A short link will appear beside and also be saved in the database.
+
+= How to replace all external links on my website with shortlinks. =
+
+Please complete the following:
+
+1. Go to the plugin main page “Google Shortlink by BestWebSoft” in the main menu (Dashboard).
 2. Go to Additional options tab.
-3. Set 'Scan web-site for new external links ' option on and click the button "Apply" below. Scanning your website may take some time, don't be afraid, it's normal.
-4. Now you can manage those links as your wish with options on the main page. In particular case to replase all external links to short links set "Replace automatically all external links" option on and press "Apply button".
-
-= Can I get short link for any link that I want? =
-
-Yes, just paste it to one of the fields below "Type long links here:" title on 'Direct input' tab at plugin's main page and press a button "Get short links". A short link will appear beside and also be saved in db.
+3. Set "Scan web-site for new external links" option on and click the button “Apply” below. Scanning your website may take some time, don’t be afraid, it’s normal.
+4. Now you can manage those links as your wish with options on the main page. In a particular case, to replace all external links to short links set “Replace automatically all external links” option on and press “Apply button”.
 
 = I have some problems with the plugin's work. What Information should I provide to receive proper support? =
 
-Please make sure that the problem hasn't been discussed yet on our forum (<http://support.bestwebsoft.com>). If no, please provide the following data along with your problem's description:
-
-1. the link to the page where the problem occurs
-2. the name of the plugin and its version. If you are using a pro version - your order number.
-3. the version of your WordPress installation
-4. copy and paste into the message your system status report. Please read more here: [Instruction on System Status](https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit)
+Please make sure that the problem hasn't been discussed yet on our forum (https://support.bestwebsoft.com). If no, please provide the following data along with your problem's description:
+1. The link to the page where the problem occurs
+2. The name of the plugin and its version. If you are using a pro version - your order number.
+3. The version of your WordPress installation
+4. Copy and paste into the message your system status report. Please read more here: [Instruction on System Status](https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit)
 
 == Screenshots ==
 
@@ -117,6 +120,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (<http:
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.5.3 - 23.03.2017 =
+* Bugfix : We fixed bug with short links.
 
 = V1.5.2 - 12.10.2016 =
 * Update : BWS plugins section is updated.
@@ -187,8 +193,11 @@ Please make sure that the problem hasn't been discussed yet on our forum (<http:
 
 == Upgrade Notice ==
 
+= V1.5.3 =
+We fixed bug with short links.
+
 = V1.5.2 =
-* Plugin optimization completed.
+Plugin optimization completed.
 
 = V1.5.1 =
 Instruction on How to get API key has been updated.
@@ -221,7 +230,7 @@ The misprint in the code was fixed. Check ajax referer is added. We updated all 
 Security Exploit was fixed. We updated all functionality for wordpress 4.0-beta3.
 
 = V1.4.1 =
-Bug with replacing, restoring, deleting of links was fixed. We fixed a bug creating a database when you first start the plugin. BWS plugins section is updated. We updated all functionality for wordpress 3.9.1. The Ukrainian language file is added to the plugin. 
+Bug with replacing, restoring, deleting of links was fixed. We fixed a bug creating a database when you first start the plugin. BWS plugins section is updated. We updated all functionality for wordpress 3.9.1. The Ukrainian language file is added to the plugin.
 
 = V1.4 =
 We added support for custom types. Plugin optimization is done. BWS menu and screenshots are updated.
