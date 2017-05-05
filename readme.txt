@@ -2,9 +2,9 @@
 Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, add shortlink, shortlink, google shortlink, shortlink plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
-Requires at least: 3.8
-Tested up to: 4.7.3
-Stable tag: 1.5.3
+Requires at least: 3.9
+Tested up to: 4.7.4
+Stable tag: 1.5.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ Google Shortlink plugin is a useful tool to get short links from Google URL Shor
 
 Install, activate, and save your time!
 
-http://www.youtube.com/watch?v=SZIWLm8mmdU
+https://www.youtube.com/watch?v=SZIWLm8mmdU
 
 = Features =
 
@@ -33,7 +33,7 @@ http://www.youtube.com/watch?v=SZIWLm8mmdU
 	* Restore
 	* Delete
 * Manage all external links automatically:
-* Scan website for new links
+	* Scan website for new links
 	* Replace
 	* Restore
 	* Restore all links and clear database
@@ -56,17 +56,11 @@ Visit our Help Center if you have any questions, our friendly Support Team is ha
 * Russian (ru_RU)
 * Ukrainian (uk)
 
-Some of these translations are not complete. We are constantly adding new features which should be translated. If you would like to create your own language pack or update the existing one, you can send [the text of PO and MO files](http://codex.wordpress.org/Translating_WordPress) to [BestWebSoft](https://support.bestwebsoft.com/hc/en-us/requests/new) and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO [files Poedit](http://www.poedit.net/download.php).
+Some of these translations are not complete. We are constantly adding new features which should be translated. If you would like to create your own language pack or update the existing one, you can send [the text of PO and MO files](https://codex.wordpress.org/Translating_WordPress) to [BestWebSoft](https://support.bestwebsoft.com/hc/en-us/requests/new) and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO [files Poedit](https://www.poedit.net/download.php).
 
 = Recommended Plugins =
 
 * [Updater](https://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1) - Automatically check and update WordPress core with all installed plugins to the latest versions. Manual mode, email notifications and backups of all your files and database before updating.
-
-= Donate =
-
-Donations play an important role in supporting open-source projects. We greatly appreciate any donation you can make to help us continue further development of free products.
-
-[Donate Now](https://bestwebsoft.com/donate/)
 
 == Installation ==
 
@@ -120,6 +114,10 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.5.4 - 05.05.2017 =
+* Bugfix : The bug with incomplete short links replacement was fixed.
+* Bugfix : The bug with empty post title displaying was fixed.
 
 = V1.5.3 - 23.03.2017 =
 * Bugfix : We fixed bug with short links.
@@ -192,6 +190,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.5.4 =
+* Bugs fixed
 
 = V1.5.3 =
 We fixed bug with short links.

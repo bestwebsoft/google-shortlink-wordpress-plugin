@@ -686,6 +686,12 @@ span.bws_code {
     margin-right: 10px;
     width: calc( 100% - 20px );
 }
+#bws_settings_tabs_wrapper .bws_tab button,
+#bws_settings_tabs_wrapper .bws_tab input[type="submit"],
+#bws_settings_tabs_wrapper .bws_tab input[type="button"] {
+    white-space: normal;
+    height: auto;
+}
 .bws_form .postbox .hndle {
     cursor: inherit;
 }
@@ -775,6 +781,9 @@ span.bws_code {
     .bws_form #postbox-container-2 .postbox {
         margin-bottom: 20px;
     }
+    .bws_form .postbox-container div.submit {
+        display: none;
+    }
 }
 @media screen and (max-width: 782px) {
     .bws-hide-for-mobile {
@@ -785,10 +794,10 @@ span.bws_code {
     #bws_settings_tabs_wrapper .bws_tab .form-table td input[type=file] {
         width: 182px;
     }
-    #bws_settings_tabs_wrapper .bws_tab .form-table td input[type=text],
+    #bws_settings_tabs_wrapper .bws_tab .form-table td input[type=text]:not(.small-text),
     #bws_settings_tabs_wrapper .bws_tab .form-table td input[type=password],
     #bws_settings_tabs_wrapper .bws_tab .form-table td input[type=search],
-    #bws_settings_tabs_wrapper .bws_tab .form-table td input[type=number],
+    #bws_settings_tabs_wrapper .bws_tab .form-table td input[type=number]:not(.small-text),
     #bws_settings_tabs_wrapper .bws_tab .form-table td select,
     #bws_settings_tabs_wrapper .bws_tab .form-table td textarea {
         width: 100%;
