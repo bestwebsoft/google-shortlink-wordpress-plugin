@@ -1,10 +1,10 @@
 === Google Shortlink by BestWebSoft ===
 Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
-Tags: add link shortener, add shortlink, shortlink, google shortlink, shortlink plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
+Tags: add link shortener, firebase plugin, firebase dynamic plugin, google shortlink, firebase links, firebase plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
 Requires at least: 3.9
-Tested up to: 4.7.4
-Stable tag: 1.5.4
+Tested up to: 5.0.3
+Stable tag: 1.5.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,6 +20,7 @@ https://www.youtube.com/watch?v=SZIWLm8mmdU
 
 = Features =
 
+* Firebase Dynamic Links API [NEW]
 * Automatically generate short links
 * Generate short links by direct output
 * Add unlimited number of fields for direct links input
@@ -45,7 +46,8 @@ If you have a feature suggestion or idea you'd like to see in the plugin, we'd l
 
 = Documentation & Videos =
 
-* [[Doc] Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/edit)
+* [[Doc] Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/)
+* [[Doc] How to Use](https://docs.google.com/document/d/13V7769ghm0d5KjzAIZIytnkLLc9yfWWe59jr81oQXEo/)
 
 = Help & Support =
 
@@ -60,7 +62,7 @@ Some of these translations are not complete. We are constantly adding new featur
 
 = Recommended Plugins =
 
-* [Updater](https://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1) - Automatically check and update WordPress core with all installed plugins to the latest versions. Manual mode, email notifications and backups of all your files and database before updating.
+* [Updater](https://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1) - Automatically check and update WordPress website core with all installed plugins and themes to the latest versions.
 
 == Installation ==
 
@@ -103,7 +105,7 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 1. The link to the page where the problem occurs
 2. The name of the plugin and its version. If you are using a pro version - your order number.
 3. The version of your WordPress installation
-4. Copy and paste into the message your system status report. Please read more here: [Instruction on System Status](https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit)
+4. Copy and paste into the message your system status report. Please read more here: [Instruction on System Status](https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/)
 
 == Screenshots ==
 
@@ -114,6 +116,11 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 5. 'FAQ' tab on plugin's main page
 
 == Changelog ==
+
+= V1.5.5 - 15.01.2019 =
+* NEW : Ability to switch to Firebase Dynamic Links API has been added.
+* Bugfix : The bug with the links search has been fixed.
+* Bugfix : The bug with the incorrect error displaying during website scanning has been fixed.
 
 = V1.5.4 - 05.05.2017 =
 * Bugfix : The bug with incomplete short links replacement was fixed.
@@ -190,6 +197,10 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.5.5 =
+* Bugs fixed
+* New features added.
 
 = V1.5.4 =
 * Bugs fixed
