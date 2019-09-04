@@ -2,9 +2,9 @@
 Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, firebase plugin, firebase dynamic plugin, google shortlink, firebase links, firebase plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
-Requires at least: 3.9
-Tested up to: 5.0.3
-Stable tag: 1.5.5
+Requires at least: 4.0
+Tested up to: 5.2.2
+Stable tag: 1.5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,7 +20,7 @@ https://www.youtube.com/watch?v=SZIWLm8mmdU
 
 = Features =
 
-* Firebase Dynamic Links API [NEW]
+* Firebase Dynamic Links API
 * Automatically generate short links
 * Generate short links by direct output
 * Add unlimited number of fields for direct links input
@@ -117,6 +117,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 
 == Changelog ==
 
+= V1.5.6 - 04.09.2019 =
+* Update : The deactivation feedback has been changed. Misleading buttons have been removed.
+
 = V1.5.5 - 15.01.2019 =
 * NEW : Ability to switch to Firebase Dynamic Links API has been added.
 * Bugfix : The bug with the links search has been fixed.
@@ -197,6 +200,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.5.6 =
+* Usability improved
 
 = V1.5.5 =
 * Bugs fixed

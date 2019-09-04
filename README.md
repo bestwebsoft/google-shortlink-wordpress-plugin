@@ -6,7 +6,7 @@
 <p><span class="embed-youtube" style="text-align:center; display: block;"></span></p>
 <h4>Features</h4>
 <ul>
-<li>Firebase Dynamic Links API [NEW]</li>
+<li>Firebase Dynamic Links API</li>
 <li>Automatically generate short links</li>
 <li>Generate short links by direct output</li>
 <li>Add unlimited number of fields for direct links input</li>
