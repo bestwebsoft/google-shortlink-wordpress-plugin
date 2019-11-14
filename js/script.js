@@ -8,7 +8,7 @@
 			$( '[name ^= gglshrtlnk_url-input-]' ).each( function() {
 				if ( '' == $( this ).attr( 'value' ) ) { 
 					gglshrtlnk_is_empty = 1;
-					return false
+					return false;
 				} else { 
 					gglshrtlnk_is_empty = 0;
 				}
@@ -74,16 +74,16 @@
 			switch ( gglshrtlnk_radio_state ) {
 				case 'replace-all':
 					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_replace_all + '</p>' );
-				break
+				break;
 				case 'restore-all':
 					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_restore_all + '</p>' );
-				break
+				break;
 				case 'delete-all-radio':
 					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_delete_all_radio + '</p>' );					
-				break
+				break;
 				case 'scan':
 					$( '#gglshrtlnk_ajax-status' ).html( '<p>' + gglshrtlnk_vars.gglshrtlnk_scan + '</p>' );
-				break
+				break;
 			}
 
 			$.ajax({
@@ -130,8 +130,6 @@
 				$( '.total_clicks').eq( current_item ).html( result );
 			});
 		});
-
-
 
 		// $( '#gglshrtlnk_oauth_send' ).on('click', function(){
 		// 	var gglshrtlnk_data = {

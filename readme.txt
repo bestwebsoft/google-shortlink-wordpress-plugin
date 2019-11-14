@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, firebase plugin, firebase dynamic plugin, google shortlink, firebase links, firebase plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
 Requires at least: 4.0
-Tested up to: 5.2.2
-Stable tag: 1.5.6
+Tested up to: 5.3
+Stable tag: 1.5.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -117,6 +117,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 
 == Changelog ==
 
+= V1.5.7 - 14.11.2019 =
+* Bugfix : Minor bugs were fixed.
+
 = V1.5.6 - 04.09.2019 =
 * Update : The deactivation feedback has been changed. Misleading buttons have been removed.
 
@@ -201,8 +204,11 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 
 == Upgrade Notice ==
 
+= V1.5.7 =
+* Bugs fixed.
+
 = V1.5.6 =
-* Usability improved
+* Usability improved.
 
 = V1.5.5 =
 * Bugs fixed

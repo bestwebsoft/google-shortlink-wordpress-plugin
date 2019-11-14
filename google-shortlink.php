@@ -6,7 +6,7 @@ Description: Replace external WordPress website links with Google shortlinks and
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.5.6
+Version: 1.5.7
 Author URI: https://bestwebsoft.com
 License: GPLv2 or later
 */
@@ -885,7 +885,7 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 		if ( empty( $gglshrtlnk_options ) ) {
 		    $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
         }
-		if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+		if ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 			/*if search query was send */
 			if ( isset( $_POST['s'] ) && '' != $_POST['s'] ) {
 				$gglshrtlnk_search = stripcslashes( $_POST['s'] );
@@ -925,7 +925,7 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 			$i = 0;
 
 			foreach ( $gglshrtlnk_data as $gglshrtlnk_row ) {
-				if ( 'added_by_direct' != $gglshrtlnk_row['post_ids'] ) {
+				if ( 'added_by_direct' != $gglshrtlnk_row['post_ids'] && @unserialize( $gglshrtlnk_row['post_ids'] ) ) {
 					$gglshrtlnk_post_ids        = unserialize( $gglshrtlnk_row['post_ids'] );
 					$gglshrtlnk_post_ids_string = implode( " OR ID = ", $gglshrtlnk_post_ids );
 					/*get post title and guid from db */
@@ -963,7 +963,7 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 			} else {
 				return false;
 			}
-		} elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+		} elseif ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 			/*if search query was send */
 			if ( isset( $_POST['s'] ) && '' != $_POST['s'] ) {
 				$gglshrtlnk_search = stripcslashes( $_POST['s'] );
@@ -1132,9 +1132,9 @@ if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
 				global $wpdb, $gglshrtlnk_options;
 				$gglshrtlnk_is_added_by_direct = '';
 
-				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				if ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM `" . $wpdb->prefix . "google_shortlink` WHERE `id` = %s", $item['id'] ) );
-				} elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				} elseif ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM `" . $wpdb->prefix . "google_shortlink_for_firebase` WHERE `id` = %s", $item['id'] ) );
                 }
 				if ( 'added_by_direct' != $gglshrtlnk_is_added_by_direct ) {
@@ -1169,9 +1169,9 @@ if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
 				$this->_column_headers = array( $columns, $hidden, $sortable, 'long_url' );
 				$this->items = gglshrtlnk_table_data();
 				$action = $this->current_action();
-				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				if ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
-                } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+                } elseif ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink_for_firebase" );
                 }
 				$table_items_quantity = count( (array) $this->items );
@@ -1224,9 +1224,9 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 				</li>
 			</ul>
 			<h2 class="nav-tab-wrapper">
-			<?php if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) { ?>
+			<?php if ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 0 == $gglshrtlnk_options['firebase_api_is_on'] ) { ?>
 				<a class="nav-tab <?php if ( ! isset( $_GET['tab'] ) ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink', '' ); ?>"><?php _e( 'Table Of Links for Shortener API', 'google-shortlink' ); ?></a>
-			<?php } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) { ?>
+			<?php } elseif ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 1 == $gglshrtlnk_options['firebase_api_is_on'] ) { ?>
 				<a class="nav-tab <?php if ( ! isset( $_GET['tab'] ) ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink', '' ); ?>"><?php _e( 'Table of links for Firebase Dynamic Links', 'google-shortlink' ); ?></a>
 			<?php } ?>
 				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'direct' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=direct', '' ); ?>"><?php _e( 'Direct Input', 'google-shortlink' ); ?></a>
@@ -1276,7 +1276,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 						</p>
 					</div>
 				<?php }
-				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				if ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					if ( '' == $gglshrtlnk_options['api_key'] ) { ?>
                         <div class="error below-h2">
                             <p>
@@ -1284,7 +1284,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
                             </p>
                         </div>
 					<?php }
-				} elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				} elseif ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					if ( '' == $gglshrtlnk_options['api_key_for_firebase'] ) { ?>
                         <div class="error below-h2 notice-error">
                             <p>
@@ -1332,7 +1332,7 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 					</div>
 				<?php }
 				$gglshrtlnk_total_items = '';
-				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				if ( isset( $gglshrtlnk_options['firebase_api_is_on'] ) && 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
                 } else {
 					$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink_for_firebase" );
@@ -1668,8 +1668,7 @@ if ( ! function_exists( 'gglshrtlnk_get' ) ) {
 	        }
 	        /* api key for application */
 	        $gglshrtlnk_api_key = $gglshrtlnk_options['api_key_for_firebase'];
-	        $gglshrtlnk_domain_link = $gglshrtlnk_options['domain_link'];
-	        $gglshrtlnk_domain_link = parse_url( $gglshrtlnk_domain_link, PHP_URL_HOST ); // taking only host from provided domain link
+	        $gglshrtlnk_domain_link = ( null == parse_url( $gglshrtlnk_options['domain_link'], PHP_URL_HOST ) ) ? $gglshrtlnk_options['domain_link'] : parse_url( $gglshrtlnk_options['domain_link'], PHP_URL_HOST ); // taking only host from provided domain link
 	        /* encoding data to json */
 	        $gglshrtlnk_post_data = array(
 		        'dynamicLinkInfo' => array(
