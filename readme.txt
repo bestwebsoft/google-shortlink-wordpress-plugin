@@ -1,10 +1,10 @@
-=== Google Shortlink by BestWebSoft ===
+=== Shortlink by BestWebSoft ===
 Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, firebase plugin, firebase dynamic plugin, google shortlink, firebase links, firebase plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
-Requires at least: 4.0
-Tested up to: 5.3
-Stable tag: 1.5.7
+Requires at least: 4.5
+Tested up to: 5.3.2
+Stable tag: 1.5.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,7 +12,7 @@ Replace external WordPress website links with Google shortlinks and track click 
 
 == Description ==
 
-Google Shortlink plugin is a useful tool to get short links from Google URL Shortener service without leaving your WordPress website. Generate short links by direct input and/or automatically. Replace all external links on your website with short links, restore or delete them from database, and manage statistic.
+Shortlink plugin is a useful tool to get short links from Google URL Shortener service without leaving your WordPress website. Generate short links by direct input and/or automatically. Replace all external links on your website with short links, restore or delete them from database, and manage statistic.
 
 Install, activate, and save your time!
 
@@ -68,11 +68,11 @@ Some of these translations are not complete. We are constantly adding new featur
 
 1. Upload the `google-shortlink` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin via the 'Plugins' menu in WordPress.
-3. Plugin settings are located in "BWS Panel" > "Google Shortlink".
+3. Plugin settings are located in "Shortlink" -> "Settings".
 4. Plugin page is located in main menu.
 4. Enter your API key for goo.gl account on plugin options page.
 
-[View a Step-by-step Instruction on Google Shortlink Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/edit)
+[View a Step-by-step Instruction on Shortlink Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/edit)
 
 == Frequently Asked Questions ==
 
@@ -94,7 +94,7 @@ Yes, just paste it to one of the fields below “Type long links here:” title 
 
 Please complete the following:
 
-1. Go to the plugin main page “Google Shortlink by BestWebSoft” in the main menu (Dashboard).
+1. Go to the plugin main page Shortlink by BestWebSoft” in the main menu (Dashboard).
 2. Go to Additional options tab.
 3. Set "Scan web-site for new external links" option on and click the button “Apply” below. Scanning your website may take some time, don’t be afraid, it’s normal.
 4. Now you can manage those links as your wish with options on the main page. In a particular case, to replace all external links to short links set “Replace automatically all external links” option on and press “Apply button”.
@@ -113,9 +113,13 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 2. 'Direct input' tab on plugin's main page.
 3. 'Additional options' tab on plugin's main page.
 4. Plugin settings page in WordPress admin panel.
-5. 'FAQ' tab on plugin's main page
+5. Plugin settings page in WordPress admin panel.
 
 == Changelog ==
+
+= V1.5.8 - 15.01.2020 =
+* Update : Plugin was renamed.
+* Bugfix : Vulnerabilities and security issues were fixed.
 
 = V1.5.7 - 14.11.2019 =
 * Bugfix : Minor bugs were fixed.
@@ -203,6 +207,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.5.8 =
+* Bugs fixed.
 
 = V1.5.7 =
 * Bugs fixed.

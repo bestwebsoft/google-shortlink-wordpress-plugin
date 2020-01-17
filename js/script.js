@@ -131,16 +131,6 @@
 			});
 		});
 
-		// $( '#gglshrtlnk_oauth_send' ).on('click', function(){
-		// 	var gglshrtlnk_data = {
-		// 		action: 'oauth',
-        //         gglshrtlnk_oauth_send: 'gglshrtlnk_oauth_send'
-		// 	};
-		// 	$.post( ajaxurl, gglshrtlnk_data, function ( result ){
-		// 		console.log('123');
-		// 	});
-		// });
-
 		$('#gglshrtlnk_copy_to_clipboard').on('click', function ( event ) {
             event.preventDefault();
 			var $temp = $("<input>");

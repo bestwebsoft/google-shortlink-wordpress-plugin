@@ -1,7 +1,7 @@
-<a href="https://bestwebsoft.com/products/wordpress/plugins/google-shortlink/" target=_blank>Google Shortlink WordPress Plugin</a>
+<a href="https://bestwebsoft.com/products/wordpress/plugins/google-shortlink/" target=_blank>Shortlink WordPress Plugin</a>
 ========================
 
-<p>Google Shortlink plugin is a useful tool to get short links from Google URL Shortener service without leaving your WordPress website. Generate short links by direct input and/or automatically. Replace all external links on your website with short links, restore or delete them from database, and manage statistic.</p>
+<p>Shortlink plugin is a useful tool to get short links from Google URL Shortener service without leaving your WordPress website. Generate short links by direct input and/or automatically. Replace all external links on your website with short links, restore or delete them from database, and manage statistic.</p>
 <p>Install, activate, and save your time!</p>
 <p><span class="embed-youtube" style="text-align:center; display: block;"></span></p>
 <h4>Features</h4>

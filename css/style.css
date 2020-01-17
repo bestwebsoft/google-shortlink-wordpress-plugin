@@ -1,23 +1,10 @@
 /*Google Shortlink*/
 /*styles for input td in tables*/
-input[type=text] {
-    width: 300px;
-}
 #gglshrtlnk_direct-input-table .gglshrtlnk_long-link-column {
     padding: 1px 5px 1px 0;
 }
 .gglshrtlnk_hide {
     display: none !important;
-}
-
-.rtl .gglshrtlnk_how_to_use {
-    width: 100%;
-    text-align: left;
-}
-
-.gglshrtlnk_how_to_use {
-    width: 100%;
-    text-align: right;
 }
 /*table of links*/
 #gglshrtlnk_table-of-links .column-short_url,
@@ -35,20 +22,6 @@ input[type=text] {
 #gglshrtlnk_table-of-links p.search-box {
     margin: 3px 0 0 0;
 }
-.gglsrtlnk_img {
-    max-width: 100%;
-    border: 1px solid #dbdbdb;
-    margin: 5px 0;
-}
-.gglsrtlnk_img_error {
-    border: none;
-}
-.button-primary {
-    font-weight: normal;
-}
-.log-in-firebase {
-    margin-bottom: 10px;
-}
 #gglshrtlnk_copy_to_clipboard:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
@@ -61,21 +34,10 @@ input[type=text] {
     #gglshrtlnk_direct-input-table .gglshrtlnk_short-link-column {
         padding: 0px 0 0px 5px;
     }
-    /*general styles for tables*/
-    #gglshrtlnk_api-key {
-        width: 325px;
-    }
 }
 @media screen and (max-width: 782px) {
     #gglshrtlnk_table-of-links .wp-list-table .column-id {
         display: none;
-    }
-    .gglshrtlnk_how_to_use {
-        float: none;
-        font-size: 16px;
-    }
-    .form-table {
-        font-size: 13px;
     }
     .gglshrtlnk_long-link-column,
     .gglshrtlnk_short-link-column {
