@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: google-shortlink\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-06 16:53+0200\n"
+"POT-Creation-Date: 2021-03-26 15:36+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: bestwebsoft.com <wp@bestwebsoft.com>\n"
@@ -14,69 +14,77 @@ msgstr ""
 "X-Poedit-KeywordsList: _e;__;_n:1,2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: bws_menu\n"
 
-#: google-shortlink.php:36 google-shortlink.php:697
-#: includes/class-gglshrtlnk-settings.php:83
+#: google-shortlink.php:36 google-shortlink.php:1285
+msgid "Links"
+msgstr "Посилання"
+
+#: google-shortlink.php:38 google-shortlink.php:1286
+msgid "Add New"
+msgstr "Додати Нове"
+
+#: google-shortlink.php:40 google-shortlink.php:757
+#: includes/class-gglshrtlnk-settings.php:93
 msgid "Shortlink Settings"
 msgstr "Налаштування Shortlink"
 
-#: google-shortlink.php:36 google-shortlink.php:1625 google-shortlink.php:1638
+#: google-shortlink.php:40 google-shortlink.php:1690 google-shortlink.php:1703
 #: includes/class-gglshrtlnk-settings.php:21
 msgid "Settings"
 msgstr "Налаштування"
 
-#: google-shortlink.php:206
+#: google-shortlink.php:214
 msgid "Do you really want to delete all links from database?"
 msgstr "Ви дійсно хочете видалити всі посилання з бази даних?"
 
-#: google-shortlink.php:208
+#: google-shortlink.php:216
 msgid "Replacing long links with short..."
 msgstr "Замінюємо довгі посилання короткими…"
 
-#: google-shortlink.php:209
+#: google-shortlink.php:217
 msgid "Replace short links to long..."
 msgstr "Замінюємо короткі посилання на довгі ..."
 
-#: google-shortlink.php:210
+#: google-shortlink.php:218
 msgid "Restoring all links and deleting them from the database"
 msgstr "Відновлюємо всі посилання і видаляємо їх з бази даних "
 
-#: google-shortlink.php:211
+#: google-shortlink.php:219
 msgid "Scanning website...."
 msgstr "Скануємо вебсайт...."
 
-#: google-shortlink.php:236
+#: google-shortlink.php:248
 msgid "more details"
 msgstr "детальніше"
 
-#: google-shortlink.php:297
+#: google-shortlink.php:327
 msgid ""
 "All long links from the database have been restored  and the database has "
 "been cleared."
 msgstr ""
 "Всі довгі посилання з бази даних були відновлені і база даних була очищена."
 
-#: google-shortlink.php:306
+#: google-shortlink.php:336
 msgid "All long links from the database have been restored."
 msgstr "Всі довгі посилання з бази даних були відновлені."
 
-#: google-shortlink.php:307 google-shortlink.php:317
+#: google-shortlink.php:337 google-shortlink.php:347
 msgid "Total replaces:"
 msgstr "Всього замін:"
 
-#: google-shortlink.php:316
+#: google-shortlink.php:346
 msgid "All links from the database have been replaced."
 msgstr "Всі номери з бази даних були замінені."
 
-#: google-shortlink.php:354 google-shortlink.php:422 google-shortlink.php:1210
+#: google-shortlink.php:389 google-shortlink.php:457 google-shortlink.php:1030
 msgid "Error:"
 msgstr "Помилка:"
 
-#: google-shortlink.php:481
+#: google-shortlink.php:517
 #, php-format
 msgid "%s link failed:"
 msgid_plural "%s links failed:"
@@ -84,166 +92,186 @@ msgstr[0] "%s помилка при додаванні посилання:"
 msgstr[1] "%s помилки при додаванні посилань:"
 msgstr[2] "%s помилок при додаванні посилань:"
 
-#: google-shortlink.php:487
+#: google-shortlink.php:523
 msgid "Website has been scanned."
 msgstr "Сайт був просканований."
 
-#: google-shortlink.php:489
+#: google-shortlink.php:525
 msgid "links were added to database."
 msgstr "посилання були додані в базу даних."
 
-#: google-shortlink.php:491
+#: google-shortlink.php:527
 msgid "There are no new links."
 msgstr "Нових посилань не виявлено."
 
-#: google-shortlink.php:491
+#: google-shortlink.php:527
 msgid "The list of articles has been updated for each link."
 msgstr "Список статей був оновлений для кожного посилання."
 
-#: google-shortlink.php:702
+#: google-shortlink.php:762
 msgid "Yes, update to Firebase"
 msgstr "Так, оновити"
 
-#: google-shortlink.php:703
+#: google-shortlink.php:763
 msgid "No, go back to the settings page"
 msgstr "Ні, повернутися на сторінку налаштувань"
 
-#: google-shortlink.php:713
-msgid "Please fill all settings and log in to your Google Account"
-msgstr ""
-"Будь ласка, заповніть всі налаштування та увійдіть у свій обліковий запис "
-"Google"
-
-#: google-shortlink.php:716
-msgid "Log in to your Google Account"
-msgstr "Увійти до свого облікового запису Google"
-
-#: google-shortlink.php:793 google-shortlink.php:871
+#: google-shortlink.php:833 google-shortlink.php:902
 msgid "no title"
 msgstr "без назви"
 
-#: google-shortlink.php:800 google-shortlink.php:878
+#: google-shortlink.php:840 google-shortlink.php:909
 msgid "None"
 msgstr "Немає"
 
-#: google-shortlink.php:806 google-shortlink.php:884
+#: google-shortlink.php:846 google-shortlink.php:915
 msgid "Wait for response"
 msgstr "Чекаємо відповіді"
 
-#: google-shortlink.php:910
+#: google-shortlink.php:937
+msgid "New Links"
+msgstr "Нові Посилання"
+
+#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1340
+#: google-shortlink.php:1348
+msgid "Warning:"
+msgstr "Увага:"
+
+#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1340
+#: google-shortlink.php:1348
+msgid "You haven't entered API key yet. Go to plugin's"
+msgstr "Ви ще не ввели ключ API. Перейдіть на сторінку"
+
+#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1090
+#: google-shortlink.php:1340 google-shortlink.php:1348
+msgid "settings page"
+msgstr "налаштувань плагіну"
+
+#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1340
+#: google-shortlink.php:1348
+msgid "and enter your key."
+msgstr "та введіть Ваш ключ."
+
+#: google-shortlink.php:1090
+msgid "Invalid API key. Go to plugin's"
+msgstr "Невірний ключ API. Перейдіть на сторінку"
+
+#: google-shortlink.php:1090
+msgid "and enter correct key."
+msgstr "та введіть вірний ключ."
+
+#: google-shortlink.php:1094
+msgid ""
+"There are empty fields on the page. Fill them out before adding another one."
+msgstr ""
+"На сторінці лишились пусті поля. Заповніть їх перш, ніж додати іще одне."
+
+#: google-shortlink.php:1101
+msgid "Get Short Links By Direct Input:"
+msgstr "Отримати короткі посилання шляхом прямого введення:"
+
+#: google-shortlink.php:1107
+msgid "Type long links here:"
+msgstr "Введіть довгі посилання тут:"
+
+#: google-shortlink.php:1108
+msgid "Short links will appear below:"
+msgstr "Короткі посилання з'являться нижче:"
+
+#: google-shortlink.php:1126
+msgid "Get Short Links"
+msgstr "Отримати короткі посилання"
+
+#: google-shortlink.php:1127
+msgid "Reset Form"
+msgstr "Очистити форму"
+
+#: google-shortlink.php:1128
+msgid "Add Field"
+msgstr "Додати поле"
+
+#: google-shortlink.php:1148
 msgid "link"
 msgstr "посилання"
 
-#: google-shortlink.php:911
+#: google-shortlink.php:1149
 msgid "links"
 msgstr "посилання"
 
-#: google-shortlink.php:931
+#: google-shortlink.php:1169
 msgid "ID"
 msgstr "ID"
 
-#: google-shortlink.php:932
-msgid "Long Link"
-msgstr "Довге посилання"
+#: google-shortlink.php:1170
+msgid "Original Link"
+msgstr "Оригінальне посилання"
 
-#: google-shortlink.php:933
+#: google-shortlink.php:1171
 msgid "Short Link"
 msgstr "Коротке посилання"
 
-#: google-shortlink.php:934
+#: google-shortlink.php:1172
 msgid "Total Clicks"
 msgstr "Всього переходів"
 
-#: google-shortlink.php:935
-msgid "Articles That Contain Links"
-msgstr "Статті, які містять посилання"
+#: google-shortlink.php:1173
+msgid "Location"
+msgstr "Місцезнаходження"
 
-#: google-shortlink.php:963 google-shortlink.php:977
+#: google-shortlink.php:1207 google-shortlink.php:1221
 msgid "Replace"
 msgstr "Замінити"
 
-#: google-shortlink.php:964 google-shortlink.php:978
+#: google-shortlink.php:1208 google-shortlink.php:1222
 msgid "Restore"
 msgstr "Відновити"
 
-#: google-shortlink.php:965 google-shortlink.php:969 google-shortlink.php:979
+#: google-shortlink.php:1209 google-shortlink.php:1213
+#: google-shortlink.php:1223
 msgid "Delete"
 msgstr "Видалити"
 
-#: google-shortlink.php:1040
-msgid "Table of Links for Shortener API"
-msgstr "Таблиця cсилок для Shortener API"
-
-#: google-shortlink.php:1042
-msgid "Table of links for Firebase Dynamic Links"
-msgstr "Таблиця Посилань для Firebase Dynamic Links"
-
-#: google-shortlink.php:1044
-msgid "Direct Input"
-msgstr "Пряме введення"
-
-#: google-shortlink.php:1045
-msgid "Additional Options"
-msgstr "Додаткові опції"
-
-#: google-shortlink.php:1048
+#: google-shortlink.php:1289
 msgid "Please enable JavaScript to count total clicks."
 msgstr ""
 "Будь ласка, включіть JavaScript, щоб розраховувати загальне число кліків."
 
-#: google-shortlink.php:1073
+#: google-shortlink.php:1314
 msgid "One long link was replaced with a short link."
 msgstr "Одне довге посилання було замінене на коротке."
 
-#: google-shortlink.php:1078
+#: google-shortlink.php:1319
 msgid "One short link was restored to a long link."
 msgstr "Одне коротке посилання було замінене на довге."
 
-#: google-shortlink.php:1083
+#: google-shortlink.php:1324
 msgid "One short link was deleted from database."
 msgstr "Одне коротке посилання було видалено з бази даних."
 
-#: google-shortlink.php:1094 google-shortlink.php:1102
-msgid "Warning:"
-msgstr "Увага:"
-
-#: google-shortlink.php:1094 google-shortlink.php:1102
-msgid "You haven't entered API key yet. Go to plugin's"
-msgstr "Ви ще не ввели ключ API. Перейдіть на сторінку"
-
-#: google-shortlink.php:1094 google-shortlink.php:1102
-#: google-shortlink.php:1264
-msgid "settings page"
-msgstr "налаштувань плагіну"
-
-#: google-shortlink.php:1094 google-shortlink.php:1102
-msgid "and enter your key."
-msgstr "та введіть Ваш ключ."
-
-#: google-shortlink.php:1112
+#: google-shortlink.php:1359
 msgid "Notice:"
 msgstr "Увага:"
 
-#: google-shortlink.php:1112
+#: google-shortlink.php:1359
 msgid "Click statistic updates every 3 days"
 msgstr "Статистика оновлюється кожні 3 дні"
 
-#: google-shortlink.php:1122 google-shortlink.php:1133
+#: google-shortlink.php:1369 google-shortlink.php:1380
 #, php-format
 msgid "Total %d links have been replaced"
 msgstr "Всього %d посилань було замінено"
 
-#: google-shortlink.php:1125 google-shortlink.php:1136
+#: google-shortlink.php:1372 google-shortlink.php:1383
 #, php-format
 msgid "Total %d links have been restored"
 msgstr "Всього %d посилань було відновлено"
 
-#: google-shortlink.php:1128 google-shortlink.php:1139
+#: google-shortlink.php:1375 google-shortlink.php:1386
 #, php-format
 msgid "Total %d links have been deleted from database"
 msgstr "Всього %d посилань було видалено з бази даних"
 
-#: google-shortlink.php:1155
+#: google-shortlink.php:1408
 msgid ""
 "There are no links in the database. Go to the Additional options tab, and "
 "scan your website."
@@ -251,116 +279,54 @@ msgstr ""
 "У базі даних не міститься посилань. Перейдіть у вкладку \"Додаткові опції\", "
 "і проскануйте ваш вебсайт."
 
-#: google-shortlink.php:1264
-msgid "Invalid API key. Go to plugin's"
-msgstr "Невірний ключ API. Перейдіть на сторінку"
-
-#: google-shortlink.php:1264
-msgid "and enter correct key."
-msgstr "та введіть вірний ключ."
-
-#: google-shortlink.php:1268
-msgid ""
-"There are empty fields on the page. Fill them out before adding another one."
-msgstr ""
-"На сторінці лишились пусті поля. Заповніть їх перш, ніж додати іще одне."
-
-#: google-shortlink.php:1275
-msgid "Get Short Links By Direct Input:"
-msgstr "Отримати короткі посилання шляхом прямого введення:"
-
-#: google-shortlink.php:1281
-msgid "Type long links here:"
-msgstr "Введіть довгі посилання тут:"
-
-#: google-shortlink.php:1282
-msgid "Short links will appear below:"
-msgstr "Короткі посилання з'являться нижче:"
-
-#: google-shortlink.php:1300
-msgid "Get Short Links"
-msgstr "Отримати короткі посилання"
-
-#: google-shortlink.php:1301
-msgid "Reset Form"
-msgstr "Очистити форму"
-
-#: google-shortlink.php:1302
-msgid "Add Field"
-msgstr "Додати поле"
-
-#: google-shortlink.php:1334
-msgid "Actions with Links:"
-msgstr "Дії з посиланнями:"
-
-#: google-shortlink.php:1338
-msgid "Scan website for new external links"
-msgstr "Сканувати вебсайт в пошуках нових зовнішніх посилань"
-
-#: google-shortlink.php:1340
-msgid "Automatically replace all external links"
-msgstr "Автоматично замінити всі зовнішні посилання"
-
-#: google-shortlink.php:1342
-msgid "Automatically restore all external links"
-msgstr "Автоматично відновити всі зовнішні посилання"
-
-#: google-shortlink.php:1344
-msgid "Restore all links and clear the database"
-msgstr "Відновити всі посилання і очистити базу даних"
-
-#: google-shortlink.php:1350
-msgid "Apply"
-msgstr "Застосувати"
-
-#: google-shortlink.php:1584
+#: google-shortlink.php:1649
 msgid "No statistic for this link"
 msgstr "Немає статистики для цього посилання"
 
-#: google-shortlink.php:1587
+#: google-shortlink.php:1652
 msgid "Request had invalid authentication credentials"
 msgstr "Запит з невірними обліковими даними"
 
-#: google-shortlink.php:1590
+#: google-shortlink.php:1655
 msgid ""
 "We could not match link with whitelisted URL patterns in your Google project"
 msgstr ""
 "Посилання не збігається з шаблонами URL з білого списку в вашому Google "
 "проект"
 
-#: google-shortlink.php:1593
+#: google-shortlink.php:1658
 msgid "Bad request error."
 msgstr "Некоректний запит."
 
-#: google-shortlink.php:1596
+#: google-shortlink.php:1661
 msgid "Invalid API key error."
 msgstr "Невірний ключ API."
 
-#: google-shortlink.php:1599
+#: google-shortlink.php:1664
 msgid "Error with access not configuration."
 msgstr "Помилка \"Доступ не налаштований\"."
 
-#: google-shortlink.php:1602
+#: google-shortlink.php:1667
 msgid "Expired API key error."
 msgstr "Помилка \"API ключ вичерпано\""
 
-#: google-shortlink.php:1605
+#: google-shortlink.php:1670
 msgid "Curl error. Please try again."
 msgstr "Помилка curl. Будь ласка, спробуйте ще раз."
 
-#: google-shortlink.php:1608
+#: google-shortlink.php:1673
 msgid "This hosting does not support СURL."
 msgstr "Цей хостинг не підтримує СURL."
 
-#: google-shortlink.php:1611
+#: google-shortlink.php:1676
 msgid "Unknown error occurred."
 msgstr "Виникла невідома помилка."
 
-#: google-shortlink.php:1640
+#: google-shortlink.php:1705
 msgid "FAQ"
 msgstr "Розповсюджені питання"
 
-#: google-shortlink.php:1641
+#: google-shortlink.php:1706
 msgid "Support"
 msgstr "Підтримка"
 
@@ -372,32 +338,32 @@ msgstr "Різне"
 msgid "Custom Code"
 msgstr "Користувацький код"
 
-#: includes/class-gglshrtlnk-settings.php:55
-#: includes/class-gglshrtlnk-settings.php:68
+#: includes/class-gglshrtlnk-settings.php:65
+#: includes/class-gglshrtlnk-settings.php:78
 msgid "Settings saved."
 msgstr "Налаштування збережені."
 
-#: includes/class-gglshrtlnk-settings.php:57
+#: includes/class-gglshrtlnk-settings.php:67
 msgid "Incorrect API key entered"
 msgstr "Некоректний ключ API"
 
-#: includes/class-gglshrtlnk-settings.php:72
+#: includes/class-gglshrtlnk-settings.php:82
 msgid "Incorrect data entered."
 msgstr "Введено невірні дані."
 
-#: includes/class-gglshrtlnk-settings.php:72
+#: includes/class-gglshrtlnk-settings.php:82
 msgid "You must fill all fields."
 msgstr "Необхідно заповнити всі поля."
 
-#: includes/class-gglshrtlnk-settings.php:86
+#: includes/class-gglshrtlnk-settings.php:96
 msgid "Google API Console"
 msgstr "Google API Console"
 
-#: includes/class-gglshrtlnk-settings.php:92
+#: includes/class-gglshrtlnk-settings.php:108
 msgid "Update to Firebase API"
 msgstr "Оновити до Firebase API"
 
-#: includes/class-gglshrtlnk-settings.php:93
+#: includes/class-gglshrtlnk-settings.php:109
 #, php-format
 msgid ""
 "Due to Google turning down support for goo.gl URL shortener api from %s."
@@ -405,67 +371,142 @@ msgstr ""
 "У зв'язку з тим, що Google відмовився від підтримки goo.gl URL shortener api "
 "з %s."
 
-#: includes/class-gglshrtlnk-settings.php:98
+#: includes/class-gglshrtlnk-settings.php:114
 msgid "API Key For Your goo.gl Account"
 msgstr "Ключ API для вашого облікового запису goo.gl"
 
-#: includes/class-gglshrtlnk-settings.php:102
 #: includes/class-gglshrtlnk-settings.php:118
+#: includes/class-gglshrtlnk-settings.php:134
 msgid "To get API key you should go to"
 msgstr "Щоб отримати ключ API, вам потрібно перейти на"
 
-#: includes/class-gglshrtlnk-settings.php:104
 #: includes/class-gglshrtlnk-settings.php:120
+#: includes/class-gglshrtlnk-settings.php:136
 msgid "Create project there and insert public API key above."
 msgstr "Створіть там проект і вставте публічний API ключ вище."
 
-#: includes/class-gglshrtlnk-settings.php:114
+#: includes/class-gglshrtlnk-settings.php:130
 msgid "API Key For Your Firebase Dynamic Links Account"
 msgstr "Ключ API для аккаунту Firebase Dynamic Links"
 
-#: includes/class-gglshrtlnk-settings.php:123
+#: includes/class-gglshrtlnk-settings.php:139
 msgid "Don't know how to get API key? Follow this instruction - "
 msgstr "Не знаєте, як отримати ключ API? Дотримуйтесь цієї інструкції - "
 
-#: includes/class-gglshrtlnk-settings.php:129
+#: includes/class-gglshrtlnk-settings.php:145
 msgid "Client ID"
 msgstr "ID клієнта"
 
-#: includes/class-gglshrtlnk-settings.php:135
+#: includes/class-gglshrtlnk-settings.php:151
 msgid "Client Secret"
 msgstr "Secret клієнта"
 
-#: includes/class-gglshrtlnk-settings.php:141
+#: includes/class-gglshrtlnk-settings.php:157
 msgid "Redirect URI"
 msgstr "URI "
 
-#: includes/class-gglshrtlnk-settings.php:146
+#: includes/class-gglshrtlnk-settings.php:162
 msgid "Copy this link and go to your"
 msgstr "Скопіюйте це посилання і перейдіть в"
 
-#: includes/class-gglshrtlnk-settings.php:146
+#: includes/class-gglshrtlnk-settings.php:162
 msgid "API console"
 msgstr "API console"
 
-#: includes/class-gglshrtlnk-settings.php:152
+#: includes/class-gglshrtlnk-settings.php:168
 msgid "Firebase Console"
 msgstr "Firebase console"
 
-#: includes/class-gglshrtlnk-settings.php:155
+#: includes/class-gglshrtlnk-settings.php:171
 msgid "Domain Link for your google project"
 msgstr "Domain Link для вашого проекту"
 
-#: includes/class-gglshrtlnk-settings.php:162
+#: includes/class-gglshrtlnk-settings.php:179
 msgid "General"
 msgstr "Загальне"
 
-#: includes/class-gglshrtlnk-settings.php:166
-msgid "Show Links In Table Per Page"
-msgstr "Кількість посилань в таблиці на одній сторінці"
+#: includes/class-gglshrtlnk-settings.php:184
+msgid "Scan Website"
+msgstr "Сканувати Веб-сайт"
 
-#: includes/class-gglshrtlnk-settings.php:173
-msgid "All"
-msgstr "Всі"
+#: includes/class-gglshrtlnk-settings.php:188
+msgid "Scan Now"
+msgstr "Сканувати Зараз"
+
+#: includes/class-gglshrtlnk-settings.php:189
+msgid "Your website will be scanned for new external links."
+msgstr "Ваш веб-сайт буде скановано на наявність нових зовнішніх посилань."
+
+#: includes/class-gglshrtlnk-settings.php:194
+msgid "External Links"
+msgstr "Зовнішні посилання"
+
+#: includes/class-gglshrtlnk-settings.php:198
+msgid "Replace Now"
+msgstr "Замінити Зараз"
+
+#: includes/class-gglshrtlnk-settings.php:200
+msgid "Restore Now"
+msgstr "Відновити Зараз"
+
+#: includes/class-gglshrtlnk-settings.php:202
+msgid "Restore & Clean DB Now"
+msgstr "Відновити та Очистити БД Зараз"
+
+#: includes/class-gglshrtlnk-settings.php:220
+msgid ""
+"The goo.gl API functionality has been deprecated. On 20.09.2021 it will be "
+"removed from our plugin. Hurry up to switch to Firebase API"
+msgstr ""
+"Функціональність goo.gl API застаріла. 20.09.2021 вона буде видалена з "
+"нашого плагіна. Поспішайте перейти на Firebase API"
+
+#~ msgid "Please fill all settings and log in to your Google Account"
+#~ msgstr ""
+#~ "Будь ласка, заповніть всі налаштування та увійдіть у свій обліковий запис "
+#~ "Google"
+
+#~ msgid "Log in to your Google Account"
+#~ msgstr "Увійти до свого облікового запису Google"
+
+#~ msgid "Long Link"
+#~ msgstr "Довге посилання"
+
+#~ msgid "Articles That Contain Links"
+#~ msgstr "Статті, які містять посилання"
+
+#~ msgid "Table of Links for Shortener API"
+#~ msgstr "Таблиця cсилок для Shortener API"
+
+#~ msgid "Table of links for Firebase Dynamic Links"
+#~ msgstr "Таблиця Посилань для Firebase Dynamic Links"
+
+#~ msgid "Direct Input"
+#~ msgstr "Пряме введення"
+
+#~ msgid "Additional Options"
+#~ msgstr "Додаткові опції"
+
+#~ msgid "Actions with Links:"
+#~ msgstr "Дії з посиланнями:"
+
+#~ msgid "Automatically replace all external links"
+#~ msgstr "Автоматично замінити всі зовнішні посилання"
+
+#~ msgid "Automatically restore all external links"
+#~ msgstr "Автоматично відновити всі зовнішні посилання"
+
+#~ msgid "Restore all links and clear the database"
+#~ msgstr "Відновити всі посилання і очистити базу даних"
+
+#~ msgid "Apply"
+#~ msgstr "Застосувати"
+
+#~ msgid "Show Links In Table Per Page"
+#~ msgstr "Кількість посилань в таблиці на одній сторінці"
+
+#~ msgid "All"
+#~ msgstr "Всі"
 
 #~ msgid "requires"
 #~ msgstr "вимагає"
@@ -482,11 +523,6 @@ msgstr "Всі"
 
 #~ msgid "Plugins page"
 #~ msgstr "Сторінку плагінів"
-
-#, fuzzy
-#~| msgid "Add Field"
-#~ msgid "Add New"
-#~ msgstr "Додати поле"
 
 #, fuzzy
 #~| msgid "More details"
@@ -730,9 +766,6 @@ msgstr "Всі"
 #~ "недавно. Перейдіть в Консоль Google API, там створіть новий публічний "
 #~ "ключ API і вставте його в поле на сторінці налаштувань плагіна в першому "
 #~ "випадку, або просто зачекайте кілька хвилин у другому."
-
-#~ msgid "Table Of Links"
-#~ msgstr "Таблиця посилань"
 
 #~ msgid "Do you really want to delete all links in database?"
 #~ msgstr "Ви дійсно хочете видалити всі посилання з бази даних?"

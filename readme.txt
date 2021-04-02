@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, firebase plugin, firebase dynamic plugin, google shortlink, firebase links, firebase plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
 Requires at least: 4.5
-Tested up to: 5.3.2
-Stable tag: 1.5.8
+Tested up to: 5.7
+Stable tag: 1.5.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -17,6 +17,8 @@ Shortlink plugin is a useful tool to get short links from Google URL Shortener s
 Install, activate, and save your time!
 
 https://www.youtube.com/watch?v=SZIWLm8mmdU
+
+[View Demo](https://bestwebsoft.com/demo-shortlink-by-bestwebsoft/?ref=readme)
 
 = Features =
 
@@ -46,8 +48,9 @@ If you have a feature suggestion or idea you'd like to see in the plugin, we'd l
 
 = Documentation & Videos =
 
+* [[Doc] User Guide](https://docs.google.com/document/d/13V7769ghm0d5KjzAIZIytnkLLc9yfWWe59jr81oQXEo/)
 * [[Doc] Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/)
-* [[Doc] How to Use](https://docs.google.com/document/d/13V7769ghm0d5KjzAIZIytnkLLc9yfWWe59jr81oQXEo/)
+* [[Doc] Purchase](https://docs.google.com/document/d/1EUdBVvnm7IHZ6y0DNyldZypUQKpB8UVPToSc_LdOYQI/)
 
 = Help & Support =
 
@@ -109,13 +112,19 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 
 == Screenshots ==
 
-1. 'Table of links' tab on plugin's main page.
-2. 'Direct input' tab on plugin's main page.
-3. 'Additional options' tab on plugin's main page.
+1. 'Table of links' page.
+2. 'Add links' page.
+3. Plugin settings page in WordPress admin panel.
 4. Plugin settings page in WordPress admin panel.
-5. Plugin settings page in WordPress admin panel.
 
 == Changelog ==
+
+= V1.5.9 - 01.04.2020 =
+* Update : Adding links manually moved to a separate page.
+* Update : Scan of the website for new external links and performing actions with external links has been moved to the settings page.
+* Update : Added warning about deprecated functionality goo.gl API.
+* Update : BWS plugins section was updated.
+* Update : All functionality was updated for wordpress 5.7.
 
 = V1.5.8 - 15.01.2020 =
 * Update : Plugin was renamed.
@@ -207,6 +216,14 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.5.9 =
+* Usability improved.
+* Plugin optimization completed.
+* The compatibility with new WordPress version updated.
+
+= V1.5.8 =
+* Bugs fixed.
 
 = V1.5.8 =
 * Bugs fixed.

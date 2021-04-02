@@ -6,12 +6,12 @@ Description: Replace external WordPress website links with Google shortlinks and
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.5.8
+Version: 1.5.9
 Author URI: https://bestwebsoft.com
 License: GPLv2 or later
 */
 
-/*  © Copyright 2020  BestWebSoft  ( https://support.bestwebsoft.com )
+/*  © Copyright 2021  BestWebSoft  ( https://support.bestwebsoft.com )
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 3, as
@@ -32,6 +32,10 @@ if ( ! function_exists( 'gglshrtlnk_menu' ) ) {
 	function gglshrtlnk_menu() {		
 
 		$hook = add_menu_page( 'Shortlink', 'Shortlink', 'manage_options', 'google-shortlink', 'gglshrtlnk_page', 'none', '55.1' );
+
+		add_submenu_page( 'google-shortlink', __( 'Links', 'google-shortlink' ), __( 'Links', 'google-shortlink' ), 'manage_options', 'google-shortlink', 'gglshrtlnk_page' );
+
+		add_submenu_page( 'google-shortlink', __( 'Add New', 'google-shortlink' ), __( 'Add New', 'google-shortlink' ), 'manage_options', 'gglshrtlnk_create_link', 'gglshrtlnk_create_link' );
 
 		$settings = add_submenu_page( 'google-shortlink', __( 'Shortlink Settings', 'google-shortlink' ), __( 'Settings', 'google-shortlink' ), 'manage_options', 'gglshrtlnk_options', 'gglshrtlnk_options_page' );
 
@@ -140,8 +144,12 @@ if ( ! function_exists( 'gglshrtlnk_get_options_default' ) ) {
 			'suggest_feature_banner'	=> 1,
 			/* end general options */
 			'api_key' 					=> '',
-			'pagination' 				=> '10',			
-			'firebase_api_is_on'		=> 0,
+			/**
+			* @deprecated since 1.5.9
+			* @todo remove after 20.09.2021
+			*/
+			'firebase_api_is_on'		=> 1,
+			/* end deprecated */
 			'api_key_for_firebase' 		=> '',
 			'domain_link' 				=> '',
 			'client_id' 				=> '',
@@ -198,7 +206,7 @@ if( ! function_exists( 'gglshrtlnk_script_style' ) ) {
 	function gglshrtlnk_script_style() {
 		wp_enqueue_style( 'gglshrtlnk_icon', plugins_url( 'css/admin_page.css', __FILE__ ) );
 		
-		if ( isset( $_REQUEST['page'] ) && ( 'google-shortlink' == $_REQUEST['page'] || 'gglshrtlnk_options' == $_REQUEST['page'] ) ) {
+		if ( isset( $_REQUEST['page'] ) && ( 'google-shortlink' == $_REQUEST['page'] || 'gglshrtlnk_options' == $_REQUEST['page'] || 'gglshrtlnk_create_link' == $_REQUEST['page'] ) ) {
 			wp_enqueue_style( 'gglshrtlnk_styles', plugins_url( 'css/style.css', __FILE__ ) );
 
 			wp_enqueue_script( 'gglshrtlnk_script', plugins_url( 'js/script.js', __FILE__ ), array( 'jquery' ) );
@@ -207,7 +215,7 @@ if( ! function_exists( 'gglshrtlnk_script_style' ) ) {
 				'gglshrtlnk_ajax_nonce' 			=> wp_create_nonce( 'gglshrtlnk_ajax_nonce_value' ),
 				'gglshrtlnk_replace_all' 			=> __( "Replacing long links with short...", 'google-shortlink' ),
 				'gglshrtlnk_restore_all' 			=> __( "Replace short links to long...", 'google-shortlink' ),
-				'gglshrtlnk_delete_all_radio' 		=> __( "Restoring all links and deleting them from the database", 'google-shortlink' ),
+				'gglshrtlnk_delete_all' 		    => __( "Restoring all links and deleting them from the database", 'google-shortlink' ),
 				'gglshrtlnk_scan' 					=> __( "Scanning website....", 'google-shortlink' )
 			) );
 			bws_enqueue_settings_scripts();
@@ -225,7 +233,11 @@ if ( ! function_exists( 'gglshrtlnk_ajax_total_clicks_callback' ) ) {
 		if ( empty( $gglshrtlnk_options ) ) {
 		    $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
 		}
-
+		/**
+		* @deprecated since 1.5.9
+		* @todo edit after 20.09.2021
+		* Remove if else and leave only content else
+		*/
 		if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 			$gglshrtlnk_info_link = str_replace( 'goo.gl/', 'goo.gl/info/', $_POST['gglshrtlnk_short_to_count'] );
 			$gglshrtlnk_count_var = gglshrtlnk_count( $_POST['gglshrtlnk_short_to_count'] );
@@ -246,7 +258,7 @@ if ( ! function_exists( 'gglshrtlnk_ajax_total_clicks_callback' ) ) {
 				die();
 			}
         }
-
+		/* end deprecated */
 	}
 }
 
@@ -258,240 +270,265 @@ if ( ! function_exists( 'gglshrtlnk_ajax_additional_opt_callback' ) ) {
 		if ( empty( $gglshrtlnk_options ) ) {
 		    $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
         }
-		$failed_links = 0;
-		$failed_links_list = array();
-		$failed_links_message = '';
-		$gglshrtlnk_rows_to_restore = '';
 
-		if ( ! $no_js ) {
-			check_ajax_referer( 'gglshrtlnk_ajax_nonce_value', 'gglshrtlnk_nonce' );
-		}
+		/* check project data is not empty */
+		if ( '' != $gglshrtlnk_options['api_key_for_firebase'] && '' != $gglshrtlnk_options['client_id']
+	        && '' != $gglshrtlnk_options['client_secret'] && '' != $gglshrtlnk_options['domain_link'] ) {		
 
-		$result = array( 'message' => '', 'error' => '', 'error_message' => '' );
+			$failed_links = 0;
+			$failed_links_list = array();
+			$failed_links_message = '';
+			$gglshrtlnk_rows_to_restore = '';
 
-		$gglshrtlnk_links_number = 0;
-		/* actions with all links part */
-        if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-	        $gglshrtlnk_rows_to_restore = $wpdb->get_results( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink` ", ARRAY_A );
-        } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-	        $gglshrtlnk_rows_to_restore = $wpdb->get_results( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink_for_firebase` ", ARRAY_A );
-        }
+			if ( ! $no_js ) {
+				check_ajax_referer( 'gglshrtlnk_ajax_nonce_value', 'gglshrtlnk_nonce' );
+			}
 
-		switch ( $_POST['gglshrtlnk_actions_with_links_radio']  ) {
-			/*if need to restore all links and clear links table*/
-			case 'delete-all-radio' :
-				/*restore all links before deleting*/
-				foreach ( $gglshrtlnk_rows_to_restore as $gglshrtlnk_row_to_action ) {
-					if ( 'added_by_direct' != $gglshrtlnk_row_to_action['post_ids'] ) {
-						gglshrtlnk_restore_one( $gglshrtlnk_row_to_action );
+			$result = array( 'message' => '', 'error' => '', 'error_message' => '' );
+			
+			$gglshrtlnk_links_number = 0;
+			/* actions with all links part */
+			/**
+			* @deprecated since 1.5.9
+			* @todo edit after 20.09.2021
+			* Remove if else and leave only content else
+			*/
+	        if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+		        $gglshrtlnk_rows_to_restore = $wpdb->get_results( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink` ", ARRAY_A );
+	        } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+		        $gglshrtlnk_rows_to_restore = $wpdb->get_results( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink_for_firebase` ", ARRAY_A );
+			}
+			/* end deprecated */
+
+			switch ( $_POST['gglshrtlnk_actions_with_links'] ) {
+				/*if need to restore all links and clear links table*/
+				case 'gglshrtlnk_delete-all' :
+					/*restore all links before deleting*/
+					foreach ( $gglshrtlnk_rows_to_restore as $gglshrtlnk_row_to_action ) {
+						if ( 'added_by_direct' != $gglshrtlnk_row_to_action['post_ids'] ) {
+							gglshrtlnk_restore_one( $gglshrtlnk_row_to_action );
+						}
 					}
-				}
-				/*clear db*/
-            if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-	            $wpdb->query( "TRUNCATE TABLE `" . $wpdb->prefix . "google_shortlink`" );
-            } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-	            $wpdb->query( "TRUNCATE TABLE `" . $wpdb->prefix . "google_shortlink_for_firebase`" );
-            }
+					/*clear db*/
+				/**
+				* @deprecated since 1.5.9
+				* @todo edit after 20.09.2021
+				* Remove if else and leave only content else
+				*/
+	            if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+		            $wpdb->query( "TRUNCATE TABLE `" . $wpdb->prefix . "google_shortlink`" );
+	            } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+		            $wpdb->query( "TRUNCATE TABLE `" . $wpdb->prefix . "google_shortlink_for_firebase`" );
+	            }
+	            /* end deprecated */
 
-
-				$result['message'] = __( 'All long links from the database have been restored  and the database has been cleared.', 'google-shortlink' );
-			break;
-			/*if need only to restore all links	*/
-			case 'restore-all':
-				foreach ( $gglshrtlnk_rows_to_restore as $gglshrtlnk_row_to_action ) {
-					if ( 'added_by_direct' != $gglshrtlnk_row_to_action['post_ids'] ) {
-						gglshrtlnk_restore_one( $gglshrtlnk_row_to_action );
+					$result['message'] = __( 'All long links from the database have been restored  and the database has been cleared.', 'google-shortlink' );
+				break;
+				/*if need only to restore all links	*/
+				case 'gglshrtlnk_restore-all':
+					foreach ( $gglshrtlnk_rows_to_restore as $gglshrtlnk_row_to_action ) {
+						if ( 'added_by_direct' != $gglshrtlnk_row_to_action['post_ids'] ) {
+							gglshrtlnk_restore_one( $gglshrtlnk_row_to_action );
+						}
 					}
-				}
-				$result['message'] = __( 'All long links from the database have been restored.', 'google-shortlink' ) . '<br />' .
-					__( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
-			break;
-			/*if need only to replace all links	*/
-			case 'replace-all':
-				foreach ( $gglshrtlnk_rows_to_restore as $gglshrtlnk_row_to_action ) {
-					if ( 'added_by_direct' != $gglshrtlnk_row_to_action['post_ids'] ) {
-						gglshrtlnk_replace_one( $gglshrtlnk_row_to_action );
+					$result['message'] = __( 'All long links from the database have been restored.', 'google-shortlink' ) . '<br />' .
+						__( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
+				break;
+				/*if need only to replace all links	*/
+				case 'gglshrtlnk_replace-all':
+					foreach ( $gglshrtlnk_rows_to_restore as $gglshrtlnk_row_to_action ) {
+						if ( 'added_by_direct' != $gglshrtlnk_row_to_action['post_ids'] ) {
+							gglshrtlnk_replace_one( $gglshrtlnk_row_to_action );
+						}
 					}
-				}
-				$result['message'] = __( 'All links from the database have been replaced.', 'google-shortlink' ) . '<br />' .
-					__( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
-			break;
-			/*if need to scan the site for new links*/
-			case 'scan':
-				$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
-				unset( $gglshrtlnk_get_all_posts['revision'] );
-				unset( $gglshrtlnk_get_all_posts['attachment'] );
-				unset( $gglshrtlnk_get_all_posts['nav_menu_item'] );
-				/* get post contents from db*/
-				$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts` WHERE `post_type` IN ( '" . implode( "', '", array_keys( $gglshrtlnk_get_all_posts ) ) . "' ) ORDER BY `ID`", ARRAY_A );
-				foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_currentpost ) {
-					/* find all links in posts and pages */
+					$result['message'] = __( 'All links from the database have been replaced.', 'google-shortlink' ) . '<br />' .
+						__( 'Total replaces:', 'google-shortlink' ) . " " . $gglshrtlnk_links_number;
+				break;
+				/*if need to scan the site for new links*/
+				case 'gglshrtlnk_scan':
+					$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
+					unset( $gglshrtlnk_get_all_posts['revision'] );
+					unset( $gglshrtlnk_get_all_posts['attachment'] );
+					unset( $gglshrtlnk_get_all_posts['nav_menu_item'] );
+					/* get post contents from db*/
+					$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts` WHERE `post_type` IN ( '" . implode( "', '", array_keys( $gglshrtlnk_get_all_posts ) ) . "' ) ORDER BY `ID`", ARRAY_A );
+					foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_currentpost ) {
+						/* find all links in posts and pages */
 
-					preg_match_all( '~(http|https|ftp)://[^#]([^\'\"\s\r\n\t<>])+~', $gglshrtlnk_currentpost['post_content'], $gglshrtlnk_out );
+						preg_match_all( '~(http|https|ftp)://[^#]([^\'\"\s\r\n\t<>])+~', $gglshrtlnk_currentpost['post_content'], $gglshrtlnk_out );
 
-					if ( empty( $gglshrtlnk_out[0] ) )
-						continue;
+						if ( empty( $gglshrtlnk_out[0] ) )
+							continue;
 
-					/*filter links from goo.gl or domain link and home_url */
-					foreach ( $gglshrtlnk_out[0] as $gglshrtlnk_link ) {
-					    if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+						/*filter links from goo.gl or domain link and home_url */
+						foreach ( $gglshrtlnk_out[0] as $gglshrtlnk_link ) {
+							/**
+							* @deprecated since 1.5.9
+							* @todo edit after 20.09.2021
+							* Remove if else and leave only content else
+							*/
+						    if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 
-						    if ( false === strpos( $gglshrtlnk_link, 'https://goo.gl' )
-						         && false === strpos( $gglshrtlnk_link, home_url() ) ) {
-							    /*check is link already in db */
-							    $gglshrtlnk_link_from_db = $wpdb->get_results( $wpdb->prepare(
-								    "SELECT `long_url`
-								FROM `" . $wpdb->prefix . "google_shortlink`
-								WHERE `long_url` = '%s'
-								LIMIT 1;
-								", $gglshrtlnk_link
-							    ) );
-							    /* add new link to db if it not exist */
-							    if ( ! $gglshrtlnk_link_from_db ) {
-								    $gglshrtlnk_short_url = gglshrtlnk_get( $gglshrtlnk_link );
+							    if ( false === strpos( $gglshrtlnk_link, 'https://goo.gl' )
+							         && false === strpos( $gglshrtlnk_link, home_url() ) ) {
+								    /*check is link already in db */
+								    $gglshrtlnk_link_from_db = $wpdb->get_results( $wpdb->prepare(
+									    "SELECT `long_url`
+									FROM `" . $wpdb->prefix . "google_shortlink`
+									WHERE `long_url` = '%s'
+									LIMIT 1;
+									", $gglshrtlnk_link
+								    ) );
+								    /* add new link to db if it not exist */
+								    if ( ! $gglshrtlnk_link_from_db ) {
+									    $gglshrtlnk_short_url = gglshrtlnk_get( $gglshrtlnk_link );
 
-								    if ( is_wp_error( $gglshrtlnk_short_url ) ) {
-									    $result['error'] = '<b>' . __( 'Error:', 'google-shortlink' ) . '</b> ' . $gglshrtlnk_short_url->get_error_message();
-									    continue;
+									    if ( is_wp_error( $gglshrtlnk_short_url ) ) {
+										    $result['error'] = '<b>' . __( 'Error:', 'google-shortlink' ) . '</b> ' . $gglshrtlnk_short_url->get_error_message();
+										    continue;
+									    } else {
+										    /*find post ids for new link */
+										    $gglshrtlnk_post_ids = array();
+										    foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
+											    $gglshrtlnk_position = strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link );
+											    if ( false !== $gglshrtlnk_position ) {
+												    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+											    }
+										    }
+										    /* add to database is url is not embedd object */
+										    if ( ! empty( $gglshrtlnk_post_ids ) ) {
+											    /*convert post ids into db format */
+											    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
+											    $wpdb->insert(
+												    $wpdb->prefix . "google_shortlink",
+												    array(
+													    'long_url'  => $gglshrtlnk_link,
+													    'short_url' => $gglshrtlnk_short_url,
+													    'post_ids'  => $gglshrtlnk_post_ids_converted
+												    )
+											    );
+											    $gglshrtlnk_links_number ++;
+										    }
+									    }
 								    } else {
-									    /*find post ids for new link */
+									    /* update posts ids for link */
 									    $gglshrtlnk_post_ids = array();
+
 									    foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
-										    $gglshrtlnk_position = strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link );
-										    if ( false !== $gglshrtlnk_position ) {
-											    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+										    if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
+											    if ( false !== strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link ) ) {
+												    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+											    }
 										    }
 									    }
-									    /* add to database is url is not embedd object */
-									    if ( ! empty( $gglshrtlnk_post_ids ) ) {
-										    /*convert post ids into db format */
-										    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
-										    $wpdb->insert(
-											    $wpdb->prefix . "google_shortlink",
-											    array(
-												    'long_url'  => $gglshrtlnk_link,
-												    'short_url' => $gglshrtlnk_short_url,
-												    'post_ids'  => $gglshrtlnk_post_ids_converted
-											    )
-										    );
-										    $gglshrtlnk_links_number ++;
-									    }
+									    /*convert post ids into db format */
+									    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
+									    $wpdb->update(
+										    $wpdb->prefix . "google_shortlink",
+										    array( 'post_ids' => $gglshrtlnk_post_ids_converted ),
+										    array( 'long_url' => $gglshrtlnk_link ),
+										    array( '%s' ),
+										    array( '%s' )
+									    );
 								    }
-							    } else {
-								    /* update posts ids for link */
-								    $gglshrtlnk_post_ids = array();
+							    } elseif ( false === strpos( $gglshrtlnk_link, $_SERVER['HTTP_HOST'] ) ) {
+								    $failed_links_list[ $failed_links ] = $gglshrtlnk_link;
+								    $failed_links ++;
 
-								    foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
-									    if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
-										    if ( false !== strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link ) ) {
-											    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
-										    }
-									    }
-								    }
-								    /*convert post ids into db format */
-								    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
-								    $wpdb->update(
-									    $wpdb->prefix . "google_shortlink",
-									    array( 'post_ids' => $gglshrtlnk_post_ids_converted ),
-									    array( 'long_url' => $gglshrtlnk_link ),
-									    array( '%s' ),
-									    array( '%s' )
-								    );
 							    }
-						    } elseif ( false === strpos( $gglshrtlnk_link, $_SERVER['HTTP_HOST'] ) ) {
-							    $failed_links_list[ $failed_links ] = $gglshrtlnk_link;
-							    $failed_links ++;
+						    } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+							    if ( false === strpos( $gglshrtlnk_link,  $gglshrtlnk_options['domain_link'] )
+							         && false === strpos( $gglshrtlnk_link, home_url() ) ) {
+								    /*check is link already in db */
+								    $gglshrtlnk_link_from_db = $wpdb->get_results( $wpdb->prepare(
+									    "SELECT `long_url`
+									FROM `" . $wpdb->prefix . "google_shortlink_for_firebase`
+									WHERE `long_url` = '%s'
+									LIMIT 1;
+									", $gglshrtlnk_link
+								    ) );
+								    /* add new link to db if it not exist */
+								    if ( ! $gglshrtlnk_link_from_db ) {
+									    $gglshrtlnk_short_url = gglshrtlnk_get( $gglshrtlnk_link );
 
-						    }
-					    } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-						    if ( false === strpos( $gglshrtlnk_link,  $gglshrtlnk_options['domain_link'] )
-						         && false === strpos( $gglshrtlnk_link, home_url() ) ) {
-							    /*check is link already in db */
-							    $gglshrtlnk_link_from_db = $wpdb->get_results( $wpdb->prepare(
-								    "SELECT `long_url`
-								FROM `" . $wpdb->prefix . "google_shortlink_for_firebase`
-								WHERE `long_url` = '%s'
-								LIMIT 1;
-								", $gglshrtlnk_link
-							    ) );
-							    /* add new link to db if it not exist */
-							    if ( ! $gglshrtlnk_link_from_db ) {
-								    $gglshrtlnk_short_url = gglshrtlnk_get( $gglshrtlnk_link );
-
-								    if ( is_wp_error( $gglshrtlnk_short_url ) ) {
-									    $result['error'] = '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . $gglshrtlnk_short_url->get_error_message();
-									    continue;
+									    if ( is_wp_error( $gglshrtlnk_short_url ) ) {
+										    $result['error'] = '<b>'. __( 'Error:', 'google-shortlink' ) . '</b> ' . $gglshrtlnk_short_url->get_error_message();
+										    continue;
+									    } else {
+										    /*find post ids for new link */
+										    $gglshrtlnk_post_ids = array();
+										    foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
+											    $gglshrtlnk_position = strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link );
+											    if ( false !== $gglshrtlnk_position ) {
+												    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+											    }
+										    }
+										    /* add to database is url is not embedd object */
+										    if ( ! empty( $gglshrtlnk_post_ids ) ) {
+											    /*convert post ids into db format */
+											    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
+											    $wpdb->insert(
+												    $wpdb->prefix . "google_shortlink_for_firebase",
+												    array(
+													    'long_url' => $gglshrtlnk_link,
+													    'short_url' => $gglshrtlnk_short_url,
+													    'post_ids' => $gglshrtlnk_post_ids_converted
+												    )
+											    );
+											    $gglshrtlnk_links_number++;
+										    }
+									    }
 								    } else {
-									    /*find post ids for new link */
+									    /* update posts ids for link */
 									    $gglshrtlnk_post_ids = array();
-									    foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
-										    $gglshrtlnk_position = strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link );
-										    if ( false !== $gglshrtlnk_position ) {
-											    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
-										    }
-									    }
-									    /* add to database is url is not embedd object */
-									    if ( ! empty( $gglshrtlnk_post_ids ) ) {
-										    /*convert post ids into db format */
-										    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
-										    $wpdb->insert(
-											    $wpdb->prefix . "google_shortlink_for_firebase",
-											    array(
-												    'long_url' => $gglshrtlnk_link,
-												    'short_url' => $gglshrtlnk_short_url,
-												    'post_ids' => $gglshrtlnk_post_ids_converted
-											    )
-										    );
-										    $gglshrtlnk_links_number++;
-									    }
-								    }
-							    } else {
-								    /* update posts ids for link */
-								    $gglshrtlnk_post_ids = array();
 
-								    foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
-									    if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
-										    if ( false !== strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link ) ) {
-											    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+									    foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
+										    if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
+											    if ( false !== strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_link ) ) {
+												    $gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+											    }
 										    }
 									    }
+									    /*convert post ids into db format */
+									    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
+									    $wpdb->update(
+										    $wpdb->prefix . "google_shortlink_for_firebase",
+										    array( 'post_ids' => $gglshrtlnk_post_ids_converted ),
+										    array( 'long_url' => $gglshrtlnk_link ),
+										    array( '%s' ),
+										    array( '%s' )
+									    );
 								    }
-								    /*convert post ids into db format */
-								    $gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
-								    $wpdb->update(
-									    $wpdb->prefix . "google_shortlink_for_firebase",
-									    array( 'post_ids' => $gglshrtlnk_post_ids_converted ),
-									    array( 'long_url' => $gglshrtlnk_link ),
-									    array( '%s' ),
-									    array( '%s' )
-								    );
+							    } elseif ( false === strpos( $gglshrtlnk_link, $_SERVER['HTTP_HOST'] ) ) {
+								    $failed_links_list[$failed_links] = $gglshrtlnk_link;
+								    $failed_links++;
 							    }
-						    } elseif ( false === strpos( $gglshrtlnk_link, $_SERVER['HTTP_HOST'] ) ) {
-							    $failed_links_list[$failed_links] = $gglshrtlnk_link;
-							    $failed_links++;
-						    }
-                        }
+	                        }
+	                        /* end deprecated */
+						}
 					}
-				}
-				if ( $failed_links > 0 ) {
-					$long_list = "";
-					foreach ( $failed_links_list as $list ) {
-						$long_list .= "<br>" . $list;
+					if ( $failed_links > 0 ) {
+						$long_list = "";
+						foreach ( $failed_links_list as $list ) {
+							$long_list .= "<br>" . $list;
+						}
+						$failed_links_message = sprintf( _n( '%s link failed:', '%s links failed:', $failed_links, 'google-shortlink' ), $failed_links );
+						$result['error_message'] = $failed_links_message;
+						$failed_links_message .= $long_list;
+						$result['error'] = $failed_links_message;
 					}
-					$failed_links_message = sprintf( _n( '%s link failed:', '%s links failed:', $failed_links, 'google-shortlink' ), $failed_links );
-					$result['error_message'] = $failed_links_message;
-					$failed_links_message .= $long_list;
-					$result['error'] = $failed_links_message;
-				}
-				if ( empty( $result['error'] ) || $result['error'] == $failed_links_message ) {
-					$result['message'] = __( 'Website has been scanned.', 'google-shortlink' );
-					if ( 0 != $gglshrtlnk_links_number ) {
-						$result['message'] .= " " . $gglshrtlnk_links_number . " " . __( 'links were added to database.', 'google-shortlink' );
-					} else {
-						$result['message'] .= " " . __( 'There are no new links.', 'google-shortlink' ) . "<br />" . __( 'The list of articles has been updated for each link.', 'google-shortlink' );
+					if ( empty( $result['error'] ) || $result['error'] == $failed_links_message ) {
+						$result['message'] = __( 'Website has been scanned.', 'google-shortlink' );
+						if ( 0 != $gglshrtlnk_links_number ) {
+							$result['message'] .= " " . $gglshrtlnk_links_number . " " . __( 'links were added to database.', 'google-shortlink' );
+						} else {
+							$result['message'] .= " " . __( 'There are no new links.', 'google-shortlink' ) . "<br />" . __( 'The list of articles has been updated for each link.', 'google-shortlink' );
+						}
 					}
-				}
-			break;
+				break;
+			}
+		} else {
+			$result['error'] = $result['error_message'] = 'Not all data is provided to complete the action. Fill the all fields on the page, then save changes and try again.';
 		}
 		/* message creating */
 		if ( ! $no_js ) {
@@ -508,6 +545,11 @@ if ( ! function_exists( 'gglshrtlnk_actions' ) ) {
 		global $wpdb, $gglshrtlnk_options;
 		/*select row with short and long db */
 		$gglshrtlnk_row_to_action = '';
+		/**
+		* @deprecated since 1.5.9
+		* @todo edit after 20.09.2021
+		* Remove if else and leave only content else
+		*/
         if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 	        $gglshrtlnk_row_to_action = $wpdb->get_row( $wpdb->prepare(
 		        "SELECT *
@@ -523,6 +565,7 @@ if ( ! function_exists( 'gglshrtlnk_actions' ) ) {
 			", $gglshrtlnk_id_to_action
 	        ), ARRAY_A );
         }
+        /* end deprecated */
 		/* delete selected links */
 		if ( 'delete' == $gglshrtlnk_action ) {
 			gglshrtlnk_delete_one( $gglshrtlnk_row_to_action );
@@ -620,12 +663,17 @@ if ( ! function_exists( 'gglshrtlnk_delete_one' ) ) {
 				$wpdb->update( $wpdb->posts, array( 'post_content' => $gglshrtlnk_one['post_content'] ), array( 'ID' => $gglshrtlnk_one['ID'] ), array( '%s' ), array( '%d' ) );
 			}
 		}
+		/**
+		* @deprecated since 1.5.9
+		* @todo edit after 20.09.2021
+		* Remove if else and leave only content else
+		*/
 		if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . $wpdb->prefix . "google_shortlink` WHERE `id` = %d", $gglshrtlnk_row_to_action['id'] ) );
 		} elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . $wpdb->prefix . "google_shortlink_for_firebase` WHERE `id` = %d", $gglshrtlnk_row_to_action['id'] ) );
         }
-
+        /* end deprecated */
 		/*increase count of deleted links */
 		$gglshrtlnk_links_number++;
 	}
@@ -676,7 +724,12 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 	function gglshrtlnk_options_page() {
 		global $wpdb, $gglshrtlnk_options;
 
-		if ( isset( $_POST['submit_to_firebase_confirm'] ) && check_admin_referer( 'gglshrtlnk_opt-noonce-action', 'gglshrtlnk_opt-noonce-field' ) ) {		    
+		/**
+		* @deprecated since 1.5.9
+		* @todo edit after 20.09.2021
+		* Remove and transfer code after 'Creating table for firebase api to save links' to gglshrtlnk_create_table function
+		*/
+		if ( ( isset( $_POST['submit_to_firebase_confirm'] ) && check_admin_referer( 'gglshrtlnk_opt-noonce-action', 'gglshrtlnk_opt-noonce-field' ) ) || 1 == $gglshrtlnk_options[ 'firebase_api_is_on' ] ) {		    
 	        $gglshrtlnk_options[ 'firebase_api_is_on' ] = 1;
 	        update_option( 'gglshrtlnk_options', $gglshrtlnk_options );
 
@@ -692,7 +745,15 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 		        )
 		        ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 	        dbDelta( $gglshrtlnk_sql );
-		} ?>
+		} 
+		if ( ! class_exists( 'Bws_Settings_Tabs' ) )
+		    require_once( dirname( __FILE__ ) . '/bws_menu/class-bws-settings.php' );
+		require_once( dirname( __FILE__ ) . '/includes/class-gglshrtlnk-settings.php' );
+		$page = new Gglshrtlnk_Settings_Tabs( plugin_basename( __FILE__ ) );
+
+		if ( method_exists( $page,'add_request_feature' ) )
+        	$page->add_request_feature();
+		/* end deprecated */ ?>
 		<div class="wrap">
 			<h1><?php _e( 'Shortlink Settings', 'custom-admin-page' ); ?></h1>
 			<?php if ( isset( $_POST['submit_to_firebase'] ) ) { ?>
@@ -705,25 +766,7 @@ if ( ! function_exists( 'gglshrtlnk_options_page' ) ) {
 					</table>
 					<?php wp_nonce_field( 'gglshrtlnk_opt-noonce-action', 'gglshrtlnk_opt-noonce-field' ); ?>
 				</form>
-			<?php } else {
-				 if ( 1 == $gglshrtlnk_options['firebase_api_is_on'] && ! isset( $_SESSION['access_token'] ) ) { ?>
-					<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
-						<div class="notice below-h2 notice-warning">
-							<p>
-					    		<?php _e( 'Please fill all settings and log in to your Google Account', 'google-shortlink' ); ?>
-					    	</p>
-					    	<p>
-					    		<input type="submit" name="gglshrtlnk_oauth" class="button button-secondary" value="<?php _e( 'Log in to your Google Account', 'google-shortlink' ); ?>"/>
-					    		<input type="hidden" name="action" value="gglshrtlnk_oauth">
-					    	</p>
-					    </div>						
-					</form>
-				<?php }
-				if ( ! class_exists( 'Bws_Settings_Tabs' ) )
-		            require_once( dirname( __FILE__ ) . '/bws_menu/class-bws-settings.php' );
-		        require_once( dirname( __FILE__ ) . '/includes/class-gglshrtlnk-settings.php' );
-				$page = new Gglshrtlnk_Settings_Tabs( plugin_basename( __FILE__ ) );
-				
+			<?php } else {		
 				$page->display_content();
 			} ?>
 		</div>
@@ -739,6 +782,11 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 		    $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
         }
 
+		/**
+		* @deprecated since 1.5.9
+		* @todo edit after 20.09.2021
+		* Remove if else and leave only content else
+		*/
 		if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 			/*if search query was send */
 			if ( ! empty( $_POST['s'] ) ) {
@@ -750,15 +798,8 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 				} else {
 					$gglshrtlnk_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink` WHERE `short_url` = %s", $gglshrtlnk_search ), ARRAY_A );
 				}
-
-				/*if pagination turn off */
-			} elseif ( 'all' == $gglshrtlnk_options['pagination'] ) {
-				$gglshrtlnk_data = $wpdb->get_results(
-					"SELECT * FROM `" . $wpdb->prefix . "google_shortlink` ORDER BY `id` DESC ", ARRAY_A
-				);
-				/*if pagination turn on	*/
 			} else {
-				$gglshrtlnk_per_page = $gglshrtlnk_options['pagination'];
+				$gglshrtlnk_per_page = 20;
 				$gglshrtlnk_begin    = 0;
 				if ( isset( $_REQUEST['paged'] ) && 1 != $_REQUEST['paged'] ) {
 					$gglshrtlnk_begin = $gglshrtlnk_per_page * absint( ( $_REQUEST['paged'] - 1 ) );
@@ -825,17 +866,8 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 					$gglshrtlnk_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . $wpdb->prefix . "google_shortlink_for_firebase` WHERE `short_url` LIKE %s;", '%' . $gglshrtlnk_search . '%' ), ARRAY_A );
 				}
 
-				/*if pagination turn off */
-			} elseif ( 'all' == $gglshrtlnk_options['pagination'] ) {
-				$gglshrtlnk_data = $wpdb->get_results(
-					"SELECT *
-				FROM `" . $wpdb->prefix . "google_shortlink_for_firebase`
-				ORDER BY `id` DESC
-				", ARRAY_A
-				);
-				/*if pagination turn on	*/
 			} else {
-				$gglshrtlnk_per_page = $gglshrtlnk_options['pagination'];
+				$gglshrtlnk_per_page = 20;
 				$gglshrtlnk_begin = 0;
 				if ( isset( $_REQUEST['paged'] ) && 1 != $_REQUEST['paged'] ) {
 					$gglshrtlnk_begin = $gglshrtlnk_per_page * absint( ( $_REQUEST['paged'] - 1 ) );
@@ -895,6 +927,213 @@ if ( ! function_exists( "gglshrtlnk_table_data" ) ) {
 	}
 }
 
+if ( ! function_exists( 'gglshrtlnk_create_link' ) ) {
+	function gglshrtlnk_create_link() { 
+		global $wpdb, $gglshrtlnk_options;
+
+	    if ( empty( $gglshrtlnk_options ) ) {
+	        $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
+        } ?>
+		<div class="wrap">
+			<h1><?php _e( 'New Links', 'google-shortlink' ); ?></h1>
+
+			<?php /*do action if isset  */
+			if ( isset( $_GET['action'] ) && isset( $_GET['link'] ) ) {
+				if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-' . $_GET['action'] . $_GET['link'] ) ) {
+					gglshrtlnk_actions( $_GET['action'], $_GET['link'] );
+				}
+			}
+			/*bulk actions part */
+			if ( ( ( isset( $_POST['action'] ) && -1 != $_POST['action'] ) || ( isset( $_POST['action2'] ) && -1 != $_POST['action2'] ) ) && isset( $_POST['link'] ) && check_admin_referer( 'gglshrtlnk_tbl-noonce-action', 'gglshrtlnk_tbl-noonce-field' ) ) {
+				foreach ( $_POST['link'] as $gglshrtlnk_id_to_action ) {
+					if ( -1 != $_POST['action'] ) {
+						gglshrtlnk_actions( $_POST['action'], $gglshrtlnk_id_to_action );
+					} elseif ( -1 != $_POST['action2'] ) {
+						gglshrtlnk_actions( $_POST['action2'], $gglshrtlnk_id_to_action );
+					}
+				}
+			}
+			
+			/**
+			* @deprecated since 1.5.9
+			* @todo edit after 20.09.2021
+			* Remove if else and leave only content else
+			*/
+			if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				if ( '' == $gglshrtlnk_options['api_key'] ) { ?>
+                    <div class="error below-h2">
+                        <p>
+							<?php echo "<b/>" . __( 'Warning:', 'google-shortlink' ) . "</b> " . __( "You haven't entered API key yet. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter your key.', 'google-shortlink' ); ?>
+                        </p>
+                    </div>
+				<?php }
+			} else {
+				if ( '' == $gglshrtlnk_options['api_key_for_firebase'] ) { ?>
+                    <div class="error below-h2 notice-error">
+                        <p>
+							<?php echo "<b/>" . __( 'Warning:', 'google-shortlink' ) . "</b> " . __( "You haven't entered API key yet. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter your key.', 'google-shortlink' ); ?>
+                        </p>
+                    </div>
+				<?php }
+			}
+			/* end deprecated */
+
+			/*
+			* direct input part
+			*/
+			$gglshrtlnk_number_of_input_links = 3;
+
+			/*set number of direct link fields if direct input form was send */
+			if ( isset( $_POST['gglshrtlnk_submit-direct-input'] ) && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) )
+				$gglshrtlnk_number_of_input_links = intval( $_POST['gglshrtlnk_number_of_input_links'] );
+
+			/* get short links if long links are exist in direct input */
+			for ( $i=1; $i < $gglshrtlnk_number_of_input_links + 1; $i++ ) {
+				$gglshrtlnk_input = "gglshrtlnk_url-input-" . $i;
+				$gglshrtlnk_output = "gglshrtlnk_url-output-" . $i;
+
+				if ( ! isset( $_POST['gglshrtlnk_reset-direct-input'] ) && ! empty( $_POST[ $gglshrtlnk_input ] ) && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) ) {
+					$gglshrtlnk_input_links[ $gglshrtlnk_input ] = stripslashes( sanitize_text_field( $_POST[ $gglshrtlnk_input ] ) );
+					/*check first is a short link alreary exist in db */
+					$gglshrtlnk_short_url_from_db = '';
+					/**
+					* @deprecated since 1.5.9
+					* @todo edit after 20.09.2021
+					* Remove if else and leave only content else
+					*/
+                    if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+                        $gglshrtlnk_short_url_from_db = $wpdb->get_var(
+                            $wpdb->prepare(
+	                            "SELECT `short_url`
+							FROM `" . $wpdb->prefix . "google_shortlink`
+							WHERE `long_url` = %s
+							", $gglshrtlnk_input_links[ $gglshrtlnk_input ]
+                            )
+                        );
+                    } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+                        $gglshrtlnk_short_url_from_db = $wpdb->get_var(
+                            $wpdb->prepare(
+	                            "SELECT `short_url`
+							FROM `" . $wpdb->prefix . "google_shortlink_for_firebase`
+							WHERE `long_url` = %s
+							", $gglshrtlnk_input_links[ $gglshrtlnk_input ]
+                            )
+                        );
+                    }
+					/* end deprecated */
+					if ( ! $gglshrtlnk_short_url_from_db ) {
+						/*get a short url*/
+						$gglshrtlnk_short_url[ $gglshrtlnk_output ] = gglshrtlnk_get( $gglshrtlnk_input_links[ $gglshrtlnk_input ] );
+						if ( is_wp_error( $gglshrtlnk_short_url[ $gglshrtlnk_output ] ) ) {
+							$gglshrtlnk_error = $gglshrtlnk_short_url[ $gglshrtlnk_output ];
+							$gglshrtlnk_short_url[ $gglshrtlnk_output ] = ''; ?>
+							<div class="below-h2 error">
+								<p><?php echo __( 'Error:', 'google-shortlink' ) . ' ' . $gglshrtlnk_error->get_error_message() . ' - ' . esc_html( $_POST[ $gglshrtlnk_input ] ); ?></p>
+							</div>
+							<?php continue;
+						}
+						/* add long and short url to db */
+						$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts`", ARRAY_A );
+						$gglshrtlnk_post_ids = array();
+						$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
+						unset( $gglshrtlnk_get_all_posts['revision'] );
+						unset( $gglshrtlnk_get_all_posts['attachment'] );
+						unset( $gglshrtlnk_get_all_posts['nav_menu_item'] );
+						foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
+							if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
+								if ( strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_input_links[ $gglshrtlnk_input ] ) ) {
+									$gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
+								}
+							}
+						}
+						/* convert post ids into db format */
+						if ( !empty( $gglshrtlnk_post_ids ) ) {
+							$gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
+						} else {
+							$gglshrtlnk_post_ids_converted = 'added_by_direct';
+						}
+						/**
+						* @deprecated since 1.5.9
+						* @todo edit after 20.09.2021
+						* Remove if else and leave only content else
+						*/
+						if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+							$wpdb->insert(
+								$wpdb->prefix . "google_shortlink",
+								array(
+									'long_url'	=> $gglshrtlnk_input_links[ $gglshrtlnk_input ],
+									'short_url'	=> $gglshrtlnk_short_url[ $gglshrtlnk_output ],
+									'post_ids'	=> $gglshrtlnk_post_ids_converted
+								)
+							);
+                        } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+							$wpdb->insert(
+								$wpdb->prefix . "google_shortlink_for_firebase",
+								array(
+									'long_url'	=> $gglshrtlnk_input_links[ $gglshrtlnk_input ],
+									'short_url'	=> $gglshrtlnk_short_url[ $gglshrtlnk_output ],
+									'post_ids'	=> $gglshrtlnk_post_ids_converted
+								)
+							);
+                        }
+						/* end deprecated */
+					} else {
+						/*get a short url from database */
+						$gglshrtlnk_short_url[ $gglshrtlnk_output ] = $gglshrtlnk_short_url_from_db;
+					}
+				} else {
+					$gglshrtlnk_input_links[ $gglshrtlnk_input ] = '';
+					$gglshrtlnk_short_url[ $gglshrtlnk_output ] = '';
+				}
+			}
+			if ( isset( $gglshrtlnk_key_invalid ) ) { ?>
+				<div class="below-h2 error">
+					<p><?php echo __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter correct key.', 'google-shortlink' ); ?></p>
+				</div>
+			<?php } ?>
+			<div class="below-h2 updated gglshrtlnk_hide" id="gglshrtlnk_no_more_fields">
+				<p><?php _e( "There are empty fields on the page. Fill them out before adding another one.", 'google-shortlink' ); ?></p>
+			</div>
+			<!-- Direct input form -->
+			<form method="post" name="gglshrtlnk_direct-input-form" action="" class="gglshrtlnk_direct-input">
+				<table class="form-table">
+					<tr valign="top">
+						<th scope="row">
+							<?php _e( 'Get Short Links By Direct Input:', 'google-shortlink' ) ?>
+						</th>
+						<td>
+							<table id="gglshrtlnk_direct-input-table" cellspacing="0">
+								<tbody>
+									<tr>
+										<td class="gglshrtlnk_long-link-column"><?php _e( 'Type long links here:', 'google-shortlink' ); ?></td>
+										<td class="gglshrtlnk_short-link-column"><?php _e( 'Short links will appear below:', 'google-shortlink' ); ?></td>
+									</tr>
+									<!-- Creating table for direct input -->
+									<?php for ( $i = 1; $i < $gglshrtlnk_number_of_input_links + 1; $i++ ) {
+										$gglshrtlnk_input = "gglshrtlnk_url-input-" . $i;
+										$gglshrtlnk_output = "gglshrtlnk_url-output-" . $i; ?>
+										<tr valign="top">
+											<td class="gglshrtlnk_long-link-column"><input type="url" name="<?php echo $gglshrtlnk_input; ?>"  value="<?php echo $gglshrtlnk_input_links[ $gglshrtlnk_input ]; ?>" /></td>
+											<td class="gglshrtlnk_short-link-column"><input type="url" name="<?php echo $gglshrtlnk_output; ?>" readonly value="<?php echo $gglshrtlnk_short_url[ $gglshrtlnk_output ]; ?>" /></td>
+										</tr>
+									<?php } ?>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<p>
+					<input type="hidden" name="gglshrtlnk_number_of_input_links" id="gglshrtlnk_number_of_input_links" value="<?php echo $gglshrtlnk_number_of_input_links; ?>" />
+					<input type="submit" name="gglshrtlnk_submit-direct-input" class="button-primary" value="<?php _e( 'Get Short Links', 'google-shortlink' ); ?>" />
+					<input type="submit" name="gglshrtlnk_reset-direct-input" class="button-primary" id="reset-direct" value="<?php _e( 'Reset Form', 'google-shortlink' ); ?>" />
+					<input type="button" value="<?php _e( 'Add Field', 'google-shortlink' ); ?>" class="button-primary hide-if-no-js" id="gglshrtlnk_add-field-button" />
+					<?php wp_nonce_field( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ); ?>
+				</p>
+			</form>
+		</div>
+	<?php }
+}
+
 /* creating class for display table of links */
 if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
 	if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -929,10 +1168,10 @@ if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
 				$columns = array(
 					'cb'			=> '<input type="checkbox" />',
 					'id' 			=> __( 'ID', 'google-shortlink' ),
-					'long_url'  	=> __( 'Long Link', 'google-shortlink' ),
+					'long_url'  	=> __( 'Original Link', 'google-shortlink' ),
 					'short_url' 	=> __( 'Short Link', 'google-shortlink' ),
 					'total_clicks'	=> __( 'Total Clicks', 'google-shortlink' ),
-					'post_ids'		=> __( 'Articles That Contain Links', 'google-shortlink' )
+					'post_ids'		=> __( 'Location', 'google-shortlink' )
 				);
 				return $columns;
 			}
@@ -953,11 +1192,17 @@ if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
 				global $wpdb, $gglshrtlnk_options;
 				$gglshrtlnk_is_added_by_direct = '';
 
+				/**
+				* @deprecated since 1.5.9
+				* @todo edit after 20.09.2021
+				* Remove if else and leave only content else
+				*/				
 				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM `" . $wpdb->prefix . "google_shortlink` WHERE `id` = %s", $item['id'] ) );
 				} else {
 					$gglshrtlnk_is_added_by_direct = $wpdb->get_var( $wpdb->prepare( "SELECT `post_ids` FROM `" . $wpdb->prefix . "google_shortlink_for_firebase` WHERE `id` = %s", $item['id'] ) );
                 }
+                /* end deprecated */
 				if ( 'added_by_direct' != $gglshrtlnk_is_added_by_direct ) {
 					$actions = array(
 						'replace' => '<a href="' . esc_url( wp_nonce_url( sprintf( '?page=%s&action=%s&link=%s', $_GET['page'], 'replace', $item['id'] ) , 'gglshrtlnk_tbl-noonce-replace' . $item['id'] ) ) . '">' .  __( 'Replace', 'google-shortlink' ) . '</a>',
@@ -990,28 +1235,31 @@ if ( file_exists( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ) ) {
 				$this->_column_headers = array( $columns, $hidden, $sortable, 'long_url' );
 				$this->items = gglshrtlnk_table_data();
 				$action = $this->current_action();
+				/**
+				* @deprecated since 1.5.9
+				* @todo edit after 20.09.2021
+				* Remove if else and leave only content else
+				*/
 				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 					$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
                 } else {
 					$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink_for_firebase" );
                 }
+                /* end deprecated */
 				$table_items_quantity = count( (array) $this->items );
-
-				/*if pagination turn on */
-				if ( 'all' != $gglshrtlnk_options['pagination'] ) {
-					$per_page = $gglshrtlnk_options['pagination'];
-					if ( ! empty( $_POST['s'] ) ) {
-						$this->set_pagination_args( array(
-							'total_items' => $table_items_quantity,
-							'per_page'    => 'all'
-						) );
-					} else {
-						$this->set_pagination_args( array(
-							'total_items' => $total_items,
-							'per_page'    => $per_page
-						) );
-						$current_page = $this->get_pagenum();
-					}
+				
+				$per_page = 20;
+				if ( ! empty( $_POST['s'] ) ) {
+					$this->set_pagination_args( array(
+						'total_items' => $table_items_quantity,
+						'per_page'    => 'all'
+					) );
+				} else {
+					$this->set_pagination_args( array(
+						'total_items' => $total_items,
+						'per_page'    => $per_page
+					) );
+					$current_page = $this->get_pagenum();
 				}
 			}
 		} /*class end */
@@ -1034,327 +1282,136 @@ if ( ! function_exists( 'gglshrtlnk_page' ) ) {
 	function gglshrtlnk_page() {
 		global $wpdb, $gglshrtlnk_links_number, $gglshrtlnk_options; ?>
 		<div class="wrap">
-			<h1>Shortlink</h1>
-			<h2 class="nav-tab-wrapper">
-			<?php if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) { ?>
-				<a class="nav-tab <?php if ( ! isset( $_GET['tab'] ) ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink', '' ); ?>"><?php _e( 'Table of Links for Shortener API', 'google-shortlink' ); ?></a>
-			<?php } else { ?>
-				<a class="nav-tab <?php if ( ! isset( $_GET['tab'] ) ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink', '' ); ?>"><?php _e( 'Table of links for Firebase Dynamic Links', 'google-shortlink' ); ?></a>
-			<?php } ?>
-				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'direct' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=direct', '' ); ?>"><?php _e( 'Direct Input', 'google-shortlink' ); ?></a>
-				<a class="nav-tab <?php if ( isset( $_GET['tab'] ) && 'all' == $_GET['tab'] ) echo 'nav-tab-active'; ?>" href="<?php echo admin_url( 'admin.php?page=google-shortlink&tab=all', '' ); ?>"><?php _e( 'Additional Options', 'google-shortlink' ); ?></a>
-			</h2>
-			<?php if ( ! isset( $_GET['tab'] ) ) { ?>
-				<noscript><div class="error below-h2"><p><?php _e( 'Please enable JavaScript to count total clicks.', 'google-shortlink' ); ?></p></div></noscript>
-				<?php /*do action if isset  */
-				if ( isset( $_GET['action'] ) && isset( $_GET['link'] ) ) {
-					if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-' . $_GET['action'] . $_GET['link'] ) ) {
-						gglshrtlnk_actions( $_GET['action'], $_GET['link'] );
-					}
+			<h1>
+				<span><?php _e( 'Links', 'google-shortlink' ); ?></span>
+				<a href="admin.php?page=gglshrtlnk_create_link" class="add-new-h2"><?php _e( 'Add New', 'google-shortlink' ); ?></a>
+			</h1>
+			
+			<noscript><div class="error below-h2"><p><?php _e( 'Please enable JavaScript to count total clicks.', 'google-shortlink' ); ?></p></div></noscript>
+			<?php /*do action if isset  */
+			if ( isset( $_GET['action'] ) && isset( $_GET['link'] ) ) {
+				if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-' . $_GET['action'] . $_GET['link'] ) ) {
+					gglshrtlnk_actions( $_GET['action'], $_GET['link'] );
 				}
-				/*bulk actions part */
-				if ( ( ( isset( $_POST['action'] ) && -1 != $_POST['action'] ) || ( isset( $_POST['action2'] ) && -1 != $_POST['action2'] ) ) && isset( $_POST['link'] ) && check_admin_referer( 'gglshrtlnk_tbl-noonce-action', 'gglshrtlnk_tbl-noonce-field' ) ) {
-					foreach ( $_POST['link'] as $gglshrtlnk_id_to_action ) {
-						if ( -1 != $_POST['action'] ) {
-							gglshrtlnk_actions( $_POST['action'], $gglshrtlnk_id_to_action );
-						} elseif ( -1 != $_POST['action2'] ) {
-							gglshrtlnk_actions( $_POST['action2'], $gglshrtlnk_id_to_action );
-						}
+			}
+			/*bulk actions part */
+			if ( ( ( isset( $_POST['action'] ) && -1 != $_POST['action'] ) || ( isset( $_POST['action2'] ) && -1 != $_POST['action2'] ) ) && isset( $_POST['link'] ) && check_admin_referer( 'gglshrtlnk_tbl-noonce-action', 'gglshrtlnk_tbl-noonce-field' ) ) {
+				foreach ( $_POST['link'] as $gglshrtlnk_id_to_action ) {
+					if ( -1 != $_POST['action'] ) {
+						gglshrtlnk_actions( $_POST['action'], $gglshrtlnk_id_to_action );
+					} elseif ( -1 != $_POST['action2'] ) {
+						gglshrtlnk_actions( $_POST['action2'], $gglshrtlnk_id_to_action );
 					}
-				} ?>
-				<!-- TABLE OF LINKS TAB -->
-				<!-- show message if action was done -->
-				<?php if ( isset( $_GET['action'] ) ) { ?>
-					<div class="updated below-h2">
-						<p>
-							<?php switch ( $_GET['action'] ) {
-								case 'replace':
-									if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-replace' . $_GET['link'] ) ) {
-										_e( 'One long link was replaced with a short link.', 'google-shortlink' );
-									}
-									break;
-								case 'restore':
-									if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-restore' . $_GET['link'] ) ) {
-										_e( 'One short link was restored to a long link.', 'google-shortlink' );
-									}
-									break;
-								case 'delete':
-									if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-delete' . $_GET['link'] ) ) {
-										_e( 'One short link was deleted from database.', 'google-shortlink' );
-									}
-									break;
-							} ?>
-						</p>
-					</div>
-				<?php }
-				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-					if ( '' == $gglshrtlnk_options['api_key'] ) { ?>
-                        <div class="error below-h2">
-                            <p>
-								<?php echo "<b/>" . __( 'Warning:', 'google-shortlink' ) . "</b> " . __( "You haven't entered API key yet. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter your key.', 'google-shortlink' ); ?>
-                            </p>
-                        </div>
-					<?php }
-				} else {
-					if ( '' == $gglshrtlnk_options['api_key_for_firebase'] ) { ?>
-                        <div class="error below-h2 notice-error">
-                            <p>
-								<?php echo "<b/>" . __( 'Warning:', 'google-shortlink' ) . "</b> " . __( "You haven't entered API key yet. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter your key.', 'google-shortlink' ); ?>
-                            </p>
-                        </div>
-					<?php }
-				}
-				/* if user input his api key notice about statistic update */
-				if ( ! empty( $gglshrtlnk_options['api_key_for_firebase'] ) ) { ?>
-				<br>
-                    <div class="notice below-h2 notice-warning is-dismissible">
-                        <p>
-							<?php echo "<b/>" . __('Notice:', 'google-shortlink') . "</b> " . __('Click statistic updates every 3 days', 'google-shortlink') ?>
-                        </p>
-                    </div>
-					<?php
-				}
-				if ( ( ( isset( $_POST['action'] ) && -1 != $_POST['action'] ) || ( isset( $_POST['action2'] ) && -1 != $_POST['action2'] ) ) && check_admin_referer( 'gglshrtlnk_tbl-noonce-action', 'gglshrtlnk_tbl-noonce-field' ) ) { ?>
-					<div class="updated below-h2">
-						<p>
-							<?php switch ( $_POST['action'] ) {
-								case 'replace':
-									printf( __( 'Total %d links have been replaced', 'google-shortlink' ), $gglshrtlnk_links_number );
-									break;
-								case 'restore':
-									printf( __( 'Total %d links have been restored', 'google-shortlink' ), $gglshrtlnk_links_number );
-									break;
-								case 'delete':
-									printf( __( 'Total %d links have been deleted from database', 'google-shortlink' ), $gglshrtlnk_links_number );
-									break;
-							}
-							switch ( $_POST['action2'] ) {
-								case 'replace':
-									printf( __( 'Total %d links have been replaced', 'google-shortlink' ), $gglshrtlnk_links_number );
-									break;
-								case 'restore':
-									printf( __( 'Total %d links have been restored', 'google-shortlink' ), $gglshrtlnk_links_number );
-									break;
-								case 'delete':
-									printf( __( 'Total %d links have been deleted from database', 'google-shortlink' ), $gglshrtlnk_links_number );
-									break;
-							} ?>
-						</p>
-					</div>
-				<?php }
-				$gglshrtlnk_total_items = '';
-				if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-					$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
-                } else {
-					$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink_for_firebase" );
-                }
-
-				/*show this if database is empty */
-				if ( ! $gglshrtlnk_total_items ) { ?>
-					<div class="updated below-h2">
-						<p><?php _e( 'There are no links in the database. Go to the Additional options tab, and scan your website.', 'google-shortlink' ); ?></p>
-					</div>
-				<?php }	?>
-				<form method="post" name="gglshrtlnk_table-of-links" id="gglshrtlnk_table-of-links" action="<?php echo admin_url( 'admin.php?page=google-shortlink', '' ); ?>" class="gglshrtlnk_auto-replace">
-					<?php gglshrtlnk_table(); ?>
-				</form>
-			<?php } else {
-			switch ( $_GET['tab'] ) {
-				case 'direct':
-					/*
-					* direct input part
-					*/
-					$gglshrtlnk_number_of_input_links = 3;
-
-					/*set number of direct link fields if direct input form was send */
-					if ( isset( $_POST['gglshrtlnk_submit-direct-input'] ) && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) )
-						$gglshrtlnk_number_of_input_links = intval( $_POST['gglshrtlnk_number_of_input_links'] );
-
-					/* get short links if long links are exist in direct input */
-					for ( $i=1; $i < $gglshrtlnk_number_of_input_links + 1; $i++ ) {
-						$gglshrtlnk_input = "gglshrtlnk_url-input-" . $i;
-						$gglshrtlnk_output = "gglshrtlnk_url-output-" . $i;
-
-						if ( ! isset( $_POST['gglshrtlnk_reset-direct-input'] ) && ! empty( $_POST[ $gglshrtlnk_input ] ) && check_admin_referer( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ) ) {
-							$gglshrtlnk_input_links[ $gglshrtlnk_input ] = stripslashes( sanitize_text_field( $_POST[ $gglshrtlnk_input ] ) );
-							/*check first is a short link alreary exist in db */
-							$gglshrtlnk_short_url_from_db = '';
-                            if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-	                            $gglshrtlnk_short_url_from_db = $wpdb->get_var(
-		                            $wpdb->prepare(
-			                            "SELECT `short_url`
-									FROM `" . $wpdb->prefix . "google_shortlink`
-									WHERE `long_url` = %s
-									", $gglshrtlnk_input_links[ $gglshrtlnk_input ]
-		                            )
-	                            );
-                            } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-	                            $gglshrtlnk_short_url_from_db = $wpdb->get_var(
-		                            $wpdb->prepare(
-			                            "SELECT `short_url`
-									FROM `" . $wpdb->prefix . "google_shortlink_for_firebase`
-									WHERE `long_url` = %s
-									", $gglshrtlnk_input_links[ $gglshrtlnk_input ]
-		                            )
-	                            );
-                            }
-
-
-							if ( ! $gglshrtlnk_short_url_from_db ) {
-								/*get a short url*/
-								$gglshrtlnk_short_url[ $gglshrtlnk_output ] = gglshrtlnk_get( $gglshrtlnk_input_links[ $gglshrtlnk_input ] );
-								if ( is_wp_error( $gglshrtlnk_short_url[ $gglshrtlnk_output ] ) ) {
-									$gglshrtlnk_error = $gglshrtlnk_short_url[ $gglshrtlnk_output ];
-									$gglshrtlnk_short_url[ $gglshrtlnk_output ] = ''; ?>
-									<div class="below-h2 error">
-										<p><?php echo __( 'Error:', 'google-shortlink' ) . ' ' . $gglshrtlnk_error->get_error_message() . ' - ' . esc_html( $_POST[ $gglshrtlnk_input ] ); ?></p>
-									</div>
-									<?php continue;
-								}
-								/* add long and short url to db */
-								$gglshrtlnk_post_contents = $wpdb->get_results( "SELECT `post_content`, `ID`, `post_type` FROM `$wpdb->posts`", ARRAY_A );
-								$gglshrtlnk_post_ids = array();
-								$gglshrtlnk_get_all_posts = get_post_types( '', 'names' );
-								unset( $gglshrtlnk_get_all_posts['revision'] );
-								unset( $gglshrtlnk_get_all_posts['attachment'] );
-								unset( $gglshrtlnk_get_all_posts['nav_menu_item'] );
-								foreach ( $gglshrtlnk_post_contents as $gglshrtlnk_is_in_post ) {
-									if ( array_key_exists( $gglshrtlnk_is_in_post['post_type'], $gglshrtlnk_get_all_posts ) ) {
-										if ( strpos( $gglshrtlnk_is_in_post['post_content'], $gglshrtlnk_input_links[ $gglshrtlnk_input ] ) ) {
-											$gglshrtlnk_post_ids[] = $gglshrtlnk_is_in_post['ID'];
-										}
-									}
-								}
-								/* convert post ids into db format */
-								if ( !empty( $gglshrtlnk_post_ids ) ) {
-									$gglshrtlnk_post_ids_converted = serialize( $gglshrtlnk_post_ids );
-								} else {
-									$gglshrtlnk_post_ids_converted = 'added_by_direct';
-								}
-								if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-									$wpdb->insert(
-										$wpdb->prefix . "google_shortlink",
-										array(
-											'long_url'	=> $gglshrtlnk_input_links[ $gglshrtlnk_input ],
-											'short_url'	=> $gglshrtlnk_short_url[ $gglshrtlnk_output ],
-											'post_ids'	=> $gglshrtlnk_post_ids_converted
-										)
-									);
-                                } elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-									$wpdb->insert(
-										$wpdb->prefix . "google_shortlink_for_firebase",
-										array(
-											'long_url'	=> $gglshrtlnk_input_links[ $gglshrtlnk_input ],
-											'short_url'	=> $gglshrtlnk_short_url[ $gglshrtlnk_output ],
-											'post_ids'	=> $gglshrtlnk_post_ids_converted
-										)
-									);
-                                }
-							} else {
-								/*get a short url from database */
-								$gglshrtlnk_short_url[ $gglshrtlnk_output ] = $gglshrtlnk_short_url_from_db;
-							}
-						} else {
-							$gglshrtlnk_input_links[ $gglshrtlnk_input ] = '';
-							$gglshrtlnk_short_url[ $gglshrtlnk_output ] = '';
-						}
-					}
-					if ( isset( $gglshrtlnk_key_invalid ) ) { ?>
-						<div class="below-h2 error">
-							<p><?php echo __( "Invalid API key. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter correct key.', 'google-shortlink' ); ?></p>
-						</div>
-					<?php } ?>
-					<div class="below-h2 updated gglshrtlnk_hide" id="gglshrtlnk_no_more_fields">
-						<p><?php _e( "There are empty fields on the page. Fill them out before adding another one.", 'google-shortlink' ); ?></p>
-					</div>
-					<!-- Direct input form -->
-					<form method="post" name="gglshrtlnk_direct-input-form" action="" class="gglshrtlnk_direct-input">
-						<table class="form-table">
-							<tr valign="top">
-								<th scope="row">
-									<?php _e( 'Get Short Links By Direct Input:', 'google-shortlink' ) ?>
-								</th>
-								<td>
-									<table id="gglshrtlnk_direct-input-table" cellspacing="0">
-										<tbody>
-											<tr>
-												<td class="gglshrtlnk_long-link-column"><?php _e( 'Type long links here:', 'google-shortlink' ); ?></td>
-												<td class="gglshrtlnk_short-link-column"><?php _e( 'Short links will appear below:', 'google-shortlink' ); ?></td>
-											</tr>
-											<!-- Creating table for direct input -->
-											<?php for ( $i = 1; $i < $gglshrtlnk_number_of_input_links + 1; $i++ ) {
-												$gglshrtlnk_input = "gglshrtlnk_url-input-" . $i;
-												$gglshrtlnk_output = "gglshrtlnk_url-output-" . $i; ?>
-												<tr valign="top">
-													<td class="gglshrtlnk_long-link-column"><input type="url" name="<?php echo $gglshrtlnk_input; ?>"  value="<?php echo $gglshrtlnk_input_links[ $gglshrtlnk_input ]; ?>" /></td>
-													<td class="gglshrtlnk_short-link-column"><input type="url" name="<?php echo $gglshrtlnk_output; ?>" readonly value="<?php echo $gglshrtlnk_short_url[ $gglshrtlnk_output ]; ?>" /></td>
-												</tr>
-											<?php } ?>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</table>
-						<p>
-							<input type="hidden" name="gglshrtlnk_number_of_input_links" id="gglshrtlnk_number_of_input_links" value="<?php echo $gglshrtlnk_number_of_input_links; ?>" />
-							<input type="submit" name="gglshrtlnk_submit-direct-input" class="button-primary" value="<?php _e( 'Get Short Links', 'google-shortlink' ); ?>" />
-							<input type="submit" name="gglshrtlnk_reset-direct-input" class="button-primary" id="reset-direct" value="<?php _e( 'Reset Form', 'google-shortlink' ); ?>" />
-							<input type="button" value="<?php _e( 'Add Field', 'google-shortlink' ); ?>" class="button-primary hide-if-no-js" id="gglshrtlnk_add-field-button" />
-							<?php wp_nonce_field( 'gglshrtlnk_dir-noonce-action', 'gglshrtlnk_dir-noonce-field' ); ?>
-						</p>
-					</form>
-				<?php break;
-				case 'all':
-					/*
-					* Actions with links part
-					*/
-					if ( isset( $_POST['gglshrtlnk_actions-with-links-was-send'] ) && check_admin_referer( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ) ) {
-						$result = gglshrtlnk_ajax_additional_opt_callback( true );
-						if ( ! empty( $result['message'] ) ) { ?>
-                            <div class="updated fade below-h2"><p><?php echo $result['message']; ?></p></div>
-						<?php }
-						if ( ! empty( $result['error'] ) ) { ?>
-                            <div class="error fade below-h2"><p><?php echo $result['error']; ?></p></div>
-						<?php }
-					}
-					$gglshrtlnk_total_items = '';
-					/*check if db is empty */
-					if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-						$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
-					} elseif ( 1 == $gglshrtlnk_options['firebase_api_is_on'] ) {
-						$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink_for_firebase" );
-					} ?>
-                    <div class="results below-h2 gglshrtlnk_hide updated" id="gglshrtlnk_ajax-status"></div>
-                    <!-- ACTIONS WITH LINKS FORM -->
-                    <form method="post" name="gglshrtlnk_actions-with-links" id="gglshrtlnk_actions-with-links"
-                          action="" class="gglshrtlnk_auto-replace">
-                        <table class="form-table">
-                            <tbody>
-                            <tr valign="top">
-                                <th><?php _e( 'Actions with Links:', 'google-shortlink' ) ?></th>
-                                <td>
-                                    <fieldset>
-                                        <!-- scan web-site to find all external links -->
-                                        <label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="scan" id="gglshrtlnk_scan" checked /> <?php _e( 'Scan website for new external links', 'google-shortlink' ); ?> </label><br />
-										<!-- replace automatically -->
-										<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="replace-all" id="gglshrtlnk_replace-all"<?php if ( 0 == $gglshrtlnk_total_items ) echo 'disabled="disabled"'; ?>/> <?php _e( 'Automatically replace all external links', 'google-shortlink' ); ?> </label><br />
-										<!-- restore all -->
-										<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="restore-all" id="gglshrtlnk_restore-all"<?php if ( 0 == $gglshrtlnk_total_items ) echo 'disabled="disabled"'; ?>/> <?php _e( 'Automatically restore all external links', 'google-shortlink' ); ?> </label><br />
-										<!-- delete all -->
-										<label> <input type="radio" name="gglshrtlnk_actions_with_links_radio" value="delete-all-radio" id="gglshrtlnk_delete-all-radio"<?php if ( 0 == $gglshrtlnk_total_items ) echo 'disabled="disabled"'; ?>/> <?php _e( 'Restore all links and clear the database', 'google-shortlink' ); ?></label><br />
-									</fieldset></td>
-								</tr>
-							</tbody>
-						</table>
-						<p>
-							<input class="button-primary" value="<?php _e( 'Apply', 'google-shortlink' ); ?>" type="submit" name="gglshrtlnk_apply_button3" id="gglshrtlnk_apply_button3" />
-							<input type="hidden" name="gglshrtlnk_actions-with-links-was-send" value="send" />
-							<?php wp_nonce_field( 'gglshrtlnk_act-noonce-action', 'gglshrtlnk_act-noonce-field' ); ?>
-						</p>
-					</form><!-- actions with links -->
-				<?php break;
 				}
 			} ?>
+			<!-- TABLE OF LINKS TAB -->
+			<!-- show message if action was done -->
+			<?php if ( isset( $_GET['action'] ) ) { ?>
+				<div class="updated below-h2">
+					<p>
+						<?php switch ( $_GET['action'] ) {
+							case 'replace':
+								if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-replace' . $_GET['link'] ) ) {
+									_e( 'One long link was replaced with a short link.', 'google-shortlink' );
+								}
+								break;
+							case 'restore':
+								if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-restore' . $_GET['link'] ) ) {
+									_e( 'One short link was restored to a long link.', 'google-shortlink' );
+								}
+								break;
+							case 'delete':
+								if ( check_admin_referer( 'gglshrtlnk_tbl-noonce-delete' . $_GET['link'] ) ) {
+									_e( 'One short link was deleted from database.', 'google-shortlink' );
+								}
+								break;
+						} ?>
+					</p>
+				</div>
+			<?php }
+			/**
+			* @deprecated since 1.5.9
+			* @todo edit after 20.09.2021
+			* Remove if else and leave only content else
+			*/
+			if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				if ( '' == $gglshrtlnk_options['api_key'] ) { ?>
+                    <div class="error below-h2">
+                        <p>
+							<?php echo "<b/>" . __( 'Warning:', 'google-shortlink' ) . "</b> " . __( "You haven't entered API key yet. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter your key.', 'google-shortlink' ); ?>
+                        </p>
+                    </div>
+				<?php }
+			} else {
+				if ( '' == $gglshrtlnk_options['api_key_for_firebase'] ) { ?>
+                    <div class="error below-h2 notice-error">
+                        <p>
+							<?php echo "<b/>" . __( 'Warning:', 'google-shortlink' ) . "</b> " . __( "You haven't entered API key yet. Go to plugin's", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( 'and enter your key.', 'google-shortlink' ); ?>
+                        </p>
+                    </div>
+				<?php }
+			}
+			/* end deprecated */
+			/* if user input his api key notice about statistic update */
+			if ( ! empty( $gglshrtlnk_options['api_key_for_firebase'] ) ) { ?>
+			<br>
+                <div class="notice below-h2 notice-warning is-dismissible">
+                    <p>
+						<?php echo "<b/>" . __('Notice:', 'google-shortlink') . "</b> " . __('Click statistic updates every 3 days', 'google-shortlink') ?>
+                    </p>
+                </div>
+				<?php
+			}
+			if ( ( ( isset( $_POST['action'] ) && -1 != $_POST['action'] ) || ( isset( $_POST['action2'] ) && -1 != $_POST['action2'] ) ) && check_admin_referer( 'gglshrtlnk_tbl-noonce-action', 'gglshrtlnk_tbl-noonce-field' ) ) { ?>
+				<div class="updated below-h2">
+					<p>
+						<?php switch ( $_POST['action'] ) {
+							case 'replace':
+								printf( __( 'Total %d links have been replaced', 'google-shortlink' ), $gglshrtlnk_links_number );
+								break;
+							case 'restore':
+								printf( __( 'Total %d links have been restored', 'google-shortlink' ), $gglshrtlnk_links_number );
+								break;
+							case 'delete':
+								printf( __( 'Total %d links have been deleted from database', 'google-shortlink' ), $gglshrtlnk_links_number );
+								break;
+						}
+						switch ( $_POST['action2'] ) {
+							case 'replace':
+								printf( __( 'Total %d links have been replaced', 'google-shortlink' ), $gglshrtlnk_links_number );
+								break;
+							case 'restore':
+								printf( __( 'Total %d links have been restored', 'google-shortlink' ), $gglshrtlnk_links_number );
+								break;
+							case 'delete':
+								printf( __( 'Total %d links have been deleted from database', 'google-shortlink' ), $gglshrtlnk_links_number );
+								break;
+						} ?>
+					</p>
+				</div>
+			<?php }
+			$gglshrtlnk_total_items = '';
+			/**
+			* @deprecated since 1.5.9
+			* @todo edit after 20.09.2021
+			* Remove if else and leave only content else
+			*/
+			if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
+				$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink" );
+            } else {
+				$gglshrtlnk_total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "google_shortlink_for_firebase" );
+            }
+			/* end deprecated */
+
+			/*show this if database is empty */
+			if ( ! $gglshrtlnk_total_items ) { ?>
+				<div class="updated below-h2">
+					<p><?php echo __( "There are no links in the database. Go to the", 'google-shortlink' ) . ' <a href="' . admin_url( 'admin.php?page=gglshrtlnk_options', '' ) . '">' . __( 'settings page', 'google-shortlink' ) . '</a> ' . __( ', and scan your website.', 'google-shortlink' );?></p>
+				</div>
+			<?php }	?>
+			<form method="post" name="gglshrtlnk_table-of-links" id="gglshrtlnk_table-of-links" action="<?php echo admin_url( 'admin.php?page=google-shortlink', '' ); ?>" class="gglshrtlnk_auto-replace">
+				<?php gglshrtlnk_table(); ?>
+			</form>
 		</div>
 	<?php }
 }
@@ -1388,6 +1445,11 @@ if ( ! function_exists( 'gglshrtlnk_get' ) ) {
 	        $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
         }
 
+        /**
+		* @deprecated since 1.5.9
+		* @todo edit after 20.09.2021
+		* Remove if else and leave only content else
+		*/
         if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) { // if using old Shortener API
 	        /* api key for application */
 	        $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
@@ -1467,6 +1529,7 @@ if ( ! function_exists( 'gglshrtlnk_get' ) ) {
 	        }
 	        return new WP_Error( 'unknown_error', gglshrtlnk_get_error_message() );
         }
+		/* end deprecated */
 	}
 }
 /*function for getting total clicks on short link */
@@ -1477,6 +1540,11 @@ if ( ! function_exists( 'gglshrtlnk_count' ) ) {
 	    if ( empty( $gglshrtlnk_options ) ) {
 	        $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
         }
+        /**
+		* @deprecated since 1.5.9
+		* @todo edit after 20.09.2021
+		* Remove if else and leave only content else
+		*/
         if ( 0 == $gglshrtlnk_options['firebase_api_is_on'] ) {
 	        /* api key for application */
 	        $gglshrtlnk_options = get_option( 'gglshrtlnk_options' );
@@ -1556,6 +1624,7 @@ if ( ! function_exists( 'gglshrtlnk_count' ) ) {
 	        }
 	        return new WP_Error( 'unknown_error', gglshrtlnk_get_error_message() );
         }
+		/* end deprecated */
 	}
 }
 

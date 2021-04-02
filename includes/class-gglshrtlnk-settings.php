@@ -33,6 +33,13 @@ if ( ! class_exists( 'Gglshrtlnk_Settings_Tabs' ) ) {
 				'tabs' 				 => $tabs,
 				'wp_slug'			 => 'google-shortlink'
 			) );
+
+			/**
+			* @deprecated since 1.5.9
+			* @todo remove after 20.09.2021
+			*/
+			add_action( get_parent_class( $this ) . '_display_custom_messages', array( $this, 'display_custom_messages' ) );
+			/* end deprecated */
 		}
 
 		/**
@@ -45,8 +52,11 @@ if ( ! class_exists( 'Gglshrtlnk_Settings_Tabs' ) ) {
 			$message = $notice = $error = '';
 
 			/* Takes all the changed settings on the plugin's admin page and saves them in array 'gglshrtlnk_options'. */
-			$this->options['pagination'] = $_POST['gglshrtlnk_links-per-page'] == 'all' ? 'all' : intval( $_POST['gglshrtlnk_links-per-page'] );
-		
+			/**
+			* @deprecated since 1.5.9
+			* @todo edit after 20.09.2021
+			* Remove if else and leave only content else
+			*/
 			if ( 0 == $this->options['firebase_api_is_on'] ) {
 				if ( '' != $_POST['gglshrtlnk_api-key'] && 39 == strlen( $_POST['gglshrtlnk_api-key'] ) ) {
 					$this->options['api_key'] = stripslashes( sanitize_text_field( $_POST['gglshrtlnk_api-key'] ) );
@@ -72,7 +82,7 @@ if ( ! class_exists( 'Gglshrtlnk_Settings_Tabs' ) ) {
 					$error = __( 'Incorrect data entered.', 'google-shortlink' ) . '<br>' . __( 'You must fill all fields.', 'google-shortlink' );
 				}
 			}			
-
+			/* end deprecated */
 			return compact( 'message', 'notice', 'error' );
 		}
 
@@ -84,7 +94,13 @@ if ( ! class_exists( 'Gglshrtlnk_Settings_Tabs' ) ) {
 			<?php $this->help_phrase(); ?>
 			<hr>
 			<div class="bws_tab_sub_label"><?php _e( 'Google API Console', 'google-shortlink' ); ?></div>			
-			<?php if ( 0 == $this->options['firebase_api_is_on'] ) { ?>
+			<?php 
+			/**
+			* @deprecated since 1.5.9
+			* @todo edit after 20.09.2021
+			* Remove if else and leave only content else
+			*/
+			if ( 0 == $this->options['firebase_api_is_on'] ) { ?>
 				<table class="form-table">
 					<tr>
 						<th></th>
@@ -158,23 +174,52 @@ if ( ! class_exists( 'Gglshrtlnk_Settings_Tabs' ) ) {
 						</td>
 					</tr>
 				</table>
-			<?php } ?>
+			<?php } 
+			/* end deprecated */ ?>
 			<div class="bws_tab_sub_label"><?php _e( 'General', 'google-shortlink' ); ?></div>
+			<div class="results below-h2 gglshrtlnk_hide updated" id="gglshrtlnk_ajax-status"></div>
 			<table class="form-table">
 				<!-- End Firebase -->
 				<tr valign="top">
-					<th><?php _e( 'Show Links In Table Per Page', 'google-shortlink' ); ?></th>
+					<th><?php _e( 'Scan Website', 'google-shortlink' ); ?></th>
 					<td>
-						<select name="gglshrtlnk_links-per-page" >
-							<option value="5" <?php if ( '5' == $this->options[ 'pagination' ] ) echo 'selected="selected"'; ?>>5</option>
-							<option value="10" <?php if ( '10' == $this->options[ 'pagination' ] ) echo 'selected="selected"'; ?>>10</option>
-							<option value="20" <?php if ( '20' == $this->options[ 'pagination' ] ) echo 'selected="selected"'; ?>>20</option>
-							<option value="50" <?php if ( '50' == $this->options[ 'pagination' ] ) echo 'selected="selected"'; ?>>50</option>
-							<option value="all" <?php if ( 'all' == $this->options[ 'pagination' ] ) echo 'selected="selected"'; ?>><?php _e( 'All', 'google-shortlink' ); ?></option>
-						</select>
+						<fieldset>
+							<!-- scan web-site to find all external links -->
+							<input type="button" name="gglshrtlnk_scan" class="button-secondary gglshrtlnk_btn_action" value="<?php _e( 'Scan Now', 'google-shortlink' ); ?>"/>
+							<p class="bws_info"><?php _e( 'Your website will be scanned for new external links.', 'google-shortlink' ); ?></p>
+						</fieldset>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th><?php _e( 'External Links', 'google-shortlink' ); ?></th>
+					<td>
+						<fieldset class="btn-group">
+							<!-- replace automatically -->
+							<input type="button" name="gglshrtlnk_replace-all" id="gglshrtlnk_replace-all" value="<?php _e( 'Replace Now', 'google-shortlink' ); ?>" class="button-secondary gglshrtlnk_btn_action"/>
+							<!-- restore all -->
+							<input type="button" name="gglshrtlnk_restore-all" id="gglshrtlnk_restore-all" value="<?php _e( 'Restore Now', 'google-shortlink' ); ?>" class="button-secondary gglshrtlnk_btn_action"/>
+							<!-- delete all -->
+							<input type="button" name="gglshrtlnk_delete-all" id="gglshrtlnk_delete-all" value="<?php _e( 'Restore & Clean DB Now', 'google-shortlink' ); ?>" class="button-secondary gglshrtlnk_btn_action"/>
+						</fieldset>
 					</td>
 				</tr>
 			</table>
 		<?php }
+
+		/**
+		* @deprecated since 1.5.9
+		* @todo remove after 20.09.2021
+		*/
+		/**
+		 * Display custom error\message\notice
+		 * @access public
+		 * @return void
+		 */
+		public function display_custom_messages() {
+			if ( 0 == $this->options['firebase_api_is_on'] ) { ?>
+				<div class="updated inline bws-notice"><p><strong><?php _e( 'The goo.gl API functionality has been deprecated. On 20.09.2021 it will be removed from our plugin. Hurry up to switch to Firebase API', 'google-shortlink' ); ?></strong></p></div>
+			<?php }
+		}
+		/* end deprecated */ 
 	}
 }
