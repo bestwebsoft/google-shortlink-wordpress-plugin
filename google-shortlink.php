@@ -6,7 +6,7 @@ Description: Replace external WordPress website links with Google shortlinks and
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.5.9
+Version: 1.6.0
 Author URI: https://bestwebsoft.com
 License: GPLv2 or later
 */
@@ -1654,6 +1654,9 @@ if ( ! function_exists( 'gglshrtlnk_get_error_message' ) ) {
 				break;
 			case '400':
 				$message = __( 'We could not match link with whitelisted URL patterns in your Google project', 'google-shortlink' );
+				break;
+			case '403':
+				$message = __( 'PERMISSION DENIED', 'google-shortlink' );
 				break;
 			case 'invalid':
 				$message = __( 'Bad request error.', 'google-shortlink' );

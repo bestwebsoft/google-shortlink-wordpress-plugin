@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, firebase plugin, firebase dynamic plugin, google shortlink, firebase links, firebase plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
 Requires at least: 4.5
-Tested up to: 5.7
-Stable tag: 1.5.9
+Tested up to: 5.7.2
+Stable tag: 1.6.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,9 +48,9 @@ If you have a feature suggestion or idea you'd like to see in the plugin, we'd l
 
 = Documentation & Videos =
 
-* [[Doc] User Guide](https://docs.google.com/document/d/13V7769ghm0d5KjzAIZIytnkLLc9yfWWe59jr81oQXEo/)
-* [[Doc] Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/)
-* [[Doc] Purchase](https://docs.google.com/document/d/1EUdBVvnm7IHZ6y0DNyldZypUQKpB8UVPToSc_LdOYQI/)
+* [[Doc] User Guide](https://bestwebsoft.com/documentation/shortlink/shortlink-user-guide/)
+* [[Doc] Installation](https://bestwebsoft.com/documentation/how-to-install-a-wordpress-product/how-to-install-a-wordpress-plugin/)
+* [[Doc] Purchase](https://bestwebsoft.com/documentation/how-to-purchase-a-wordpress-plugin/how-to-purchase-wordpress-plugin-from-bestwebsoft/)
 
 = Help & Support =
 
@@ -75,7 +75,7 @@ Some of these translations are not complete. We are constantly adding new featur
 4. Plugin page is located in main menu.
 4. Enter your API key for goo.gl account on plugin options page.
 
-[View a Step-by-step Instruction on Shortlink Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/edit)
+[View a Step-by-step Instruction on Shortlink Installation](https://bestwebsoft.com/documentation/how-to-install-a-wordpress-product/how-to-install-a-wordpress-plugin)
 
 == Frequently Asked Questions ==
 
@@ -108,7 +108,7 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 1. The link to the page where the problem occurs
 2. The name of the plugin and its version. If you are using a pro version - your order number.
 3. The version of your WordPress installation
-4. Copy and paste into the message your system status report. Please read more here: [Instruction on System Status](https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/)
+4. Copy and paste into the message your system status report. Please read more here: [Instruction on System Status](https://bestwebsoft.com/documentation/admin-panel-issues/system-status/)
 
 == Screenshots ==
 
@@ -119,7 +119,11 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 
 == Changelog ==
 
-= V1.5.9 - 01.04.2020 =
+= V1.6.0 - 29.06.2021 =
+* Update : All functionality was updated for wordpress 5.7.2
+* Bugfix : The issue with display Firebase error 403 has been fixed.
+
+= V1.5.9 - 01.04.2021 =
 * Update : Adding links manually moved to a separate page.
 * Update : Scan of the website for new external links and performing actions with external links has been moved to the settings page.
 * Update : Added warning about deprecated functionality goo.gl API.
@@ -216,6 +220,10 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.6.0 =
+* The compatibility with new WordPress version updated.
+* Bugs fixed.
 
 = V1.5.9 =
 * Usability improved.

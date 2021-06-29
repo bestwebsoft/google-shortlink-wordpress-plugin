@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: google-shortlink\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-26 15:31+0200\n"
+"POT-Creation-Date: 2021-06-17 11:12+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: bestwebsoft.com <plugins@bestwebsoft.com>\n"
 "Language-Team: bestwebsoft.com <wp@bestwebsoft.com>\n"
@@ -14,25 +14,25 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_n;_e;_n:1,2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: bws_menu\n"
 
-#: google-shortlink.php:36 google-shortlink.php:1285
+#: google-shortlink.php:36 google-shortlink.php:1286
 msgid "Links"
 msgstr "Ссылки"
 
-#: google-shortlink.php:38 google-shortlink.php:1286
+#: google-shortlink.php:38 google-shortlink.php:1287
 msgid "Add New"
 msgstr "Добавить Новую"
 
-#: google-shortlink.php:40 google-shortlink.php:757
+#: google-shortlink.php:40 google-shortlink.php:758
 #: includes/class-gglshrtlnk-settings.php:93
 msgid "Shortlink Settings"
 msgstr "Настройки Shortlink"
 
-#: google-shortlink.php:40 google-shortlink.php:1690 google-shortlink.php:1703
+#: google-shortlink.php:40 google-shortlink.php:1694 google-shortlink.php:1707
 #: includes/class-gglshrtlnk-settings.php:21
 msgid "Settings"
 msgstr "Настройки"
@@ -62,7 +62,7 @@ msgstr "Сканируем вебсайт...."
 msgid "more details"
 msgstr "подробнее"
 
-#: google-shortlink.php:327
+#: google-shortlink.php:325
 msgid ""
 "All long links from the database have been restored  and the database has "
 "been cleared."
@@ -70,23 +70,23 @@ msgstr ""
 "Все длинные ссылки из базы данных были восстановлены и база данных была "
 "очищена."
 
-#: google-shortlink.php:336
+#: google-shortlink.php:334
 msgid "All long links from the database have been restored."
 msgstr "Все длинные ссылки из базы данных были восстановлены."
 
-#: google-shortlink.php:337 google-shortlink.php:347
+#: google-shortlink.php:335 google-shortlink.php:345
 msgid "Total replaces:"
 msgstr "Всего замен:"
 
-#: google-shortlink.php:346
+#: google-shortlink.php:344
 msgid "All links from the database have been replaced."
 msgstr "Все ссылки из базы данных были заменены."
 
-#: google-shortlink.php:389 google-shortlink.php:457 google-shortlink.php:1030
+#: google-shortlink.php:387 google-shortlink.php:455 google-shortlink.php:1031
 msgid "Error:"
 msgstr "Ошибка:"
 
-#: google-shortlink.php:517
+#: google-shortlink.php:515
 #, php-format
 msgid "%s link failed:"
 msgid_plural "%s links failed:"
@@ -94,241 +94,250 @@ msgstr[0] "%s ошибка при добавлении ссылки:"
 msgstr[1] "%s ошибки при добавлении ссылок:"
 msgstr[2] "%s ошибок при добавлении ссылок:"
 
-#: google-shortlink.php:523
+#: google-shortlink.php:521
 msgid "Website has been scanned."
 msgstr "Cайт был просканирован."
 
-#: google-shortlink.php:525
+#: google-shortlink.php:523
 msgid "links were added to database."
 msgstr "ссылки были добавлены в базу данных."
 
-#: google-shortlink.php:527
+#: google-shortlink.php:525
 msgid "There are no new links."
 msgstr "Новых ссылок не обнаружено."
 
-#: google-shortlink.php:527
+#: google-shortlink.php:525
 msgid "The list of articles has been updated for each link."
 msgstr "Список статей был обновлен для каждой ссылки."
 
-#: google-shortlink.php:762
+#: google-shortlink.php:763
 msgid "Yes, update to Firebase"
 msgstr "Да, обновить"
 
-#: google-shortlink.php:763
+#: google-shortlink.php:764
 msgid "No, go back to the settings page"
 msgstr "Нет, вернутся на страницу настроек"
 
-#: google-shortlink.php:833 google-shortlink.php:902
+#: google-shortlink.php:834 google-shortlink.php:903
 msgid "no title"
 msgstr "без названия"
 
-#: google-shortlink.php:840 google-shortlink.php:909
+#: google-shortlink.php:841 google-shortlink.php:910
 msgid "None"
 msgstr "Нет"
 
-#: google-shortlink.php:846 google-shortlink.php:915
+#: google-shortlink.php:847 google-shortlink.php:916
 msgid "Wait for response"
 msgstr "Ждем ответа"
 
 # Table of Links
 # Таблица ссылок
-#: google-shortlink.php:937
+#: google-shortlink.php:938
 msgid "New Links"
 msgstr "Новые Ссылки"
 
-#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1340
-#: google-shortlink.php:1348
+#: google-shortlink.php:966 google-shortlink.php:974 google-shortlink.php:1341
+#: google-shortlink.php:1349
 msgid "Warning:"
 msgstr "Внимание:"
 
-#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1340
-#: google-shortlink.php:1348
+#: google-shortlink.php:966 google-shortlink.php:974 google-shortlink.php:1341
+#: google-shortlink.php:1349
 msgid "You haven't entered API key yet. Go to plugin's"
 msgstr "Вы еще не ввели ключ API. Перейдите на страницу"
 
-#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1090
-#: google-shortlink.php:1340 google-shortlink.php:1348
+#: google-shortlink.php:966 google-shortlink.php:974 google-shortlink.php:1091
+#: google-shortlink.php:1341 google-shortlink.php:1349
+#: google-shortlink.php:1409
 msgid "settings page"
 msgstr "настроек плагина"
 
-#: google-shortlink.php:965 google-shortlink.php:973 google-shortlink.php:1340
-#: google-shortlink.php:1348
+#: google-shortlink.php:966 google-shortlink.php:974 google-shortlink.php:1341
+#: google-shortlink.php:1349
 msgid "and enter your key."
 msgstr "и введите ваш ключ. "
 
-#: google-shortlink.php:1090
+#: google-shortlink.php:1091
 msgid "Invalid API key. Go to plugin's"
 msgstr "Некорректный API ключ. Перейдите на страницу"
 
-#: google-shortlink.php:1090
+#: google-shortlink.php:1091
 msgid "and enter correct key."
 msgstr "и введите корректный ключ."
 
-#: google-shortlink.php:1094
+#: google-shortlink.php:1095
 msgid ""
 "There are empty fields on the page. Fill them out before adding another one."
 msgstr ""
 "На странице остались пустые поля. Заполните их перед добавлением еще одного."
 
-#: google-shortlink.php:1101
+#: google-shortlink.php:1102
 msgid "Get Short Links By Direct Input:"
 msgstr "Получить короткие ссылки путем прямого ввода:"
 
-#: google-shortlink.php:1107
+#: google-shortlink.php:1108
 msgid "Type long links here:"
 msgstr "Вводите длинные ссылки сюда:"
 
-#: google-shortlink.php:1108
+#: google-shortlink.php:1109
 msgid "Short links will appear below:"
 msgstr "Короткие ссылки появятся ниже:"
 
-#: google-shortlink.php:1126
+#: google-shortlink.php:1127
 msgid "Get Short Links"
 msgstr "Получить короткие ссылки"
 
-#: google-shortlink.php:1127
+#: google-shortlink.php:1128
 msgid "Reset Form"
 msgstr "Очистить форму"
 
-#: google-shortlink.php:1128
+#: google-shortlink.php:1129
 msgid "Add Field"
 msgstr "Добавить поле"
 
-#: google-shortlink.php:1148
+#: google-shortlink.php:1149
 msgid "link"
 msgstr "ссылка"
 
-#: google-shortlink.php:1149
+#: google-shortlink.php:1150
 msgid "links"
 msgstr "ссылки"
 
-#: google-shortlink.php:1169
+#: google-shortlink.php:1170
 msgid "ID"
 msgstr "ID"
 
-#: google-shortlink.php:1170
+#: google-shortlink.php:1171
 msgid "Original Link"
 msgstr "Оригинальная Ссылка"
 
-#: google-shortlink.php:1171
+#: google-shortlink.php:1172
 msgid "Short Link"
 msgstr "Короткая ссылка"
 
-#: google-shortlink.php:1172
+#: google-shortlink.php:1173
 msgid "Total Clicks"
 msgstr "Всего переходов"
 
-#: google-shortlink.php:1173
+#: google-shortlink.php:1174
 msgid "Location"
 msgstr "Расположение"
 
-#: google-shortlink.php:1207 google-shortlink.php:1221
+#: google-shortlink.php:1208 google-shortlink.php:1222
 msgid "Replace"
 msgstr "Заменить"
 
-#: google-shortlink.php:1208 google-shortlink.php:1222
+#: google-shortlink.php:1209 google-shortlink.php:1223
 msgid "Restore"
 msgstr "Восстановить"
 
-#: google-shortlink.php:1209 google-shortlink.php:1213
-#: google-shortlink.php:1223
+#: google-shortlink.php:1210 google-shortlink.php:1214
+#: google-shortlink.php:1224
 msgid "Delete"
 msgstr "Удалить"
 
-#: google-shortlink.php:1289
+#: google-shortlink.php:1290
 msgid "Please enable JavaScript to count total clicks."
 msgstr "Пожалуйста, включите JavaScript, чтобы узнать общее число кликов."
 
-#: google-shortlink.php:1314
+#: google-shortlink.php:1315
 msgid "One long link was replaced with a short link."
 msgstr "Одна длинная ссылка была заменена на короткую."
 
-#: google-shortlink.php:1319
+#: google-shortlink.php:1320
 msgid "One short link was restored to a long link."
 msgstr "Одна короткая ссылка была заменена на длинную."
 
-#: google-shortlink.php:1324
+#: google-shortlink.php:1325
 msgid "One short link was deleted from database."
 msgstr "Одна короткая ссылка была удалена из базы данных."
 
-#: google-shortlink.php:1359
+#: google-shortlink.php:1360
 msgid "Notice:"
 msgstr "Внимание:"
 
-#: google-shortlink.php:1359
+#: google-shortlink.php:1360
 msgid "Click statistic updates every 3 days"
 msgstr "Статистика обновляется каждые 3 дня"
 
-#: google-shortlink.php:1369 google-shortlink.php:1380
+#: google-shortlink.php:1370 google-shortlink.php:1381
 #, php-format
 msgid "Total %d links have been replaced"
 msgstr "Всего %d ссылок было заменено"
 
-#: google-shortlink.php:1372 google-shortlink.php:1383
+#: google-shortlink.php:1373 google-shortlink.php:1384
 #, php-format
 msgid "Total %d links have been restored"
 msgstr "Всего %d ссылок было востановлено"
 
-#: google-shortlink.php:1375 google-shortlink.php:1386
+#: google-shortlink.php:1376 google-shortlink.php:1387
 #, php-format
 msgid "Total %d links have been deleted from database"
 msgstr "Всего %d ссылок было удалено из базы данных"
 
-#: google-shortlink.php:1408
-msgid ""
-"There are no links in the database. Go to the Additional options tab, and "
-"scan your website."
-msgstr ""
-"В базе данных не содержится ссылок. Перейдите во вкладку \"Дополнительные "
-"опции\", и просканируйте ваш вебсайт."
+#: google-shortlink.php:1409
+#, fuzzy
+#| msgid "There are no links in database"
+msgid "There are no links in the database. Go to the"
+msgstr "В базе данных пока нет ссылок"
 
-#: google-shortlink.php:1649
+#: google-shortlink.php:1409
+#, fuzzy
+#| msgid "and enter your key."
+msgid ", and scan your website."
+msgstr "и введите ваш ключ. "
+
+#: google-shortlink.php:1650
 msgid "No statistic for this link"
 msgstr "Нет статистики для этой ссылки"
 
-#: google-shortlink.php:1652
+#: google-shortlink.php:1653
 msgid "Request had invalid authentication credentials"
 msgstr "Запрос с неверными учетными данными"
 
-#: google-shortlink.php:1655
+#: google-shortlink.php:1656
 msgid ""
 "We could not match link with whitelisted URL patterns in your Google project"
 msgstr ""
 "Ссылка не совпадает с шаблонами URL из белого списка в вашем Google проекте"
 
-#: google-shortlink.php:1658
+#: google-shortlink.php:1659
+msgid "PERMISSION DENIED"
+msgstr "Недостаточно прав"
+
+#: google-shortlink.php:1662
 msgid "Bad request error."
 msgstr "Плохой запрос."
 
-#: google-shortlink.php:1661
+#: google-shortlink.php:1665
 msgid "Invalid API key error."
 msgstr "Некорректный ключ API."
 
-#: google-shortlink.php:1664
+#: google-shortlink.php:1668
 msgid "Error with access not configuration."
 msgstr "Ошибка \"Доступ не настроен\"."
 
-#: google-shortlink.php:1667
+#: google-shortlink.php:1671
 msgid "Expired API key error."
 msgstr "Ошибка \"Иcтёкший ключ API\""
 
-#: google-shortlink.php:1670
+#: google-shortlink.php:1674
 msgid "Curl error. Please try again."
 msgstr "Ошибка curl. Пожалуйста, попробуйте снова."
 
-#: google-shortlink.php:1673
+#: google-shortlink.php:1677
 msgid "This hosting does not support СURL."
 msgstr "Это хостинг не поддерживает СURL."
 
-#: google-shortlink.php:1676
+#: google-shortlink.php:1680
 msgid "Unknown error occurred."
 msgstr "Возникла неизвестная ошибка."
 
-#: google-shortlink.php:1705
+#: google-shortlink.php:1709
 msgid "FAQ"
 msgstr "Часто задаваемые вопросы"
 
-#: google-shortlink.php:1706
+#: google-shortlink.php:1710
 msgid "Support"
 msgstr "Поддержка"
 
@@ -462,6 +471,13 @@ msgid ""
 msgstr ""
 "Функционал goo.gl API устарел. 20.09.2021 он будет удален из нашего плагина. "
 "Успейте переключиться на Firebase API"
+
+#~ msgid ""
+#~ "There are no links in the database. Go to the Additional options tab, and "
+#~ "scan your website."
+#~ msgstr ""
+#~ "В базе данных не содержится ссылок. Перейдите во вкладку \"Дополнительные "
+#~ "опции\", и просканируйте ваш вебсайт."
 
 #~ msgid "Please fill all settings and log in to your Google Account"
 #~ msgstr "Пожалуйста, заполните все настройки и войдите в свой аккаунт Google"
@@ -1077,9 +1093,6 @@ msgstr ""
 
 #~ msgid "page:"
 #~ msgstr "страница:"
-
-#~ msgid "There are no links in database"
-#~ msgstr "В базе данных пока нет ссылок"
 
 #~ msgid "Google url shortener options"
 #~ msgstr "Настройки Google url shortener"

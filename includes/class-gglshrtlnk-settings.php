@@ -29,7 +29,7 @@ if ( ! class_exists( 'Gglshrtlnk_Settings_Tabs' ) ) {
 				'prefix' 			 => 'gglshrtlnk',
 				'default_options' 	 => gglshrtlnk_get_options_default(),
 				'options' 			 => $gglshrtlnk_options,
-				'doc_link'			 => 'https://docs.google.com/document/d/13V7769ghm0d5KjzAIZIytnkLLc9yfWWe59jr81oQXEo/',
+				'doc_link'			 => 'https://bestwebsoft.com/documentation/shortlink/shortlink-user-guide/',
 				'tabs' 				 => $tabs,
 				'wp_slug'			 => 'google-shortlink'
 			) );
@@ -137,7 +137,7 @@ if ( ! class_exists( 'Gglshrtlnk_Settings_Tabs' ) ) {
 							</p>
 							<p class="bws_info">
 								<?php _e( 'Don\'t know how to get API key? Follow this instruction - ', 'google-shortlink' ); ?>
-								<a href="https://docs.google.com/document/d/1dAFjOVe1fJD5NKO0QV5B8HOcvN79s0phNbc9eqQWEEQ/edit" target="_blank">Firebase Dynamic Links API</a>.
+								<a href="https://bestwebsoft.com/documentation/shortlink/firebase-dynamic-links-api/" target="_blank">Firebase Dynamic Links API</a>.
 							</p>
 						</td>
 					</tr>
