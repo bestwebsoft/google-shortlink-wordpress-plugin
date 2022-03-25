@@ -4,6 +4,7 @@
 <p>Shortlink plugin is a useful tool to get short links from Google URL Shortener service without leaving your WordPress website. Generate short links by direct input and/or automatically. Replace all external links on your website with short links, restore or delete them from database, and manage statistic.</p>
 <p>Install, activate, and save your time!</p>
 <p><span class="embed-youtube" style="text-align:center; display: block;"></span></p>
+<p><a href="https://bestwebsoft.com/demo-shortlink-by-bestwebsoft/?ref=readme" rel="nofollow ugc">View Demo</a></p>
 <h4>Features</h4>
 <ul>
 <li>Firebase Dynamic Links API</li>
@@ -37,23 +38,22 @@
 <li>Incredibly simple settings for fast setup without modifying code</li>
 <li>Detailed step-by-step documentation and videos</li>
 </ul>
-<p>If you have a feature suggestion or idea you&#8217;d like to see in the plugin, we&#8217;d love to hear about it! <a href="https://support.bestwebsoft.com/hc/en-us/requests/new" rel="nofollow">Suggest a Feature</a></p>
+<p>If you have a feature suggestion or idea you&#8217;d like to see in the plugin, we&#8217;d love to hear about it! <a href="https://support.bestwebsoft.com/hc/en-us/requests/new" rel="nofollow ugc">Suggest a Feature</a></p>
 <h4>Documentation &amp; Videos</h4>
 <ul>
-<li><a href="https://bestwebsoft.com/documentation/how-to-install-a-wordpress-product/how-to-install-a-wordpress-plugin/" rel="nofollow">[Doc] Installation</a></li>
-<li><a href="https://bestwebsoft.com/documentation/shortlink/shortlink-user-guide/" rel="nofollow">[Doc] How to Use</a></li>
+<li><a href="https://bestwebsoft.com/documentation/shortlink/shortlink-user-guide/" rel="nofollow ugc">[Doc] User Guide</a></li>
+<li><a href="https://bestwebsoft.com/documentation/how-to-install-a-wordpress-product/how-to-install-a-wordpress-plugin/" rel="nofollow ugc">[Doc] Installation</a></li>
+<li><a href="https://bestwebsoft.com/documentation/how-to-purchase-a-wordpress-plugin/how-to-purchase-wordpress-plugin-from-bestwebsoft/" rel="nofollow ugc">[Doc] Purchase</a></li>
 </ul>
 <h4>Help &amp; Support</h4>
-<p>Visit our Help Center if you have any questions, our friendly Support Team is happy to help — <a href="https://support.bestwebsoft.com/" rel="nofollow">https://support.bestwebsoft.com/</a></p>
-<h4>Affiliate Program</h4>
-<p>Earn 20% commission by selling the premium WordPress plugins and themes by BestWebSoft — <a href="https://bestwebsoft.com/affiliate/" rel="nofollow">https://bestwebsoft.com/affiliate/</a></p>
+<p>Visit our Help Center if you have any questions, our friendly Support Team is happy to help — <a href="https://support.bestwebsoft.com/" rel="nofollow ugc">https://support.bestwebsoft.com/</a></p>
 <h4>Translation</h4>
 <ul>
 <li>Russian (ru_RU)</li>
 <li>Ukrainian (uk)</li>
 </ul>
-<p>Some of these translations are not complete. We are constantly adding new features which should be translated. If you would like to create your own language pack or update the existing one, you can send <a href="https://codex.wordpress.org/Translating_WordPress" rel="nofollow">the text of PO and MO files</a> to <a href="https://support.bestwebsoft.com/hc/en-us/requests/new" rel="nofollow">BestWebSoft</a> and we&#8217;ll add it to the plugin. You can download the latest version of the program for work with PO and MO <a href="https://www.poedit.net/download.php" rel="nofollow">files Poedit</a>.</p>
+<p>Some of these translations are not complete. We are constantly adding new features which should be translated. If you would like to create your own language pack or update the existing one, you can send <a href="https://codex.wordpress.org/Translating_WordPress" rel="nofollow ugc">the text of PO and MO files</a> to <a href="https://support.bestwebsoft.com/hc/en-us/requests/new" rel="nofollow ugc">BestWebSoft</a> and we&#8217;ll add it to the plugin. You can download the latest version of the program for work with PO and MO <a href="https://www.poedit.net/download.php" rel="nofollow ugc">files Poedit</a>.</p>
 <h4>Recommended Plugins</h4>
 <ul>
-<li><a href="https://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1" rel="nofollow">Updater</a> &#8211; Automatically check and update WordPress website core with all installed plugins and themes to the latest versions.</li>
+<li><a href="https://bestwebsoft.com/products/wordpress/plugins/updater/?k=ed72e881dcfb65a3487b083775c694c1" rel="nofollow ugc">Updater</a> &#8211; Automatically check and update WordPress website core with all installed plugins and themes to the latest versions.</li>
 </ul>
