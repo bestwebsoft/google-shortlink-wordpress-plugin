@@ -4,7 +4,7 @@ Donate link: https://bestwebsoft.com/donate/
 Tags: add link shortener, firebase plugin, firebase dynamic plugin, google shortlink, firebase links, firebase plugin, google shortlink plugin, get short links, link statistics, links, google, goo.gl, shorturl
 Requires at least: 4.5
 Tested up to: 5.9
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -119,6 +119,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 
 == Changelog ==
 
+= V1.6.2 - 26.04.2022 =
+* Bugfix : Deactivation feedback fix.
+
 = V1.6.1 - 24.03.2022 =
 * Update : Functionality updated for wordpress 5.9.
 * Update : BWS plugins section was updated.
@@ -224,6 +227,9 @@ Please make sure that the problem hasn't been discussed yet on our forum (https:
 * NEW : Ability to get short links by direct input was added.
 
 == Upgrade Notice ==
+
+= V1.6.2 =
+* Bug fixed.
 
 = V1.6.1 =
 * Usability improved.

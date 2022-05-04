@@ -6,7 +6,7 @@ Description: Replace external WordPress website links with Google shortlinks and
 Author: BestWebSoft
 Text Domain: google-shortlink
 Domain Path: /languages
-Version: 1.6.1
+Version: 1.6.2
 Author URI: https://bestwebsoft.com
 License: GPLv2 or later
 */
